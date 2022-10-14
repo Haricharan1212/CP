@@ -24,19 +24,15 @@ void solve()
     int n;
     cin >> n;
 
-    vi dp;
+    vi a(n);
 
     for (int i = 0; i < n; i++)
-    {
-        int a;
-        cin >> a;
+        cin >> a[i];
 
-        if (lower_bound(dp.begin(), dp.end(), a) == dp.end())
-            dp.push_back(a);
-        else
-            *lower_bound(dp.begin(), dp.end(), a) = a;
-    }
-    cout << dp.size() << endl;
+    sort(a.begin(), a.end());
+
+    vi pref(n);
+    pref[0] = a[0];
 }
 
 int main()
@@ -44,7 +40,7 @@ int main()
     fio;
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

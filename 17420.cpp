@@ -21,22 +21,15 @@ using namespace __gnu_pbds;
 
 void solve()
 {
-    int n;
-    cin >> n;
+    int a, b, c;
+    cin >> a >> b >> c;
 
-    vi dp;
-
-    for (int i = 0; i < n; i++)
+    if (a == b + c || b == c + a || c == a + b)
     {
-        int a;
-        cin >> a;
-
-        if (lower_bound(dp.begin(), dp.end(), a) == dp.end())
-            dp.push_back(a);
-        else
-            *lower_bound(dp.begin(), dp.end(), a) = a;
+        cout << "YES" << endl;
     }
-    cout << dp.size() << endl;
+    else
+        cout << "NO" << endl;
 }
 
 int main()
@@ -44,7 +37,7 @@ int main()
     fio;
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

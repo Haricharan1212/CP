@@ -24,19 +24,38 @@ void solve()
     int n;
     cin >> n;
 
-    vi dp;
+    int arr[1001] = {0};
+    for (int i = 0; i <= 1000; i++)
+        arr[i] = -1;
 
     for (int i = 0; i < n; i++)
     {
-        int a;
-        cin >> a;
-
-        if (lower_bound(dp.begin(), dp.end(), a) == dp.end())
-            dp.push_back(a);
-        else
-            *lower_bound(dp.begin(), dp.end(), a) = a;
+        int f;
+        cin >> f;
+        arr[f] = max(arr[f], i);
     }
-    cout << dp.size() << endl;
+
+    int ans = -1;
+    for (int i = 1; i <= 1000; i++)
+    {
+        for (int j = i; j <= 1000; j++)
+        {
+            if (arr[j] == -1 || arr[i] == -1)
+                continue;
+            else
+            {
+                if (__gcd(i, j) == 1)
+                {
+                    //                    cout << i << ' ' << j << endl;
+                    ans = max(ans, arr[i] + arr[j]);
+                }
+            }
+        }
+    }
+    if (ans == -1)
+        cout << ans << endl;
+    else
+        cout << ans + 2 << endl;
 }
 
 int main()
@@ -44,7 +63,7 @@ int main()
     fio;
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

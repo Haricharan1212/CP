@@ -21,22 +21,37 @@ using namespace __gnu_pbds;
 
 void solve()
 {
-    int n;
-    cin >> n;
+    ll n, q;
+    cin >> n >> q;
+    vector<ll> a(n);
+    for (ll i = 0; i < n; i++)
+        cin >> a[i];
 
-    vi dp;
+    vector<ll> pref(n);
+    pref[0] = a[0];
+    for (ll i = 1; i < n; i++)
+        pref[i] = a[i] + pref[i - 1];
 
-    for (int i = 0; i < n; i++)
+    vector<ll> maxx(n);
+    maxx[0] = a[0];
+    for (ll i = 1; i < n; i++)
+        maxx[i] = max(a[i], maxx[i - 1]);
+
+    for (ll i = 0; i < q; i++)
     {
-        int a;
-        cin >> a;
+        ll q;
+        cin >> q;
+        if (q < a[0])
+        {
+            cout << 0 << ' ';
+            continue;
+        }
+        ll ind = upper_bound(maxx.begin(), maxx.end(), q) - maxx.begin();
 
-        if (lower_bound(dp.begin(), dp.end(), a) == dp.end())
-            dp.push_back(a);
-        else
-            *lower_bound(dp.begin(), dp.end(), a) = a;
+        cout << pref[ind - 1] << ' ';
     }
-    cout << dp.size() << endl;
+
+    cout << endl;
 }
 
 int main()
@@ -44,7 +59,7 @@ int main()
     fio;
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

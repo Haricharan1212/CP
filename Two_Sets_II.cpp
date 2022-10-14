@@ -24,14 +24,34 @@ void solve()
     int n;
     cin >> n;
 
-    int dp[max(4, n + 1)] = {0};
-
-    for (int i = 1; i <= n; i++)
+    vi dp(n + 1, 0);
+    dp[0] = 1;
+    for (int i = 1; i < n; i++)
     {
-        if (i % 4 == 1 || i % 4 == 2)
+        if (i <= 2)
+            continue;
+        // else if (i == 3)
+        //     dp[i] = 1;
+        else if (i == 4 || i == 3)
+            dp[i] = 1;
+        else if (i % 4 == 1 || i % 4 == 2)
             dp[i] = 0;
-        }
+        else
+        {
+            for (auto i : dp)
+                cout << i << ' ';
+            cout << endl;
 
+            for (int j = 1; j <= i; j++)
+            {
+                int sum = j * (j + 1) / 2;
+                int a = (-1 + sqrt(1 + 4 * 2 * sum / 2)) / 2;
+                int b = (-1 + sqrt(1 + 4 * 2 * (sum / 2 - j))) / 2;
+                cout << a << ' ' << b << endl;
+            }
+            dp[i] = dp[b] + dp[a];
+        }
+    }
     cout << dp[n];
 }
 
@@ -40,7 +60,7 @@ int main()
     fio;
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    //    cin >> tc;
+    // cin >> tc;
     while (tc--)
     {
         solve();
