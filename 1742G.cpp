@@ -24,15 +24,39 @@ void solve()
     int n;
     cin >> n;
 
-    vi a(n);
-
+    multiset<int> s;
     for (int i = 0; i < n; i++)
-        cin >> a[i];
+    {
+        int a;
+        cin >> a;
+        s.insert(a);
+    }
 
-    sort(a.begin(), a.end());
+    vi b(1);
+    b[0] = *s.begin();
+    s.erase(s.begin());
 
-    vi pref(n);
-    pref[0] = a[0];
+    for (int i = 1; i < 32; i++)
+    {
+        int orr = 0;
+        for (int j = 0; j < i; j++)
+            orr = orr | b[j];
+        int mn = 1e9, num = 0;
+        for (auto j : s)
+        {
+            if (orr | j < mn)
+            {
+                mn = orr | j;
+                num = j;
+            }
+        }
+        b.push_back(num);
+        s.erase(s.find(num));
+    }
+
+    for (auto i : b)
+        cout << i << ' ';
+    cout << endl;
 }
 
 int main()

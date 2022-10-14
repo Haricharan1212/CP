@@ -23,75 +23,37 @@ void solve()
 {
     ll q;
     cin >> q;
-    ll s[26] = {0};
-    ll t[26] = {0};
-    s[0]++, t[0]++;
-    int a = 1, b = 1;
+    ll a = 1, b = 1;
+    ll a1 = 0, a2 = 0, count1 = 1, count2 = 1;
     for (int j = 0; j < q; j++)
     {
-        int type, k;
+        ll type, k;
         string f;
         cin >> type >> k >> f;
         if (type == 1)
         {
             for (auto i : f)
-                s[i - 'a'] += k;
-            a += k * f.size();
+                if (i == 'a')
+                    count1 += k;
+                else
+                    a1 = 1;
         }
         else
         {
             for (auto i : f)
-                t[i - 'a'] += k;
-            b += k * f.size();
-        }
-
-        int last = 0;
-        for (int i = 25; i >= 0; i--)
-        {
-            if (s[i] != 0)
-            {
-                last = i;
-                break;
-            }
-        }
-        int last2 = 0;
-        for (int i = 25; i >= 0; i--)
-        {
-            if (t[i] != 0)
-            {
-                last2 = i;
-                break;
-            }
-        }
-        int flag = 0;
-        for (int i = 0; i < 26; i++)
-        {
-            if (i != last || i != last2)
-            {
-                if (s[i] > t[i])
-                {
-                    cout << "YES" << endl;
-                    flag = 1;
-                    break;
-                }
-                else if (s[i] < t[i])
-                {
-                    cout << "NO" << endl;
-                    flag = 1;
-                    break;
-                }
+                if (i == 'a')
+                    count2 += k;
                 else
-                    continue;
-            }
-            else
-            {
-                if (a < b)
-                    cout << "YES" << endl;
-                else
-                    cout << "NO" << endl;
-                break;
-            }
+                    a2 = 1;
         }
+        if (a2 == 1)
+        {
+            cout << "YES" << endl;
+        }
+        else if (a1 == 0 && count1 < count2)
+            cout << "YES" << endl;
+        else
+            cout << "NO" << endl;
     }
 }
 

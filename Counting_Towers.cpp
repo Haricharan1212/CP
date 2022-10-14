@@ -21,26 +21,6 @@ using namespace __gnu_pbds;
 
 void solve()
 {
-    int n, x;
-    cin >> n >> x;
-
-    vi h(n);
-    vi s(n);
-    for (int i = 0; i < n; i++)
-        cin >> h[i];
-    for (int i = 0; i < n; i++)
-        cin >> s[i];
-
-    int arr[x + 1] = {0};
-
-    for (int j = 0; j < n; j++)
-        for (int i = x; i >= 1; i--)
-        {
-            if (i >= h[j])
-                arr[i] = max(arr[i], arr[i - h[j]] + s[j]);
-        }
-
-    cout << arr[x];
 }
 
 int main()
@@ -48,7 +28,7 @@ int main()
     fio;
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();
