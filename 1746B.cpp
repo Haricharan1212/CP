@@ -21,43 +21,42 @@ using namespace __gnu_pbds;
 
 void solve()
 {
-    ll n;
+    int n;
     cin >> n;
+    vi a(n);
+    for (int i = 0; i < n; i++)
+        cin >> a[i];
 
-    multiset<ll> s;
-    for (ll i = 0; i < n; i++)
-    {
-        int a;
-        cin >> a;
-        s.insert(a);
-    }
+    deque<int> zer, one;
 
-    vector<ll> b(1);
-    b[0] = *--s.end();
-    s.erase(--s.end());
-
-    for (int i = 1; i < min(33ll, n); i++)
-    {
-        ll orr = 0;
-        for (ll j = 0; j < i; j++)
-            orr = orr | b[j];
-        ll mx = -1, num = 0;
-        for (auto j : s)
+    for (int i = 0; i < n; i++)
+        if (a[i] == 1)
         {
-            if ((orr | j) > mx)
-            {
-                mx = orr | j;
-                num = j;
-            }
+
+            one.push_back(i);
         }
-        b.push_back(num);
-        s.erase(s.find(num));
+        else
+            zer.push_back(i);
+
+    int count = 0;
+    if (zer.size() == 0 || one.size() == 0)
+    {
+        cout << 0 << endl;
+        return;
     }
-    for (auto i : b)
-        cout << i << ' ';
-    for (auto i : s)
-        cout << i << ' ';
-    cout << endl;
+
+    while (zer[zer.size() - 1] >= one[0])
+    {
+
+        count++;
+        zer.pop_back();
+        one.pop_front();
+        if (zer.size() == 0 || one.size() == 0)
+        {
+            break;
+        }
+    }
+    cout << count << endl;
 }
 
 int main()

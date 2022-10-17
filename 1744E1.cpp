@@ -19,45 +19,42 @@ using namespace __gnu_pbds;
 #define vi vector<int>
 #define vii vector<vector<int>>
 
+multiset<int> printDivisors(int n)
+{
+    multiset<int> ans;
+    for (int i = 1; i <= sqrt(n); i++)
+    {
+        if (n % i == 0)
+        {
+            if (n / i == i)
+                ans.insert(i);
+            else
+                ans.insert(i), ans.insert(n / i);
+        }
+    }
+    return ans;
+}
+
 void solve()
 {
-    ll n;
-    cin >> n;
+    ll a, b, c, d;
+    cin >> a >> b >> c >> d;
 
-    multiset<ll> s;
-    for (ll i = 0; i < n; i++)
+    ll num = 2 * a * b;
+    while (num <= c * d)
     {
-        int a;
-        cin >> a;
-        s.insert(a);
-    }
-
-    vector<ll> b(1);
-    b[0] = *--s.end();
-    s.erase(--s.end());
-
-    for (int i = 1; i < min(33ll, n); i++)
-    {
-        ll orr = 0;
-        for (ll j = 0; j < i; j++)
-            orr = orr | b[j];
-        ll mx = -1, num = 0;
-        for (auto j : s)
+        for (ll i = a + 1; i <= c; i++)
         {
-            if ((orr | j) > mx)
+            if (num / i <= d && num / i > b && num % i == 0)
             {
-                mx = orr | j;
-                num = j;
+                cout << i << ' ' << num / i << endl;
+                return;
             }
         }
-        b.push_back(num);
-        s.erase(s.find(num));
+        num += a * b;
     }
-    for (auto i : b)
-        cout << i << ' ';
-    for (auto i : s)
-        cout << i << ' ';
-    cout << endl;
+    cout << "-1 -1" << endl;
+    return;
 }
 
 int main()
