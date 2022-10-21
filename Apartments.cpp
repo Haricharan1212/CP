@@ -19,48 +19,37 @@ using namespace __gnu_pbds;
 #define vi vector<int>
 #define vii vector<vector<int>>
 
-int mod = 1e9 + 7;
-
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
+    int n, m, k;
+    cin >> n >> m >> k;
 
     vi a(n);
+    vi b(m);
     for (int i = 0; i < n; i++)
-    {
         cin >> a[i];
-        a[i]--;
-    }
-    vector<vector<ll>> dp(n, vector<ll>(m, 0));
-    if (a[0] == -1)
-        dp[0] = vector<ll>(m, 1);
-    else
-        dp[0][a[0]]++;
+    for (int i = 0; i < m; i++)
+        cin >> b[i];
 
-    for (int i = 1; i < n; i++)
+    sort(a.begin(), a.end());
+    sort(b.begin(), b.end());
+
+    int point1 = 0, point2 = 0;
+    int ans = 0;
+    while (point1 != n && point2 != m)
     {
-        if (a[i] == -1)
-            for (int j = 0; j < m; j++)
-            {
-                dp[i][j] = ((j != m - 1) ? dp[i - 1][j + 1] : 0) + dp[i - 1][j] + (j != 0 ? dp[i - 1][j - 1] : 0);
-                dp[i][j] %= mod;
-            }
-        else
+
+        if (a[point1] - k <= b[point2] && a[point1] + k >= b[point2])
         {
-            int j = a[i];
-            dp[i][j] = ((j != m - 1) ? dp[i - 1][j + 1] : 0) + dp[i - 1][j] + (j != 0 ? dp[i - 1][j - 1] : 0);
-            dp[i][j] %= mod;
+            ans++;
+            point1++;
+            point2++;
         }
+        else if (a[point1] - k > b[point2])
+            point2++;
+        else
+            point1++;
     }
-    ll ans = 0;
-    for (auto i : dp[n - 1])
-        ans += i, ans %= mod;
-
-    // for (auto i : dp)
-    //     for (auto j : i)
-    //         cout << j << ' ';
-
     cout << ans << endl;
 }
 
@@ -69,7 +58,7 @@ int main()
     fio;
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    //   cin >> tc;
+    // cin >> tc;
     while (tc--)
     {
         solve();

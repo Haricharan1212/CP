@@ -19,49 +19,55 @@ using namespace __gnu_pbds;
 #define vi vector<int>
 #define vii vector<vector<int>>
 
-int mod = 1e9 + 7;
-
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
+    int n;
+    cin >> n;
+
+    string s;
+    cin >> s;
 
     vi a(n);
     for (int i = 0; i < n; i++)
-    {
         cin >> a[i];
-        a[i]--;
-    }
-    vector<vector<ll>> dp(n, vector<ll>(m, 0));
-    if (a[0] == -1)
-        dp[0] = vector<ll>(m, 1);
-    else
-        dp[0][a[0]]++;
 
+    int sum = 0;
+    for (int i = 0; i < n; i++)
+        if (s[i] == '1')
+            sum += a[i];
+
+    int current = s[0] - '0';
+    int prev = (s[0] == '0' ? a[0] : 0);
     for (int i = 1; i < n; i++)
     {
-        if (a[i] == -1)
-            for (int j = 0; j < m; j++)
+        // cout << sum << ' ' << prev << ' ' << current << endl;
+        if (s[i] - '0' == current)
+        {
+            if (s[i] == '0')
+                prev = a[i];
+            if (s[i] == '1')
             {
-                dp[i][j] = ((j != m - 1) ? dp[i - 1][j + 1] : 0) + dp[i - 1][j] + (j != 0 ? dp[i - 1][j - 1] : 0);
-                dp[i][j] %= mod;
+                if (prev > a[i])
+                    sum = sum + prev - a[i], prev = a[i], current = 0;
             }
+        }
         else
         {
-            int j = a[i];
-            dp[i][j] = ((j != m - 1) ? dp[i - 1][j + 1] : 0) + dp[i - 1][j] + (j != 0 ? dp[i - 1][j - 1] : 0);
-            dp[i][j] %= mod;
+            if (s[i] == '0')
+            {
+                current = 0;
+                prev = a[i];
+            }
+            else
+            {
+                if (prev > a[i])
+                    sum = sum + prev - a[i], current = 0, prev = a[i];
+                else
+                    current = 1;
+            }
         }
     }
-    ll ans = 0;
-    for (auto i : dp[n - 1])
-        ans += i, ans %= mod;
-
-    // for (auto i : dp)
-    //     for (auto j : i)
-    //         cout << j << ' ';
-
-    cout << ans << endl;
+    cout << sum << endl;
 }
 
 int main()
@@ -69,7 +75,7 @@ int main()
     fio;
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    //   cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

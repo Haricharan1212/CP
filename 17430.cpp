@@ -19,7 +19,18 @@ using namespace __gnu_pbds;
 #define vi vector<int>
 #define vii vector<vector<int>>
 
-int mod = 1e9 + 7;
+void solve()
+{
+    int n;
+    cin >> n;
+
+    vi a(n);
+    for (int i = 0; i < n; i++)
+        cin >> a[i];
+
+    int z = (10 - n);
+    cout << z * (z - 1) / 2 * 6 << endl;
+}
 
 int main()
 {
@@ -27,23 +38,9 @@ int main()
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
     cin >> tc;
-
-    int n = 1e6;
-    vector<pair<ll, ll>> v(n + 1);
-    v[0] = make_pair(0, 0);
-    v[1] = make_pair(1, 1);
-
-    for (int i = 2; i <= n; i++)
-    {
-        v[i].first = (v[i - 1].second + v[i - 1].first * 4) % mod;
-        v[i].second = (v[i - 1].first + 2 * v[i - 1].second) % mod;
-    }
-
     while (tc--)
     {
-        int a;
-        cin >> a;
-        cout << (v[a].first + v[a].second) % mod << endl;
+        solve();
     }
 
     return 0;

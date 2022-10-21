@@ -19,48 +19,44 @@ using namespace __gnu_pbds;
 #define vi vector<int>
 #define vii vector<vector<int>>
 
-int mod = 1e9 + 7;
-
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
+    int n;
+    cin >> n;
+    deque<pair<ll, ll>> d(n);
+    for (int i = 0; i < n; i++)
+        cin >> d[i].first;
 
-    vi a(n);
+    for (int i = 0; i < n; i++)
+        cin >> d[i].second;
+
+    deque<pair<ll, ll>> dd;
+    ll ans = 0;
     for (int i = 0; i < n; i++)
     {
-        cin >> a[i];
-        a[i]--;
+        if (d[i].second == 0)
+            ans += d[i].first;
+        else
+            dd.push_back(d[i]);
     }
-    vector<vector<ll>> dp(n, vector<ll>(m, 0));
-    if (a[0] == -1)
-        dp[0] = vector<ll>(m, 1);
-    else
-        dp[0][a[0]]++;
 
-    for (int i = 1; i < n; i++)
+    while (dd.size() > 1)
     {
-        if (a[i] == -1)
-            for (int j = 0; j < m; j++)
-            {
-                dp[i][j] = ((j != m - 1) ? dp[i - 1][j + 1] : 0) + dp[i - 1][j] + (j != 0 ? dp[i - 1][j - 1] : 0);
-                dp[i][j] %= mod;
-            }
+        if (dd[0].second > dd[dd.size() - 1].second)
+        {
+            dd[dd.size() - 2].first += dd[dd.size() - 1].second;
+            ans += dd[dd.size() - 1].first;
+            dd.pop_back();
+        }
         else
         {
-            int j = a[i];
-            dp[i][j] = ((j != m - 1) ? dp[i - 1][j + 1] : 0) + dp[i - 1][j] + (j != 0 ? dp[i - 1][j - 1] : 0);
-            dp[i][j] %= mod;
+            dd[1].first += dd[0].second;
+            ans += dd[0].first;
+            dd.pop_front();
         }
     }
-    ll ans = 0;
-    for (auto i : dp[n - 1])
-        ans += i, ans %= mod;
-
-    // for (auto i : dp)
-    //     for (auto j : i)
-    //         cout << j << ' ';
-
+    if (dd.size() != 0)
+        ans += dd[0].first;
     cout << ans << endl;
 }
 
@@ -69,7 +65,7 @@ int main()
     fio;
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    //   cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

@@ -19,7 +19,7 @@ using namespace __gnu_pbds;
 #define vi vector<int>
 #define vii vector<vector<int>>
 
-struct s
+struct S
 {
     int a, b, p;
 };
@@ -28,28 +28,52 @@ void solve()
 {
     int n;
     cin >> n;
-    vector<s> vec(n);
-    for (int i = 0; i < n; i++)
-        cin >> vec[i].a >> vec[i].b >> vec[i].p;
 
-    map<int, int> compress;
-    int count = 0;
-    for (int i = 0; i < n; i++)
-        compress[vec[i].b] = count++;
-
-    vi dp(n + 1, 0);
-    vector<vector<pair<int, int>>> f(n);
+    map<int, int> m;
+    vector<S> a(n);
     for (int i = 0; i < n; i++)
     {
-        f[compress[vec[i].b]].push_back(make_pair(vec[i].a, vec[i].p));
+        cin >> a[i].a >> a[i].b >> a[i].p;
+        a[i].b++;
+        m[a[i].a];
+        m[a[i].b];
     }
-    for (int i = 1; i <= n; i++)
+
+    int count = 1;
+
+    for (auto i : m)
+        m[i.first] = count++;
+
+    vector<vector<S>> z(m.size() + 1);
+
+    for (int i = 0; i < n; i++)
     {
-        for (auto j : f[i])
-        {
-            dp[i] = max(dp[i - j.first] + [], dp[i])
-        }
+        z[m[a[i].b]].push_back(a[i]);
     }
+
+    vector<ll> dp(m.size() + 1);
+    dp[0] = 0;
+
+    // for (auto i : z)
+    // {
+    //     for (auto j : i)
+    //         cout << j.a << j.b << j.p << endl;
+    //     cout << endl;
+    // }
+
+    for (int i = 1; i <= m.size(); i++)
+    {
+        dp[i] = dp[i - 1];
+        if (z[i].size() != 0)
+            for (auto j : z[i])
+                if (i >= m[j.a])
+                    dp[i] = max(dp[i], dp[m[j.a]] + j.p);
+    }
+
+    // for (auto i : dp)
+    //     cout << i << ' ';
+
+    cout << dp[m.size()];
 }
 
 int main()
@@ -57,7 +81,7 @@ int main()
     fio;
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    //   cin >> tc;
+    // cin >> tc;
     while (tc--)
     {
         solve();

@@ -19,7 +19,41 @@ using namespace __gnu_pbds;
 #define vi vector<int>
 #define vii vector<vector<int>>
 
-int mod = 1e9 + 7;
+void solve()
+{
+    int n, m;
+    cin >> n >> m;
+
+    vi a(n);
+    vi b(m);
+    for (int i = 0; i < n; i++)
+        cin >> a[i];
+    for (int i = 0; i < m; i++)
+        cin >> b[i];
+
+    vi z = b;
+    map<int, int> m;
+
+    sort(a.begin(), a.end());
+    sort(b.begin(), b.end());
+
+    int point1 = 0, point2 = 0;
+    int ans = 0;
+    while (point1 != n && point2 != m)
+    {
+        if (a[point1] <= b[point2])
+        {
+            m[b[point2]] = a[point1];
+            ans++;
+            point1++;
+            point2++;
+        }
+        else
+        {
+        }
+    }
+    cout << ans << endl;
+}
 
 int main()
 {
@@ -27,23 +61,9 @@ int main()
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
     cin >> tc;
-
-    int n = 1e6;
-    vector<pair<ll, ll>> v(n + 1);
-    v[0] = make_pair(0, 0);
-    v[1] = make_pair(1, 1);
-
-    for (int i = 2; i <= n; i++)
-    {
-        v[i].first = (v[i - 1].second + v[i - 1].first * 4) % mod;
-        v[i].second = (v[i - 1].first + 2 * v[i - 1].second) % mod;
-    }
-
     while (tc--)
     {
-        int a;
-        cin >> a;
-        cout << (v[a].first + v[a].second) % mod << endl;
+        solve();
     }
 
     return 0;
