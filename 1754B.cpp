@@ -21,37 +21,22 @@ using namespace __gnu_pbds;
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
+    int n;
+    cin >> n;
 
-    multiset<int> s;
-
-    for (int i = 0; i < n; i++)
+    vi a(n);
+    int count = 1;
+    for (int i = 1; i < n; i += 2)
     {
-        int a;
-        cin >> a;
-        s.insert(a);
+        a[i] = count++;
     }
-    for (int i = 0; i < m; i++)
+    for (int i = 0; i < n; i += 2)
     {
-        int f;
-        cin >> f;
-
-        auto z = s.upper_bound(f);
-        if (s.size() == 0)
-        {
-            cout << -1 << endl;
-            continue;
-        }
-        if (z == s.begin())
-        {
-            cout << -1 << endl;
-            continue;
-        }
-        z--;
-        cout << *z << endl;
-        s.erase(z);
+        a[i] = count++;
     }
+    for (auto i : a)
+        cout << i << ' ';
+    cout << endl;
 }
 
 int main()
@@ -59,7 +44,7 @@ int main()
     fio;
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

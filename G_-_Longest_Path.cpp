@@ -23,35 +23,6 @@ void solve()
 {
     int n, m;
     cin >> n >> m;
-
-    multiset<int> s;
-
-    for (int i = 0; i < n; i++)
-    {
-        int a;
-        cin >> a;
-        s.insert(a);
-    }
-    for (int i = 0; i < m; i++)
-    {
-        int f;
-        cin >> f;
-
-        auto z = s.upper_bound(f);
-        if (s.size() == 0)
-        {
-            cout << -1 << endl;
-            continue;
-        }
-        if (z == s.begin())
-        {
-            cout << -1 << endl;
-            continue;
-        }
-        z--;
-        cout << *z << endl;
-        s.erase(z);
-    }
 }
 
 int main()

@@ -21,36 +21,34 @@ using namespace __gnu_pbds;
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
-
-    multiset<int> s;
-
+    int n, q;
+    cin >> n >> q;
+    vi a(n);
+    vi pref(n), xr(n);
     for (int i = 0; i < n; i++)
+        cin >> a[i];
+    for (int i = 0; i < n; i++)
+        if (i == 0)
+            pref[i] = xr[i] = a[i];
+        else
+            pref[i] = a[i] + pref[i - 1], xr[i] = xr[i - 1] ^ a[i];
+    for (int i = 0; i < q; i++)
     {
-        int a;
-        cin >> a;
-        s.insert(a);
-    }
-    for (int i = 0; i < m; i++)
-    {
-        int f;
-        cin >> f;
+        int l, r;
+        cin >> l >> r;
+        l--;
+        r--;
+        int f = (pref[r] - l != 0 ? pref[l] : 0) - (xr[r] ^ (l != 0 ? xr[l] : 0));
+        int start = 0;
+        int end = n - 1;
+        while (1)
+        {
 
-        auto z = s.upper_bound(f);
-        if (s.size() == 0)
-        {
-            cout << -1 << endl;
-            continue;
+            if (z == f)
+            {
+                start++;
+            }
         }
-        if (z == s.begin())
-        {
-            cout << -1 << endl;
-            continue;
-        }
-        z--;
-        cout << *z << endl;
-        s.erase(z);
     }
 }
 
@@ -59,7 +57,7 @@ int main()
     fio;
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

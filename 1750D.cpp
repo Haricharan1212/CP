@@ -19,39 +19,41 @@ using namespace __gnu_pbds;
 #define vi vector<int>
 #define vii vector<vector<int>>
 
+int mod = 998244353;
+
 void solve()
 {
     int n, m;
     cin >> n >> m;
 
-    multiset<int> s;
+    ll ans = 1;
 
+    vi a(n);
+    for (int i = 0; i < n; i++)
+        cin >> a[i];
+
+    vector<ll> dp(n);
     for (int i = 0; i < n; i++)
     {
-        int a;
-        cin >> a;
-        s.insert(a);
+        if (i == 0)
+        {
+            dp[i] = 1;
+        }
+        else
+        {
+            if (a[i] == a[i - 1])
+                dp[i] = dp[i - 1] * (m / a[i]);
+            else if (a[i - 1] % a[i] != 0)
+                dp[i] = 0;
+            else
+            {
+                dp[i] = dp[i - 1] * (m / a[i] - m / a[i - 1]);
+            }
+        }
+        dp[i] %= mod;
     }
-    for (int i = 0; i < m; i++)
-    {
-        int f;
-        cin >> f;
 
-        auto z = s.upper_bound(f);
-        if (s.size() == 0)
-        {
-            cout << -1 << endl;
-            continue;
-        }
-        if (z == s.begin())
-        {
-            cout << -1 << endl;
-            continue;
-        }
-        z--;
-        cout << *z << endl;
-        s.erase(z);
-    }
+    cout << dp[n - 1] << endl;
 }
 
 int main()
@@ -59,7 +61,7 @@ int main()
     fio;
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

@@ -21,37 +21,54 @@ using namespace __gnu_pbds;
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
+    int n, p;
+    cin >> n >> p;
 
-    multiset<int> s;
-
+    set<int> s;
+    int a;
+    int x = 0, y;
     for (int i = 0; i < n; i++)
     {
-        int a;
         cin >> a;
         s.insert(a);
+        if (i == n - 2)
+            x = a;
+        if (i == n - 1)
+            y = a;
     }
-    for (int i = 0; i < m; i++)
-    {
-        int f;
-        cin >> f;
 
-        auto z = s.upper_bound(f);
-        if (s.size() == 0)
+    if (y <= 100)
+    {
+        // cycling not required
+        int flag = 1;
+        for (int i = 0; i < y; i++)
+            if (s.count(i))
+                continue;
+            else
+            {
+                flag = 0;
+                break;
+            }
+        if (flag == 1)
         {
-            cout << -1 << endl;
-            continue;
+            cout << *s.upper_bound(y) - y - 1 << endl;
+            return;
         }
-        if (z == s.begin())
-        {
-            cout << -1 << endl;
-            continue;
-        }
-        z--;
-        cout << *z << endl;
-        s.erase(z);
     }
+
+    int num = y;
+    int cn = 0;
+    while (s.count(num))
+    {
+        num--;
+        cn++;
+        if (num == -1)
+            num = p - 1;
+        if (cn == p)
+            break;
+    }
+
+    cout << p - cn << endl;
 }
 
 int main()
@@ -59,7 +76,7 @@ int main()
     fio;
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

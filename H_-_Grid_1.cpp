@@ -21,39 +21,31 @@ using namespace __gnu_pbds;
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
+    int h, w;
+    cin >> h >> w;
 
-    multiset<int> s;
-
-    for (int i = 0; i < n; i++)
+    int arr[h][w];
+    for (int i = 0; i < h; i++)
     {
-        int a;
-        cin >> a;
-        s.insert(a);
+        string s;
+        cin >> s;
+        for (int j = 0; j < w; j++)
+            arr[i][j] = (s[j] == '.' ? 0 : 1);
     }
-    for (int i = 0; i < m; i++)
-    {
-        int f;
-        cin >> f;
+    vector<vector<int>> dp(h + 1, vector<int>(w + 1, 0));
 
-        auto z = s.upper_bound(f);
-        if (s.size() == 0)
+    for (int i = 1; i <= h; i++)
+        for (int j = 1; j <= w; j++)
         {
-            cout << -1 << endl;
-            continue;
+            if (i == 1 && j == 1)
+                dp[i][j] = 1;
+            else
+                dp[i][j] = (arr[i - 1][j - 1] == 1 ? 0 : dp[i - 1][j] + dp[i][j - 1]);
+            dp[i][j] %= ((int)1e9 + 7);
         }
-        if (z == s.begin())
-        {
-            cout << -1 << endl;
-            continue;
-        }
-        z--;
-        cout << *z << endl;
-        s.erase(z);
-    }
+
+    cout << dp[h][w];
 }
-
 int main()
 {
     fio;

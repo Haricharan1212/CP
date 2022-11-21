@@ -21,37 +21,36 @@ using namespace __gnu_pbds;
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
+    string a, b;
+    cin >> a >> b;
 
-    multiset<int> s;
+    int n = a.size();
+    int m = b.size();
 
-    for (int i = 0; i < n; i++)
+    vector<vector<int>> dp(n + 1, vector<int>(m + 1, 0));
+
+    for (int i = 1; i <= n; i++)
     {
-        int a;
-        cin >> a;
-        s.insert(a);
+        for (int j = 1; j <= m; j++)
+        {
+            dp[i][j] = (a[i - 1] == b[j - 1] ? 1 + dp[i - 1][j - 1] : max(dp[i - 1][j], dp[i][j - 1]));
+        }
     }
-    for (int i = 0; i < m; i++)
-    {
-        int f;
-        cin >> f;
+    string ans;
+    int i = n;
+    int j = m;
 
-        auto z = s.upper_bound(f);
-        if (s.size() == 0)
-        {
-            cout << -1 << endl;
-            continue;
-        }
-        if (z == s.begin())
-        {
-            cout << -1 << endl;
-            continue;
-        }
-        z--;
-        cout << *z << endl;
-        s.erase(z);
+    while (i != 0 && j != 0)
+    {
+        if (a[i - 1] == b[j - 1])
+            ans += a[i - 1], i--, j--;
+        else if (dp[i][j] == dp[i - 1][j])
+            i--;
+        else
+            j--;
     }
+    reverse(ans.begin(), ans.end());
+    cout << ans << endl;
 }
 
 int main()

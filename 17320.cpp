@@ -21,37 +21,43 @@ using namespace __gnu_pbds;
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
-
-    multiset<int> s;
+    int n;
+    cin >> n;
+    vi a(n);
 
     for (int i = 0; i < n; i++)
-    {
-        int a;
-        cin >> a;
-        s.insert(a);
-    }
-    for (int i = 0; i < m; i++)
-    {
-        int f;
-        cin >> f;
+        cin >> a[i];
 
-        auto z = s.upper_bound(f);
-        if (s.size() == 0)
-        {
-            cout << -1 << endl;
-            continue;
-        }
-        if (z == s.begin())
-        {
-            cout << -1 << endl;
-            continue;
-        }
-        z--;
-        cout << *z << endl;
-        s.erase(z);
+    int ans = n;
+
+    int g = a[0];
+    for (int i = 0; i < n; i++)
+    {
+        g = __gcd(g, a[i]);
     }
+    if (g == 1)
+    {
+        cout << 0 << endl;
+        return;
+    }
+    for (int i = 0; i < n; i++)
+    {
+        for (int j = i; j < n; j++)
+        {
+            vi b = a;
+            b[j] = __gcd(j + 1, b[j]);
+            b[i] = __gcd(i + 1, b[i]);
+
+            int g = b[0];
+            for (int i = 0; i < n; i++)
+            {
+                g = __gcd(g, b[i]);
+            }
+            if (g == 1)
+                ans = min(ans, (i != j) ? n - i + n - j : n - i);
+        }
+    }
+    cout << ans << endl;
 }
 
 int main()
@@ -59,7 +65,7 @@ int main()
     fio;
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

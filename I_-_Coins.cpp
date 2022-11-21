@@ -21,37 +21,38 @@ using namespace __gnu_pbds;
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
+    int n;
+    cin >> n;
 
-    multiset<int> s;
+    vector<vector<long double>> dp(n, vector<long double>(n + 1, 0.0));
 
     for (int i = 0; i < n; i++)
     {
-        int a;
-        cin >> a;
-        s.insert(a);
+        long double p;
+        cin >> p;
+        if (i == 0)
+        {
+            dp[0][0] = 1 - p;
+            dp[0][1] = p;
+        }
+        else
+        {
+            for (int j = 0; j <= n; j++)
+            {
+                if (j != 0)
+                    dp[i][j] = dp[i - 1][j] * (1 - p) + dp[i - 1][j - 1] * p;
+                else
+                    dp[i][j] = (1 - p) * dp[i - 1][j];
+            }
+        }
     }
-    for (int i = 0; i < m; i++)
+    long double ans = 0;
+    for (int j = 0; j <= n; j++)
     {
-        int f;
-        cin >> f;
-
-        auto z = s.upper_bound(f);
-        if (s.size() == 0)
-        {
-            cout << -1 << endl;
-            continue;
-        }
-        if (z == s.begin())
-        {
-            cout << -1 << endl;
-            continue;
-        }
-        z--;
-        cout << *z << endl;
-        s.erase(z);
+        if (j > n - j)
+            ans += dp[n - 1][j];
     }
+    cout << fixed << setprecision(10) << ans;
 }
 
 int main()

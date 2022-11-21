@@ -21,37 +21,29 @@ using namespace __gnu_pbds;
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
+    int n;
+    cin >> n;
+    int ans = 0;
+    int current = 0;
 
-    multiset<int> s;
+    int arr[n][3];
 
     for (int i = 0; i < n; i++)
     {
-        int a;
-        cin >> a;
-        s.insert(a);
-    }
-    for (int i = 0; i < m; i++)
-    {
-        int f;
-        cin >> f;
-
-        auto z = s.upper_bound(f);
-        if (s.size() == 0)
+        int a, b, c;
+        cin >> a >> b >> c;
+        if (i == 0)
         {
-            cout << -1 << endl;
+            arr[0][0] = a;
+            arr[0][1] = b;
+            arr[0][2] = c;
             continue;
         }
-        if (z == s.begin())
-        {
-            cout << -1 << endl;
-            continue;
-        }
-        z--;
-        cout << *z << endl;
-        s.erase(z);
+        arr[i][0] = max(arr[i - 1][1], arr[i - 1][2]) + a;
+        arr[i][1] = max(arr[i - 1][0], arr[i - 1][2]) + b;
+        arr[i][2] = max(arr[i - 1][1], arr[i - 1][0]) + c;
     }
+    cout << max(arr[n - 1][0], max(arr[n - 1][1], arr[n - 1][2]));
 }
 
 int main()

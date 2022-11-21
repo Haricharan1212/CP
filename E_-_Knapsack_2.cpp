@@ -21,37 +21,43 @@ using namespace __gnu_pbds;
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
+    int n, W;
+    cin >> n >> W;
 
-    multiset<int> s;
+    vector<ll> w(n), v(n);
+    for (int i = 0; i < n; i++)
+        cin >> w[i] >> v[i];
 
+    vector<ll> dp(1e5 + 1, -1);
+    dp[0] = 0;
     for (int i = 0; i < n; i++)
     {
-        int a;
-        cin >> a;
-        s.insert(a);
+        for (int j = (int)1e5; j > 0; j--)
+        {
+            if (j >= v[i])
+            {
+                if (dp[j - v[i]] != -1)
+                    if (dp[j] == -1)
+                        dp[j] = dp[j - v[i]] + w[i];
+                    else
+                        dp[j] = min(dp[j], dp[j - v[i]] + w[i]);
+            }
+        }
     }
-    for (int i = 0; i < m; i++)
-    {
-        int f;
-        cin >> f;
+    ll ans = 0;
 
-        auto z = s.upper_bound(f);
-        if (s.size() == 0)
+    // for (int i = 0; i < 20; i++)
+    //     cout << dp[i] << ' ';
+
+    for (int j = (int)1e5; j > 0; j--)
+    {
+        if (dp[j] != -1 && dp[j] <= W)
         {
-            cout << -1 << endl;
-            continue;
+            ans = j;
+            break;
         }
-        if (z == s.begin())
-        {
-            cout << -1 << endl;
-            continue;
-        }
-        z--;
-        cout << *z << endl;
-        s.erase(z);
     }
+    cout << ans;
 }
 
 int main()
@@ -59,7 +65,7 @@ int main()
     fio;
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    //    cin >> tc;
     while (tc--)
     {
         solve();

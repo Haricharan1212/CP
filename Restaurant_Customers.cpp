@@ -21,37 +21,22 @@ using namespace __gnu_pbds;
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
-
-    multiset<int> s;
+    int n;
+    cin >> n;
+    map<int, int> m;
 
     for (int i = 0; i < n; i++)
     {
-        int a;
-        cin >> a;
-        s.insert(a);
+        int a, b;
+        cin >> a >> b;
+        m[a]++;
+        m[b]--;
     }
-    for (int i = 0; i < m; i++)
-    {
-        int f;
-        cin >> f;
-
-        auto z = s.upper_bound(f);
-        if (s.size() == 0)
-        {
-            cout << -1 << endl;
-            continue;
-        }
-        if (z == s.begin())
-        {
-            cout << -1 << endl;
-            continue;
-        }
-        z--;
-        cout << *z << endl;
-        s.erase(z);
-    }
+    int count = 0;
+    int mx = 0;
+    for (auto i : m)
+        count += i.second, mx = max(count, mx);
+    cout << mx;
 }
 
 int main()
