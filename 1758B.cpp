@@ -23,17 +23,24 @@ void solve()
 {
     int n;
     cin >> n;
-    string s;
-    cin >> s;
-    sort(s.begin(), s.end());
-    set<int> se;
 
-    for (auto i : s)
+    if (n % 2 == 1)
+        for (int i = 0; i < n; i++)
+            cout << 1 << ' ';
+    else if (n == 2)
+        cout << "1 3";
+    else
     {
-        se.insert(i);
+        cout << "1 2 8 13 ";
+        int sum = 6 * n - (1 + 2 + 8 + 13);
+
+        for (int i = 0; i < n - 4; i++)
+        {
+            cout << sum / (n - 4) << ' ';
+        }
     }
 
-    int num = se.size();
+    cout << endl;
 }
 
 int main()

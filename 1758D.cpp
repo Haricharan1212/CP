@@ -21,19 +21,6 @@ using namespace __gnu_pbds;
 
 void solve()
 {
-    int n;
-    cin >> n;
-    string s;
-    cin >> s;
-    sort(s.begin(), s.end());
-    set<int> se;
-
-    for (auto i : s)
-    {
-        se.insert(i);
-    }
-
-    int num = se.size();
 }
 
 int main()

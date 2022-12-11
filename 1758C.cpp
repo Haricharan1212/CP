@@ -19,21 +19,55 @@ using namespace __gnu_pbds;
 #define vi vector<int>
 #define vii vector<vector<int>>
 
+multiset<int> primeFactors(int n)
+{
+    multiset<int> a;
+    int c = 2;
+    while (n > 1)
+    {
+        if (n % c == 0)
+        {
+            a.insert(c);
+            n /= c;
+        }
+        else
+            c++;
+    }
+    return a;
+}
+
 void solve()
 {
-    int n;
-    cin >> n;
-    string s;
-    cin >> s;
-    sort(s.begin(), s.end());
-    set<int> se;
+    int n, x;
+    cin >> n >> x;
 
-    for (auto i : s)
+    if (n % x != 0)
     {
-        se.insert(i);
+        cout << -1 << endl;
+        return;
     }
 
-    int num = se.size();
+    vi ans(n);
+
+    for (int i = 0; i < n; i++)
+        ans[i] = i + 1;
+
+    int f = n / x;
+    multiset<int> a = primeFactors(f);
+
+    ans[0] = x;
+    ans[n - 1] = 1;
+
+    while (!a.empty())
+    {
+        ans[x - 1] = x * (*a.begin());
+        x *= (*a.begin());
+        a.erase(a.begin());
+    }
+
+    for (auto i : ans)
+        cout << i << ' ';
+    cout << endl;
 }
 
 int main()

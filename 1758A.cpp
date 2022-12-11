@@ -21,19 +21,13 @@ using namespace __gnu_pbds;
 
 void solve()
 {
-    int n;
-    cin >> n;
-    string s;
-    cin >> s;
-    sort(s.begin(), s.end());
-    set<int> se;
+    string a;
+    cin >> a;
 
-    for (auto i : s)
-    {
-        se.insert(i);
-    }
-
-    int num = se.size();
+    cout << a;
+    reverse(a.begin(), a.end());
+    cout << a;
+    cout << endl;
 }
 
 int main()

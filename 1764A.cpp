@@ -23,17 +23,16 @@ void solve()
 {
     int n;
     cin >> n;
-    string s;
-    cin >> s;
-    sort(s.begin(), s.end());
-    set<int> se;
 
-    for (auto i : s)
+    int ans = 0;
+
+    for (int i = 0; i < n; i++)
     {
-        se.insert(i);
+        int a;
+        cin >> a;
     }
 
-    int num = se.size();
+    cout << "1 " << n << endl;
 }
 
 int main()

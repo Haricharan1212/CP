@@ -23,17 +23,30 @@ void solve()
 {
     int n;
     cin >> n;
-    string s;
-    cin >> s;
-    sort(s.begin(), s.end());
-    set<int> se;
+    vi a(n);
 
-    for (auto i : s)
+    for (int i = 0; i < n; i++)
+        cin >> a[i];
+
+    int i;
+    for (i = 0; i < n - 1; i++)
     {
-        se.insert(i);
+        if (a[i] >= a[i + 1])
+            continue;
+        else
+            break;
     }
-
-    int num = se.size();
+    for (i; i < n - 1; i++)
+    {
+        if (a[i] <= a[i + 1])
+            continue;
+        else
+        {
+            cout << "NO" << endl;
+            return;
+        }
+    }
+    cout << "YES" << endl;
 }
 
 int main()

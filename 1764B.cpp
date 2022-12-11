@@ -23,17 +23,18 @@ void solve()
 {
     int n;
     cin >> n;
-    string s;
-    cin >> s;
-    sort(s.begin(), s.end());
-    set<int> se;
 
-    for (auto i : s)
-    {
-        se.insert(i);
-    }
+    vi a(n);
 
-    int num = se.size();
+    for (int i = 0; i < n; i++)
+        cin >> a[i];
+
+    sort(a.begin(), a.end());
+
+    int g = a[0];
+    for (int i = 0; i < n; i++)
+        g = __gcd(g, a[i]);
+    cout << a[n - 1] / g << endl;
 }
 
 int main()
