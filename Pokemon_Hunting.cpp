@@ -36,38 +36,27 @@ void sieve()
     }
 }
 
+int func(int a, int b)
+{
+    if (a == 0 || b == 0)
+        return 1;
+    return ((a + b) * (a + b - 1)) / 2;
+}
+
 void solve()
 {
+    int h, w, a, b;
+    cin >> h >> w >> a >> b;
 
-    ll n, m;
-    cin >> n >> m;
+    int ans = 0;
 
-    vector<ll> a(n);
-    for (int i = 0; i < n; i++)
-        cin >> a[i];
-
-    ll g = a[0];
-    vector<ll> dp(n, 0);
-
-    dp[0] = 1;
-
-    int mod = 998244353;
-
-    for (int i = 1; i < n; i++)
+    for (int i = b + 1; i <= w; i++)
     {
-        if (a[i - 1] % a[i] != 0)
-        {
-            cout << 0 << endl;
-            return;
-        }
-
-        dp[i] = dp[i - 1] * (a[i] == a[i - 1] ? m / a[i] : (m / a[i] - (m * a[i - 1]) / (a[i])));
-        dp[i] %= mod;
+        int num = func(i - 1, h - a - 1) * func(w - i, a - 1);
+        ans += num;
     }
 
-    for (auto i : dp)
-        cout << i << ' ';
-    cout << dp[n - 1] << endl;
+    cout << ans << endl;
 }
 
 int main()
@@ -75,7 +64,7 @@ int main()
     fio;
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    cin >> tc;
+    // cin >> tc;
     while (tc--)
     {
         solve();

@@ -38,36 +38,35 @@ void sieve()
 
 void solve()
 {
+    int n;
+    cin >> n;
+    deque<char> d;
+    string s;
+    cin >> s;
 
-    ll n, m;
-    cin >> n >> m;
+    int rev = 0;
 
-    vector<ll> a(n);
-    for (int i = 0; i < n; i++)
-        cin >> a[i];
-
-    ll g = a[0];
-    vector<ll> dp(n, 0);
-
-    dp[0] = 1;
-
-    int mod = 998244353;
-
-    for (int i = 1; i < n; i++)
+    for (int i = 1; i <= n; i++)
     {
-        if (a[i - 1] % a[i] != 0)
+        if (rev)
+            d.push_front(s[i - 1]);
+        else
+            d.push_back(s[i - 1]);
+        if (i % 2 == 1)
         {
-            cout << 0 << endl;
-            return;
+            rev += 1;
+            rev %= 2;
         }
-
-        dp[i] = dp[i - 1] * (a[i] == a[i - 1] ? m / a[i] : (m / a[i] - (m * a[i - 1]) / (a[i])));
-        dp[i] %= mod;
     }
 
-    for (auto i : dp)
-        cout << i << ' ';
-    cout << dp[n - 1] << endl;
+    if (n % 4 == 2 || n % 4 == 1)
+        reverse(d.begin(), d.end());
+
+    for (int i = 0; i < n; i++)
+        cout
+            << d[i];
+
+    cout << endl;
 }
 
 int main()

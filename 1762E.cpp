@@ -19,48 +19,8 @@ using namespace __gnu_pbds;
 #define vi vector<int>
 #define vii vector<vector<int>>
 
-const int n = 1e5 + 5;
-bool prime[n + 1];
-
-void sieve()
-{
-    memset(prime, true, sizeof(prime));
-
-    for (int p = 2; p * p <= n; p++)
-    {
-        if (prime[p] == true)
-        {
-            for (int i = p * p; i <= n; i += p)
-                prime[i] = false;
-        }
-    }
-    prime[0] = false;
-    prime[1] = false;
-}
-const int mod = 998244353;
-
 void solve()
 {
-    ll n, m;
-    cin >> n >> m;
-
-    ll prod = 1;
-    ll pow = m;
-    ll ans = 0;
-    for (int i = 2; i <= n; i++)
-    {
-        pow *= m;
-        pow %= mod;
-
-        if (prime[i])
-            prod *= i;
-
-        ans += pow - (m / prod);
-        ans %= mod;
-        ans += mod;
-        ans %= mod;
-    }
-    cout << ans << endl;
 }
 
 int main()
@@ -68,8 +28,7 @@ int main()
     fio;
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
-    sieve();
+    cin >> tc;
     while (tc--)
     {
         solve();

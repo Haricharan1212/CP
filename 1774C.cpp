@@ -19,55 +19,31 @@ using namespace __gnu_pbds;
 #define vi vector<int>
 #define vii vector<vector<int>>
 
-const int N = 1e5 + 5;
-bool prime[N + 1];
-
-void sieve()
-{
-    memset(prime, true, sizeof(prime));
-
-    for (int p = 2; p * p <= N; p++)
-    {
-        if (prime[p] == true)
-        {
-            for (int i = p * p; i <= N; i += p)
-                prime[i] = false;
-        }
-    }
-}
-
 void solve()
 {
+    int n;
+    cin >> n;
 
-    ll n, m;
-    cin >> n >> m;
+    string s;
+    cin >> s;
 
-    vector<ll> a(n);
-    for (int i = 0; i < n; i++)
-        cin >> a[i];
+    int zer = 0;
+    int ones = 0;
 
-    ll g = a[0];
-    vector<ll> dp(n, 0);
-
+    int dp[n - 1] = {0};
     dp[0] = 1;
 
-    int mod = 998244353;
-
-    for (int i = 1; i < n; i++)
+    for (int i = 1; i < n - 1; i++)
     {
-        if (a[i - 1] % a[i] != 0)
-        {
-            cout << 0 << endl;
-            return;
-        }
-
-        dp[i] = dp[i - 1] * (a[i] == a[i - 1] ? m / a[i] : (m / a[i] - (m * a[i - 1]) / (a[i])));
-        dp[i] %= mod;
+        if (s[i] == s[i - 1])
+            dp[i] = dp[i - 1];
+        else
+            dp[i] = i + 1;
     }
 
-    for (auto i : dp)
-        cout << i << ' ';
-    cout << dp[n - 1] << endl;
+    for (int i = 0; i < n - 1; i++)
+        cout << dp[i] << ' ';
+    cout << endl;
 }
 
 int main()

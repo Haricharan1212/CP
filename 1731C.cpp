@@ -17,57 +17,37 @@ using namespace __gnu_pbds;
 #define ordered_set tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update>
 
 #define vi vector<int>
-#define vii vector<vector<int>>
 
-const int N = 1e5 + 5;
-bool prime[N + 1];
-
-void sieve()
-{
-    memset(prime, true, sizeof(prime));
-
-    for (int p = 2; p * p <= N; p++)
-    {
-        if (prime[p] == true)
-        {
-            for (int i = p * p; i <= N; i += p)
-                prime[i] = false;
-        }
-    }
-}
+vector<ll> m(1e6, 0);
 
 void solve()
 {
 
-    ll n, m;
-    cin >> n >> m;
+    ll n;
+    cin >> n;
+
+    for (int i = 0; i < 4 * n; i++)
+        m[i] = 0;
+    m[0] = 1;
 
     vector<ll> a(n);
     for (int i = 0; i < n; i++)
         cin >> a[i];
 
-    ll g = a[0];
-    vector<ll> dp(n, 0);
-
-    dp[0] = 1;
-
-    int mod = 998244353;
-
+    vector<ll> pref = a;
     for (int i = 1; i < n; i++)
+        pref[i] ^= pref[i - 1];
+
+    ll ans = 0;
+    for (int i = 0; i < n; i++)
     {
-        if (a[i - 1] % a[i] != 0)
-        {
-            cout << 0 << endl;
-            return;
-        }
+        ans += i + 1;
+        for (int j = 0; j * j < 2 * n; j++)
+            ans -= m[pref[i] ^ (j * j)];
 
-        dp[i] = dp[i - 1] * (a[i] == a[i - 1] ? m / a[i] : (m / a[i] - (m * a[i - 1]) / (a[i])));
-        dp[i] %= mod;
+        m[pref[i]]++;
     }
-
-    for (auto i : dp)
-        cout << i << ' ';
-    cout << dp[n - 1] << endl;
+    cout << ans << endl;
 }
 
 int main()

@@ -19,48 +19,42 @@ using namespace __gnu_pbds;
 #define vi vector<int>
 #define vii vector<vector<int>>
 
-const int n = 1e5 + 5;
-bool prime[n + 1];
-
-void sieve()
-{
-    memset(prime, true, sizeof(prime));
-
-    for (int p = 2; p * p <= n; p++)
-    {
-        if (prime[p] == true)
-        {
-            for (int i = p * p; i <= n; i += p)
-                prime[i] = false;
-        }
-    }
-    prime[0] = false;
-    prime[1] = false;
-}
-const int mod = 998244353;
-
 void solve()
 {
-    ll n, m;
-    cin >> n >> m;
+    cout.flush();
+    int n;
+    cin >> n;
 
-    ll prod = 1;
-    ll pow = m;
-    ll ans = 0;
-    for (int i = 2; i <= n; i++)
+    if (n == 2)
     {
-        pow *= m;
-        pow %= mod;
-
-        if (prime[i])
-            prod *= i;
-
-        ans += pow - (m / prod);
-        ans %= mod;
-        ans += mod;
-        ans %= mod;
+        cout << "! 1 2" << endl;
+        cout.flush();
+        return;
     }
-    cout << ans << endl;
+
+    int i = 1, j = 2;
+
+    for (int k = 3; k <= n; k++)
+    {
+        int x, y;
+
+        cout << "? " << i << ' ' << k << endl;
+        cout.flush();
+        cin >> x;
+
+        cout << "? " << j << ' ' << k << endl;
+        cout.flush();
+        cin >> y;
+
+        if (x == y)
+            continue;
+        else if (x > y)
+            j = k;
+        else
+            i = k;
+    }
+    cout << "! " << i << ' ' << j << endl;
+    cout.flush();
 }
 
 int main()
@@ -68,11 +62,14 @@ int main()
     fio;
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
-    sieve();
+    cin >> tc;
     while (tc--)
     {
         solve();
+        int x;
+        cin >> x;
+
+        cout.flush();
     }
 
     return 0;

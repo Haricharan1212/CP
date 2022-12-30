@@ -16,51 +16,26 @@ typedef long long ll;
 using namespace __gnu_pbds;
 #define ordered_set tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update>
 
-#define vi vector<int>
+#define vi vector<ll>
 #define vii vector<vector<int>>
-
-const int n = 1e5 + 5;
-bool prime[n + 1];
-
-void sieve()
-{
-    memset(prime, true, sizeof(prime));
-
-    for (int p = 2; p * p <= n; p++)
-    {
-        if (prime[p] == true)
-        {
-            for (int i = p * p; i <= n; i += p)
-                prime[i] = false;
-        }
-    }
-    prime[0] = false;
-    prime[1] = false;
-}
-const int mod = 998244353;
 
 void solve()
 {
-    ll n, m;
-    cin >> n >> m;
+    ll n;
+    cin >> n;
 
-    ll prod = 1;
-    ll pow = m;
-    ll ans = 0;
-    for (int i = 2; i <= n; i++)
-    {
-        pow *= m;
-        pow %= mod;
+    ll x;
+    cin >> x;
+    vi a(n - 1);
+    int sum = 0;
+    for (int i = 0; i < n - 1; i++)
+        cin >> a[i];
 
-        if (prime[i])
-            prod *= i;
+    for (int i = 0; i < n - 1; i++)
+        if (a[i] > x)
+            x += (a[i] - x + 1) / 2;
 
-        ans += pow - (m / prod);
-        ans %= mod;
-        ans += mod;
-        ans %= mod;
-    }
-    cout << ans << endl;
+    cout << x << endl;
 }
 
 int main()
@@ -68,8 +43,7 @@ int main()
     fio;
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
-    sieve();
+    cin >> tc;
     while (tc--)
     {
         solve();

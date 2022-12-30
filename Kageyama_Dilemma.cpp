@@ -36,38 +36,38 @@ void sieve()
     }
 }
 
+void addEdge(vector<int> adj[], int u, int v)
+{
+    adj[u].push_back(v);
+    adj[v].push_back(u);
+}
+
+// A utility function to do DFS of graph
+// recursively from a given vertex u.
+void DFSUtil(int u, vector<int> adj[],
+             vector<bool> &visited)
+{
+    visited[u] = true;
+    cout << u << " ";
+    for (int i = 0; i < adj[u].size(); i++)
+        if (visited[adj[u][i]] == false)
+            DFSUtil(adj[u][i], adj, visited);
+}
+
 void solve()
 {
 
-    ll n, m;
-    cin >> n >> m;
+    int n;
+    cin >> n;
 
-    vector<ll> a(n);
+    map<int, int> m;
+    vi adj(n);
+
     for (int i = 0; i < n; i++)
-        cin >> a[i];
+        cin >> adj[i];
 
-    ll g = a[0];
-    vector<ll> dp(n, 0);
-
-    dp[0] = 1;
-
-    int mod = 998244353;
-
-    for (int i = 1; i < n; i++)
-    {
-        if (a[i - 1] % a[i] != 0)
-        {
-            cout << 0 << endl;
-            return;
-        }
-
-        dp[i] = dp[i - 1] * (a[i] == a[i - 1] ? m / a[i] : (m / a[i] - (m * a[i - 1]) / (a[i])));
-        dp[i] %= mod;
-    }
-
-    for (auto i : dp)
-        cout << i << ' ';
-    cout << dp[n - 1] << endl;
+    int a, b;
+    cin >> a >> b;
 }
 
 int main()

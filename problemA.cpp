@@ -39,35 +39,64 @@ void sieve()
 void solve()
 {
 
-    ll n, m;
-    cin >> n >> m;
+    int n, p;
+    cin >> n >> p;
 
-    vector<ll> a(n);
+    vi a(n);
     for (int i = 0; i < n; i++)
         cin >> a[i];
 
-    ll g = a[0];
-    vector<ll> dp(n, 0);
-
-    dp[0] = 1;
-
-    int mod = 998244353;
-
-    for (int i = 1; i < n; i++)
+    if (p == 0 || n == 1)
     {
-        if (a[i - 1] % a[i] != 0)
-        {
-            cout << 0 << endl;
-            return;
-        }
-
-        dp[i] = dp[i - 1] * (a[i] == a[i - 1] ? m / a[i] : (m / a[i] - (m * a[i - 1]) / (a[i])));
-        dp[i] %= mod;
+        cout << 0 << endl;
+        return;
     }
 
-    for (auto i : dp)
-        cout << i << ' ';
-    cout << dp[n - 1] << endl;
+    int ans = 0;
+    int i;
+    for (i = 0; i < n; i++)
+    {
+        if (a[i] != 0)
+        {
+            break;
+        }
+    }
+    for (int k = 1; k <= min(i, p); k++)
+        ans += 2 * k;
+
+    ans += (i)*2 * max(0, p - i);
+
+    reverse(a.begin(), a.end());
+    int j;
+
+    for (j = 0; j < n; j++)
+    {
+        if (a[j] != 0)
+        {
+            break;
+        }
+    }
+
+    for (int k = 1; k <= min(j, p); k++)
+        ans += 2 * k;
+
+    ans += (j)*2 * max(0, p - j);
+
+    vector<int> v;
+
+    int count = 0;
+    for (int k = j; k < j; k++)
+    {
+        if (a[j] == 0)
+        {
+            count++;
+        }
+        else
+        {
+            v.push_back(count);
+            count = 0;
+        }
+    }
 }
 
 int main()

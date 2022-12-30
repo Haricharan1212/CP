@@ -19,8 +19,70 @@ using namespace __gnu_pbds;
 #define vi vector<int>
 #define vii vector<vector<int>>
 
+const int N = 1e5 + 5;
+bool prime[N + 1];
+
+void sieve()
+{
+    memset(prime, true, sizeof(prime));
+
+    for (int p = 2; p * p <= N; p++)
+    {
+        if (prime[p] == true)
+        {
+            for (int i = p * p; i <= N; i += p)
+                prime[i] = false;
+        }
+    }
+}
+
 void solve()
 {
+    int n, q;
+    cin >> n >> q;
+
+    vector<ll> a(n);
+    for (int i = 0; i < n; i++)
+        cin >> a[i];
+
+    vector<ll> pref = a;
+    vector<ll> xo = a;
+
+    for (int i = 1; i < n; i++)
+        pref[i] += pref[i - 1], xo[i] ^= xo[i - 1];
+
+    for (int _ = 0; _ < q; _++)
+    {
+        int l, r;
+        cin >> l >> r;
+        l--;
+        r--;
+
+        int mindist = r - l;
+        pair<int, int> ans = {l, r};
+        int i = l;
+        int j = r;
+        int xooo = pref[j] - (i == 0 ? 0 : pref[i - 1]) - (xo[j] ^ (i == 0 ? 0 : xo[i - 1]));
+
+        for (; i < min(l + 32, n); i++)
+            for (; j >= max(i, max(0, r - 32)); j--)
+            {
+                //                cout << pref[j] - (i == 0 ? 0 : pref[i - 1]) - (xo[j] ^ (i == 0 ? 0 : xo[i - 1]));
+
+                if ((pref[j] - (i == 0 ? 0 : pref[i - 1]) - (xo[j] ^ (i == 0 ? 0 : xo[i - 1]))) == xooo)
+                {
+                    if ((j - i) < mindist)
+                    {
+                        // cout << "hi";
+                        // cout << mindist << j - i << i << j;
+                        mindist = j - i;
+                        ans = make_pair(i, j);
+                    }
+                }
+            }
+
+        cout << ans.first + 1 << ' ' << ans.second + 1 << endl;
+    }
 }
 
 int main()

@@ -19,61 +19,57 @@ using namespace __gnu_pbds;
 #define vi vector<int>
 #define vii vector<vector<int>>
 
-const int n = 1e5 + 5;
-bool prime[n + 1];
+const ll mod = 998244353, inv = (mod + 1) / 2;
 
-void sieve()
+void add(ll &x, ll y)
 {
-    memset(prime, true, sizeof(prime));
-
-    for (int p = 2; p * p <= n; p++)
-    {
-        if (prime[p] == true)
-        {
-            for (int i = p * p; i <= n; i += p)
-                prime[i] = false;
-        }
-    }
+    (x += y) >= mod && (x -= mod);
 }
 
 void solve()
 {
-    ll q;
-    cin >> q;
-    map<ll, ll> m;
-    set<ll> s = {0};
+    int n;
+    map<ll, ll> s;
+    ll tot, mul = 1, ts = 1;
 
-    for (ll i = 0; i < q; i++)
+    cin >> n;
+    while (n--)
     {
-        char x;
-        cin >> x;
-        ll a;
-        cin >> a;
-        // cout << x << a;
-        if (x == '+')
+        int op;
+        cin >> op;
+        if (op == 1)
         {
-            s.insert(a);
+            ll x;
+            cin >> x;
+            add(s[x + tot], ts);
         }
-        else
+        else if (op == 2)
         {
-            if (m[a] && !s.count(a))
-            {
-                cout << m[a] << endl;
-            }
+            ll x;
+            cin >> x;
+            tot += x;
+        }
+        else if (tot <= 2e5)
+        {
+            if (tot == 0)
+                mul = mul * 2 % mod, ts = ts * inv % mod;
             else
             {
-                ll ans = m[a];
-                while (s.count(ans))
-                {
-                    ans += a;
-                }
-                cout << ans << endl;
-                m[a] = ans;
+                for (ll i = tot + 2e5; i > tot; i--)
+                    add(s[i + tot], s[i]);
+                tot *= 2;
             }
         }
     }
-}
+    ll res = 0;
+    for (auto i : s)
+        if (i.first > tot)
+            add(res, i.second);
+    res = res * mul % mod;
+    cout << res;
 
+    return;
+}
 int main()
 {
     fio;

@@ -38,36 +38,16 @@ void sieve()
 
 void solve()
 {
-
-    ll n, m;
+    int n, m;
     cin >> n >> m;
 
-    vector<ll> a(n);
+    vi a(n);
     for (int i = 0; i < n; i++)
         cin >> a[i];
 
-    ll g = a[0];
-    vector<ll> dp(n, 0);
+    sort(a.begin(), a.end());
 
-    dp[0] = 1;
-
-    int mod = 998244353;
-
-    for (int i = 1; i < n; i++)
-    {
-        if (a[i - 1] % a[i] != 0)
-        {
-            cout << 0 << endl;
-            return;
-        }
-
-        dp[i] = dp[i - 1] * (a[i] == a[i - 1] ? m / a[i] : (m / a[i] - (m * a[i - 1]) / (a[i])));
-        dp[i] %= mod;
-    }
-
-    for (auto i : dp)
-        cout << i << ' ';
-    cout << dp[n - 1] << endl;
+    cout << (a[0] > m ? "NO" : "YES") << endl;
 }
 
 int main()

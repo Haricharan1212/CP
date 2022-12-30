@@ -39,35 +39,29 @@ void sieve()
 void solve()
 {
 
-    ll n, m;
-    cin >> n >> m;
+    int n;
+    cin >> n;
 
-    vector<ll> a(n);
+    vector<ll> c(n);
+
     for (int i = 0; i < n; i++)
-        cin >> a[i];
+        cin >> c[i];
 
-    ll g = a[0];
-    vector<ll> dp(n, 0);
-
-    dp[0] = 1;
-
-    int mod = 998244353;
+    vector<ll> a = c, b = c;
 
     for (int i = 1; i < n; i++)
-    {
-        if (a[i - 1] % a[i] != 0)
-        {
-            cout << 0 << endl;
-            return;
-        }
+        a[i] ^= a[i - 1];
 
-        dp[i] = dp[i - 1] * (a[i] == a[i - 1] ? m / a[i] : (m / a[i] - (m * a[i - 1]) / (a[i])));
-        dp[i] %= mod;
-    }
+    for (int i = n - 2; i >= 0; i--)
+        b[i] ^= b[i + 1];
 
-    for (auto i : dp)
-        cout << i << ' ';
-    cout << dp[n - 1] << endl;
+    ll ans = 0;
+    for (int i = 0; i < n - 1; i++)
+        ans = max(ans, a[i] + b[n - 1 - i]);
+
+    ans = max(ans, a[n - 1]);
+
+    cout << ans << endl;
 }
 
 int main()
@@ -75,7 +69,7 @@ int main()
     fio;
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    cin >> tc;
+    //    cin >> tc;
     while (tc--)
     {
         solve();

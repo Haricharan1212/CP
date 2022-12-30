@@ -19,37 +19,62 @@ using namespace __gnu_pbds;
 #define vi vector<int>
 #define vii vector<vector<int>>
 
-void solve()
-{
-    int n, q;
-    cin >> n >> q;
-    vi a(n);
-    vi pref(n), xr(n);
-    for (int i = 0; i < n; i++)
-        cin >> a[i];
-    for (int i = 0; i < n; i++)
-        if (i == 0)
-            pref[i] = xr[i] = a[i];
-        else
-            pref[i] = a[i] + pref[i - 1], xr[i] = xr[i - 1] ^ a[i];
-    for (int i = 0; i < q; i++)
-    {
-        int l, r;
-        cin >> l >> r;
-        l--;
-        r--;
-        int f = (pref[r] - l != 0 ? pref[l] : 0) - (xr[r] ^ (l != 0 ? xr[l] : 0));
-        int start = 0;
-        int end = n - 1;
-        while (1)
-        {
+const int n = 1e5 + 5;
+bool prime[n + 1];
 
-            if (z == f)
-            {
-                start++;
-            }
+void sieve()
+{
+    memset(prime, true, sizeof(prime));
+
+    for (int p = 2; p * p <= n; p++)
+    {
+        if (prime[p] == true)
+        {
+            for (int i = p * p; i <= n; i += p)
+                prime[i] = false;
         }
     }
+}
+
+void solve()
+{
+
+    int n, q;
+    cin >> n >> q;
+
+    vi a(n);
+    for (int i = 0; i < n; i++)
+        cin >> a[i];
+
+    int l, r;
+    cin >> l >> r;
+    ll sum = 0;
+    ll x = 0;
+    for (int i = 0; i < n; i++)
+        sum += a[i], x ^= a[i];
+
+    int val = sum - x;
+
+    l = 0;
+    r = n - 1;
+
+    int l = 0;
+    int sum, x = 0;
+
+    for (int r = 0; r < n; r++)
+    {
+        sum += a[r];
+        x ^= a[r];
+
+        while (!(val == sum - x))
+        {
+            sum -= a[l];
+            x ^= a[l];
+            l++;
+        }
+    }
+
+    cout << l + 1 << ' ' << r + 1 << endl;
 }
 
 int main()

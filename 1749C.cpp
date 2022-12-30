@@ -21,64 +21,50 @@ using namespace __gnu_pbds;
 
 void solve()
 {
+
     int n;
     cin >> n;
 
-    multiset<int> b;
+    multiset<int> s;
+
     for (int i = 0; i < n; i++)
     {
         int a;
         cin >> a;
-        b.insert(a);
+        s.insert(a);
     }
 
-    int ans = 0;
-    for (int k = 1; k <= n; k++)
+    if (n == 1)
     {
-        multiset<int> s = b;
-        int flag = 1;
+        cout << 1 << endl;
+        return;
+    }
+
+    int k = 0;
+
+    for (k; k <= n; k++)
+    {
+
+        auto se = s;
         for (int i = 1; i <= k; i++)
         {
-            auto pt = s.lower_bound(k - i + 1);
-            if (*s.begin() == *s.rbegin() && *s.begin() > k - i + 1)
-            {
-                flag = 0;
-                break;
-            }
-            if (pt == s.end())
-                pt--;
-            if (pt == s.begin() && *pt > k - i + 1)
-            {
-                flag = 0;
-                break;
-            }
-            else
-            {
-                if (*pt != k - i + 1)
-                    pt--;
 
-                s.erase(pt);
+            // for (auto i : se)
+            //     cout << i << ' ';
+            // cout << endl;
 
-                auto b = s.upper_bound(k - i);
-                if (b == s.begin())
-                    continue;
-                else
-                {
-                    b--;
-                    int num = *b;
-                    s.erase(b);
-
-                    s.insert(num + k - i + 1);
-                }
+            if (se.upper_bound(k - i + 1) == se.begin())
+            {
+                cout << k - 1 << endl;
+                return;
             }
+            se.erase(--se.upper_bound(k - i + 1));
+            int num = *se.begin();
+            se.erase(se.begin());
+            se.insert(num + (k - i + 1));
         }
-        if (flag)
-            ans = max(ans, k);
-        else
-            break;
     }
-
-    cout << ans << endl;
+    cout << n << endl;
 }
 
 int main()

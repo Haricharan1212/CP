@@ -19,21 +19,39 @@ using namespace __gnu_pbds;
 #define vi vector<int>
 #define vii vector<vector<int>>
 
+const int N = 1e5 + 5;
+bool prime[N + 1];
+
+void sieve()
+{
+    memset(prime, true, sizeof(prime));
+
+    for (int p = 2; p * p <= N; p++)
+    {
+        if (prime[p] == true)
+        {
+            for (int i = p * p; i <= N; i += p)
+                prime[i] = false;
+        }
+    }
+}
+
 void solve()
 {
+
+    int arr[10] = {0};
     int n;
     cin >> n;
+
     string s;
     cin >> s;
-    sort(s.begin(), s.end());
-    set<int> se;
 
     for (auto i : s)
-    {
-        se.insert(i);
-    }
+        arr[i - '0']++;
 
-    int num = se.size();
+    for (int i = 0; i < 10; i++)
+    {
+    }
 }
 
 int main()

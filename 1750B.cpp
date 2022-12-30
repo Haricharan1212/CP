@@ -19,49 +19,55 @@ using namespace __gnu_pbds;
 #define vi vector<int>
 #define vii vector<vector<int>>
 
+const int N = 1e5 + 5;
+bool prime[N + 1];
+
+void sieve()
+{
+    memset(prime, true, sizeof(prime));
+
+    for (int p = 2; p * p <= N; p++)
+    {
+        if (prime[p] == true)
+        {
+            for (int i = p * p; i <= N; i += p)
+                prime[i] = false;
+        }
+    }
+}
+
 void solve()
 {
-    int n;
+
+    ll n;
     cin >> n;
-    deque<int> a(n);
-    int ones = 0, zeros = 0;
+
     string s;
     cin >> s;
-    for (int i = 0; i < n; i++)
+
+    ll ones = 0;
+    for (ll i = 0; i < n; i++)
     {
-        a[i] = s[i] - '0', a[i] == 0 ? zeros++ : ones++;
+        ones += s[i] - '0';
     }
+    ll ans = ones * (n - ones);
 
-    int best = ones * zeros;
-
-    int zercount = 0;
-    int onescount = 0;
-    a[0] == 0 ? zercount++ : onescount++;
-    best = max(zercount * zercount, best);
-    best = max(onescount * onescount, best);
-
-    for (int i = 1; i < n; i++)
+    ll current = 'x';
+    ll len = 0;
+    for (ll i = 0; i < n; i++)
     {
-        if (a[i] == 0 && zercount)
-            zercount++;
-        else if (a[i] == 1 && onescount)
-            onescount++;
+        if (current == s[i])
+        {
+            len++;
+        }
         else
         {
-            zercount = 0;
-            onescount = 0;
-            a[i] == 0 ? zercount++ : onescount++;
+            current = s[i];
+            len = 1;
         }
-        best = max(zercount * zercount, best);
-        best = max(onescount * onescount, best);
+        ans = max(ans, len * len);
     }
-
-    if (n == 1)
-    {
-        cout << 1 << endl;
-        return;
-    }
-    cout << best << endl;
+    cout << ans << endl;
 }
 
 int main()
