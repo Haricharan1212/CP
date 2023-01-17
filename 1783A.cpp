@@ -65,59 +65,31 @@ void solve()
     int n;
     cin >> n;
 
-    vi arr(n, 0);
-    int sum = 0;
+    vi a(n);
+
+    map<int, int> m;
+
     rep(i, 0, n)
     {
-        cin >> arr[i];
-        sum += arr[i];
+        cin >> a[i];
+        m[a[i]]++;
     }
 
-    vector<vector<int>> a(n, vector<int>(n, -1e18));
-    a[0][n - 1] = 0;
-
-    for (int i = 0; i < n; i++)
+    if (m.size() == 1)
     {
-        for (int j = n - 1; j >= i; j--)
-        {
-            if ((i + (n - j)) % 2 == 1)
-            {
-
-                if (i != n - 1)
-                {
-                    a[i + 1][j] = max(a[i + 1][j], a[i][j] + arr[i]);
-                }
-                if (j != 0)
-                    a[i][j - 1] = max(a[i][j - 1], a[i][j] + arr[j]);
-            }
-            else
-            {
-                if (i != n - 1)
-                {
-                    if (a[i + 1][j] == -1e18)
-                        a[i + 1][j] = a[i][j];
-                    else
-                        a[i + 1][j] = min(a[i + 1][j], a[i][j]);
-                }
-                if (j != 0)
-                    if (a[i][j - 1] == -1e18)
-                        a[i][j - 1] = a[i][j];
-                    else
-                        a[i][j - 1] = min(a[i][j - 1], a[i][j]);
-            }
-        }
+        cout << "NO" << endl;
+        return;
     }
-
-    for (int i = 0; i < n; i++)
+    else
     {
-        for (int j = 0; j < n; j++)
-            cout << (a[i][j] == -1e18 ? 0 : a[i][j]) << ' ';
-        cout << endl;
-    }
 
-    int ans = -1e18;
-    rep(i, 0, n) ans = max(ans, a[i][i]);
-    cout << ans << endl;
+        auto it = m.begin();
+
+        int num = (*it).first;
+        int numm = (*it).first;
+
+        it++;
+    }
 }
 
 int32_t main()
@@ -125,7 +97,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

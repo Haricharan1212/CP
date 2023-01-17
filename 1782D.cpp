@@ -65,58 +65,51 @@ void solve()
     int n;
     cin >> n;
 
-    vi arr(n, 0);
-    int sum = 0;
+    vi a(n);
     rep(i, 0, n)
     {
-        cin >> arr[i];
-        sum += arr[i];
+        cin >> a[i];
     }
 
-    vector<vector<int>> a(n, vector<int>(n, -1e18));
-    a[0][n - 1] = 0;
-
-    for (int i = 0; i < n; i++)
+    if (n == 1)
     {
-        for (int j = n - 1; j >= i; j--)
-        {
-            if ((i + (n - j)) % 2 == 1)
-            {
+        cout << 1 << endl;
+        return;
+    }
 
-                if (i != n - 1)
-                {
-                    a[i + 1][j] = max(a[i + 1][j], a[i][j] + arr[i]);
-                }
-                if (j != 0)
-                    a[i][j - 1] = max(a[i][j - 1], a[i][j] + arr[j]);
-            }
-            else
+    int ans = 1;
+
+    rep(i, 0, n)
+    {
+        rep(j, i + 1, n)
+        {
+            int num = a[j] - a[i];
+            int x = 0;
+
+            for (int l = 1; 2 * l + l * l <= num; l++)
             {
-                if (i != n - 1)
+                if ((num - l * l) % (2 * l) == 0)
                 {
-                    if (a[i + 1][j] == -1e18)
-                        a[i + 1][j] = a[i][j];
-                    else
-                        a[i + 1][j] = min(a[i + 1][j], a[i][j]);
+                    int f = (num - l * l) / (2 * l);
+                    x = f * f - a[i];
+
+                    if (x < 0)
+                        continue;
+
+                    int count = 0;
+
+                    rep(k, 0, n)
+                    {
+                        int z = floorl(sqrtl(a[k] + x));
+                        if (z * z == (a[k] + x))
+                            count++;
+                    }
+                    ans = max(count, ans);
                 }
-                if (j != 0)
-                    if (a[i][j - 1] == -1e18)
-                        a[i][j - 1] = a[i][j];
-                    else
-                        a[i][j - 1] = min(a[i][j - 1], a[i][j]);
             }
         }
     }
 
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-            cout << (a[i][j] == -1e18 ? 0 : a[i][j]) << ' ';
-        cout << endl;
-    }
-
-    int ans = -1e18;
-    rep(i, 0, n) ans = max(ans, a[i][i]);
     cout << ans << endl;
 }
 
@@ -125,7 +118,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

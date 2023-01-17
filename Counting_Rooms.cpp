@@ -60,20 +60,120 @@ vector<bool> sieve(int n)
     return is_prime;
 }
 
+// C++ program for above approach
+#include <bits/stdc++.h>
+using namespace std;
+
+// Graph class represents a undirected graph
+// using adjacency list representation
+class Graph
+{
+    // No. of vertices
+    int V;
+
+    // Pointer to an array containing adjacency lists
+    list<int> *adj;
+
+    // A function used by DFS
+    void DFSUtil(int v, bool visited[]);
+
+public:
+    // Constructor
+    Graph(int V);
+
+    void addEdge(int v, int w);
+    int NumberOfconnectedComponents();
+};
+
+// Function to return the number of
+// connected components in an undirected graph
+int Graph::NumberOfconnectedComponents()
+{
+
+    // Mark all the vertices as not visited
+    bool *visited = new bool[V];
+
+    // To store the number of connected components
+    int count = 0;
+    for (int v = 0; v < V; v++)
+        visited[v] = false;
+
+    for (int v = 0; v < V; v++)
+    {
+        if (visited[v] == false)
+        {
+            DFSUtil(v, visited);
+            count += 1;
+        }
+    }
+
+    return count;
+}
+
+void Graph::DFSUtil(int v, bool visited[])
+{
+
+    // Mark the current node as visited
+    visited[v] = true;
+
+    // Recur for all the vertices
+    // adjacent to this vertex
+    list<int>::iterator i;
+
+    for (i = adj[v].begin(); i != adj[v].end(); ++i)
+        if (!visited[*i])
+            DFSUtil(*i, visited);
+}
+
+Graph::Graph(int V)
+{
+    this->V = V;
+    adj = new list<int>[V];
+}
+
+// Add an undirected edge
+void Graph::addEdge(int v, int w)
+{
+    adj[v].push_back(w);
+    adj[w].push_back(v);
+}
+
 void solve()
 {
     int n, m;
     cin >> n >> m;
 
-    int arr[n][m];
-
-    rep(i, 0, n)
+    vii a(n + 2, vector<int>(m + 2, 0));
+    int count = 0;
+    rep(i, 1, n + 1)
     {
         string s;
         cin >> s;
-
-        rep(j, 0, m) arr[i][j] = (s[j] == '.' ? 1 : 0);
+        rep(j, 1, m + 1)
+        {
+            a[i][j] = (s[j - 1] == '.' ? 1 : 0);
+        }
     }
+
+    rep(i, 0, n + 2) rep(j, 0, m + 2) if (!a[i][j]) count++;
+
+    Graph g((n + 2) * (m + 2));
+
+    rep(i, 1, n + 1) rep(j, 1, m + 1)
+    {
+        if (a[i][j])
+        {
+            if (a[i][j - 1])
+                g.addEdge(i * m + j, i * m + (j - 1));
+            if (a[i][j + 1])
+                g.addEdge(i * m + j, i * m + (j + 1));
+            if (a[i - 1][j])
+                g.addEdge((i - 1) * m + j, i * m + j);
+            if (a[i + 1][j])
+                g.addEdge((i + 1) * m + j, i * m + j);
+        }
+    }
+    cout << g.NumberOfconnectedComponents() - count << endl;
 }
 
 int32_t main()
@@ -81,7 +181,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    //    cin >> tc;
     while (tc--)
     {
         solve();
