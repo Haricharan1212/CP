@@ -62,40 +62,20 @@ vector<bool> sieve(int n)
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
 
-    m--;
+    string s = "314159265358979323846264338327";
 
-    vi a(n);
-    rep(i, 0, n)
+    string ss;
+    cin >> ss;
+
+    int i = 0;
+    for (i = 0; i < ss.size(); i++)
     {
-        cin >> a[i];
+        if (s[i] != ss[i])
+            break;
     }
 
-    int summ = 0;
-    rep(i, 1, m + 1) summ += a[i];
-
-    vi pref = a;
-    rep(i, 1, n) pref[i] += pref[i - 1];
-
-    priority_queue<int> pq;
-
-    pq.push(a[m]);
-
-    int op = 0;
-    for (int i = m - 1; i >= 0; i--)
-    {
-        while (pref[i] < summ)
-        {
-            op++;
-            int num = pq.top();
-            pq.pop();
-            pq.push(-num);
-            summ -= 2 * num;
-        }
-        pq.push(a[i]);
-    }
+    cout << i << endl;
 }
 
 int32_t main()

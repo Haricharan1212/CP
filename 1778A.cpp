@@ -62,40 +62,30 @@ vector<bool> sieve(int n)
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
-
-    m--;
+    int n;
+    cin >> n;
 
     vi a(n);
+    int sum = 0;
+    int flag = 0;
     rep(i, 0, n)
     {
         cin >> a[i];
+        sum += a[i];
     }
 
-    int summ = 0;
-    rep(i, 1, m + 1) summ += a[i];
-
-    vi pref = a;
-    rep(i, 1, n) pref[i] += pref[i - 1];
-
-    priority_queue<int> pq;
-
-    pq.push(a[m]);
-
-    int op = 0;
-    for (int i = m - 1; i >= 0; i--)
+    rep(i, 1, n) if (a[i - 1] == -1 && a[i] == -1)
     {
-        while (pref[i] < summ)
-        {
-            op++;
-            int num = pq.top();
-            pq.pop();
-            pq.push(-num);
-            summ -= 2 * num;
-        }
-        pq.push(a[i]);
+        sum += 4;
+        flag = 1;
+        break;
     }
+    else if (!((a[i - 1] == 1) && (a[i] == 1))) flag = 1;
+
+    if (flag == 0)
+        sum -= 4;
+
+    cout << sum << endl;
 }
 
 int32_t main()

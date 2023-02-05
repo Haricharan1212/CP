@@ -62,40 +62,62 @@ vector<bool> sieve(int n)
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
+    int n;
+    cin >> n;
 
-    m--;
-
-    vi a(n);
+    int arr[n][n - 1];
     rep(i, 0, n)
     {
-        cin >> a[i];
+        rep(j, 0, n - 1)
+                cin >>
+            arr[i][j];
     }
 
-    int summ = 0;
-    rep(i, 1, m + 1) summ += a[i];
+    int current = 0;
+    int next = 0;
 
-    vi pref = a;
-    rep(i, 1, n) pref[i] += pref[i - 1];
+    vi ans;
 
-    priority_queue<int> pq;
-
-    pq.push(a[m]);
-
-    int op = 0;
-    for (int i = m - 1; i >= 0; i--)
+    rep(j, 0, n - 1)
     {
-        while (pref[i] < summ)
+        map<int, int> m;
+        rep(i, 0, n)
         {
-            op++;
-            int num = pq.top();
-            pq.pop();
-            pq.push(-num);
-            summ -= 2 * num;
+            m[arr[i][j]]++;
         }
-        pq.push(a[i]);
+
+        int nnext;
+
+        if (j == 0)
+        {
+            for (auto i : m)
+            {
+                if (i.second == n - (j + 1))
+                    current = i.first;
+                else
+                    next = i.first;
+            }
+        }
+        else
+        {
+            for (auto i : m)
+            {
+                // cout << i.first << i.second << ' ';
+                if (i.first == next)
+                    current = i.first;
+                else
+                    nnext = i.first;
+            }
+            next = nnext;
+        }
+        ans.push_back(current);
+        // cout << current << ' ' << next << endl;
     }
+    ans.push_back(next);
+
+    for (auto i : ans)
+        cout << i << ' ';
+    cout << endl;
 }
 
 int32_t main()

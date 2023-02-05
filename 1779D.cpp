@@ -26,104 +26,114 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
-int modexp(long long x, unsigned int y, int p)
-{
-    int res = 1;
+const int N = 2e5; // limit for array size
+int n;             // array size
+int t[2 * N];
 
-    x = x % p;
-    if (x == 0)
-        return 0;
-    while (y > 0)
+void build()
+{
+    for (int i = n - 1; i > 0; --i)
+        t[i] = max(t[i << 1], t[i << 1 | 1]);
+}
+
+int query(int l, int r)
+{ // sum on interval [l, r)
+    int res = 0;
+    for (l += n, r += n; l < r; l >>= 1, r >>= 1)
     {
-        if (y & 1)
-            res = (res * x) % p;
-        y = y >> 1;
-        x = (x * x) % p;
+        if (l & 1)
+            res = max(res, t[l++]);
+        if (r & 1)
+            res = max(res, t[--r]);
     }
     return res;
 }
 
-vector<bool> sieve(int n)
-{
-    // Time Complexity:- O(log(log(n)))
-
-    vector<bool> is_prime(n + 1, 1);
-    is_prime[0] = is_prime[1] = 0;
-    for (int i = 2; i <= n; i++)
-    {
-        if (is_prime[i] && 1LL * i * i <= n)
-        {
-            for (int j = i * i; j <= n; j += i)
-                is_prime[j] = 0;
-        }
-    }
-    return is_prime;
-}
-
 void solve()
 {
-    int n;
     cin >> n;
 
+    for (int i = 0; i < 2 * N; i++)
+        t[i] = 0;
+
     vi a(n), b(n);
-    rep(i, 0, n)
-    {
-        cin >> a[i];
-    }
+    rep(i, 0, n) cin >> a[i];
+
     rep(i, 0, n)
     {
         cin >> b[i];
-    }
-
-    map<int, vi> ma;
-
-    rep(i, 0, n)
-    {
-        if (a[i] < b[i])
-        {
-            cout << "NO" << endl;
-            return;
-        }
-
-        ma[b[i]].push_back(i);
+        t[n + i] = b[i];
     }
 
     int m;
     cin >> m;
-
-    vi x(m);
-
-    map<int, int> xes;
-
+    map<int, int> razors;
     rep(i, 0, m)
     {
-        cin >> x[i];
-        xes[x[i]]++;
+        int x;
+        cin >> x;
+        razors[x]++;
     }
 
-    for (auto it : xes)
+    rep(i, 0, n) if (a[i] < b[i])
     {
-        int i = it.first;
-        if (ma[i].size() == 0)
-            continue;
-        int num = 1;
-        for (int j = 0; j < ma[i].size() - 1; j++)
+        cout << "NO" << endl;
+        return;
+    }
+
+    build();
+
+    map<int, vector<int>> ma;
+    rep(i, 0, n)
+    {
+
+        if (a[i] != b[i])
+            ma[b[i]].push_back(i);
+    }
+
+    for (auto i : ma)
+    {
+        vi f = i.second;
+        int num = razors[i.first];
+        int numm = i.first;
+
+        if (f.size() == 1)
         {
-            if (ma[i][j] + 1 == ma[i][j + 1])
+            if (num)
                 continue;
             else
-                num++;
+            {
+                cout << "NO" << endl;
+                return;
+            }
         }
-        if (it.second >= num)
+
+        int start = 0;
+        int count = 1;
+
+        for (int i = 1; i < f.size(); i++)
+        {
+            // cout << start << ' ' << query(f[start], f[i] + 1) << ' ';
+            // cout << f[start] << ' ' << f[i] << endl;
+            if (query(f[start], f[i] + 1) <= numm)
+                continue;
+            else
+            {
+                count++;
+                start = i;
+            }
+        }
+
+        if (count <= num)
             continue;
         else
         {
-            cout << it.first << it.second << endl;
             cout << "NO" << endl;
             return;
         }
     }
     cout << "YES" << endl;
+    return;
 }
 
 int32_t main()

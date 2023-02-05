@@ -73,29 +73,55 @@ void solve()
         cin >> a[i];
     }
 
-    int summ = 0;
-    rep(i, 1, m + 1) summ += a[i];
-
-    vi pref = a;
-    rep(i, 1, n) pref[i] += pref[i - 1];
-
-    priority_queue<int> pq;
-
-    pq.push(a[m]);
+    priority_queue<int, vector<int>, greater<int>> small;
+    priority_queue<int, vector<int>> large;
 
     int op = 0;
-    for (int i = m - 1; i >= 0; i--)
+    if (a[m] > 0 && m != 0)
     {
-        while (pref[i] < summ)
-        {
-            op++;
-            int num = pq.top();
-            pq.pop();
-            pq.push(-num);
-            summ -= 2 * num;
-        }
-        pq.push(a[i]);
+        a[m] *= -1;
+        op++;
     }
+
+    int summ = 0;
+    rep(i, 0, m + 1) summ += a[i];
+
+    int sum = 0;
+    for (int i = 0; i < m; i++)
+    {
+        small.push(a[i]);
+        sum += a[i];
+
+        while (sum < summ)
+        {
+            int num = small.top();
+            small.pop();
+            sum -= num;
+            num *= -1;
+            sum += num;
+            op++;
+        }
+    }
+
+    sum = summ;
+
+    for (int i = m + 1; i < n; i++)
+    {
+        large.push(a[i]);
+        sum += a[i];
+
+        while (sum < summ)
+        {
+            int num = large.top();
+            large.pop();
+            sum -= num;
+            num *= -1;
+            sum += num;
+            op++;
+        }
+    }
+
+    cout << op << endl;
 }
 
 int32_t main()
