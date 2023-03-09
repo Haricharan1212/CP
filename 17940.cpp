@@ -60,41 +60,49 @@ vector<bool> sieve(int n)
     return is_prime;
 }
 
+bool compare(string &s1, string &s2)
+{
+    return s1.size() < s2.size();
+}
+
 void solve()
 {
-    int n, k, x;
-    cin >> n >> k >> x;
 
-    vi a(n);
-    rep(i, 0, n)
+    int n;
+    cin >> n;
+
+    vector<string> v(2 * n - 1);
+
+    rep(i, 0, 2 * (n - 1))
     {
-        cin >> a[i];
+        cin >> v[i];
     }
 
-    int dp[n + 1][k][3];
+    sort(v.begin(), v.end(), compare);
 
-    for (int i = 0; i < n; i++)
+    string a = v[v.size() - 1];
+    string b = v[v.size() - 2];
+
+    string s;
+
+    // cout << a << b;
+
+    if (b.substr(0, n - 2) == a.substr(1, n - 2))
     {
-        for (int j = 0; j < k; j++)
-        {
-            for (int l = 0; l < 3; l++)
-            {
-                dp[i][j][l] = -1e18;
-            }
-        }
+        s = a.substr(0, 1) + b;
     }
+    else
+        s = b.substr(0, 1) + a;
 
-    dp[0][0][0] = 0;
+    // cout << s;
 
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < k; j++)
-        {
-            for (int l = 0; l < 3; l++)
-            {
-            }
-        }
-    }
+    string t = s;
+    reverse(t.begin(), t.end());
+
+    if (s == t)
+        cout << "YES" << endl;
+    else
+        cout << "NO" << endl;
 }
 
 int32_t main()

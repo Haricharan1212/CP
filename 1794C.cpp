@@ -62,8 +62,8 @@ vector<bool> sieve(int n)
 
 void solve()
 {
-    int n, k, x;
-    cin >> n >> k >> x;
+    int n;
+    cin >> n;
 
     vi a(n);
     rep(i, 0, n)
@@ -71,30 +71,25 @@ void solve()
         cin >> a[i];
     }
 
-    int dp[n + 1][k][3];
+    deque<int> pq;
 
-    for (int i = 0; i < n; i++)
+    rep(i, 0, n)
     {
-        for (int j = 0; j < k; j++)
-        {
-            for (int l = 0; l < 3; l++)
-            {
-                dp[i][j][l] = -1e18;
-            }
-        }
-    }
+        pq.push_back(a[i]);
 
-    dp[0][0][0] = 0;
-
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < k; j++)
+        while (pq.front() < pq.size())
         {
-            for (int l = 0; l < 3; l++)
-            {
-            }
+            pq.pop_front();
         }
+
+        // for (auto i : pq)
+        //     cout << i << ' ';
+
+        int num = pq.size();
+
+        cout << max(1ll, num) << ' ';
     }
+    cout << endl;
 }
 
 int32_t main()

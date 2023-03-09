@@ -20,7 +20,7 @@ typedef long long ll;
 #define vii vector<vector<int>>
 #define pi pair<int, int>
 #define mi map<int, int>
-#define si set<int>
+#define si multiset<int>
 #define rep(var, l, r) for (int var = l; var < r; var++)
 #define repr(var, r, l) for (int var = r; var > l; var--)
 int mod1 = 1000000007;
@@ -43,6 +43,8 @@ int modexp(long long x, unsigned int y, int p)
     return res;
 }
 
+vector<bool> siev;
+
 vector<bool> sieve(int n)
 {
     // Time Complexity:- O(log(log(n)))
@@ -62,8 +64,18 @@ vector<bool> sieve(int n)
 
 void solve()
 {
-    int n, k, x;
-    cin >> n >> k >> x;
+    vi modfact(3000);
+
+    for (int i = 0; i < 3000; i++)
+    {
+        if (i == 0)
+            modfact[i] = 1;
+        else
+            modfact[i] = (modfact[i - 1] * i) % mod2;
+    }
+
+    int n;
+    cin >> n;
 
     vi a(n);
     rep(i, 0, n)
@@ -71,28 +83,37 @@ void solve()
         cin >> a[i];
     }
 
-    int dp[n + 1][k][3];
+    map<int, int> m;
 
-    for (int i = 0; i < n; i++)
+    for (auto i : a)
+        m[i]++;
+
+    vi prims;
+    vi comps;
+
+    for (auto i : m)
+        if (siev[i.first])
+            prims.push_back(i.second);
+        else
+            comps.push_back(i.second);
+
+    sort(prims.begin(), prims.end());
+
+    int f = prims.size();
+
+    int dp[f][2] = {0};
+
+    for (int i = 0; i < f; i++)
     {
-        for (int j = 0; j < k; j++)
+        if (i == 0)
         {
-            for (int l = 0; l < 3; l++)
-            {
-                dp[i][j][l] = -1e18;
-            }
+            dp[i][0] = 1;
+            dp[i][1] = 1;
         }
-    }
-
-    dp[0][0][0] = 0;
-
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < k; j++)
+        else
         {
-            for (int l = 0; l < 3; l++)
-            {
-            }
+            dp[i][0] = dp[i - 1][1] + prims[i];
+            dp[i][1] = max(dp[i - 1][0], dp[i - 1][1]);
         }
     }
 }
@@ -102,7 +123,9 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    cin >> tc;
+    // cin >> tc;
+
+    siev = sieve(1e6 + 5);
     while (tc--)
     {
         solve();

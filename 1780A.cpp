@@ -45,7 +45,7 @@ int modexp(long long x, unsigned int y, int p)
 
 vector<bool> sieve(int n)
 {
-    // Time Complexity:- O(log(log(n)))
+    // Time Complexity:- O(n log(log(n)))
 
     vector<bool> is_prime(n + 1, 1);
     is_prime[0] = is_prime[1] = 0;
@@ -92,6 +92,26 @@ void solve()
     }
     else
         cout << "NO" << endl;
+}
+
+void binSearch(vi &a, int k)
+{
+    int n = a.size();
+    int l = 0, r = n - 1;
+    while (l <= r)
+    {
+        int m = (l + r) / 2;
+        if (a[m] == k)
+        {
+            cout << "YES" << endl;
+            return;
+        }
+        if (a[m] < k)
+            l = m + 1;
+        else
+            r = m - 1;
+    }
+    cout << "NO" << endl;
 }
 
 int32_t main()

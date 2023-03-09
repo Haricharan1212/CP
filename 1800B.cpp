@@ -62,39 +62,29 @@ vector<bool> sieve(int n)
 
 void solve()
 {
-    int n, k, x;
-    cin >> n >> k >> x;
+    int n, k;
+    cin >> n >> k;
 
-    vi a(n);
-    rep(i, 0, n)
-    {
-        cin >> a[i];
-    }
+    string s;
+    cin >> s;
 
-    int dp[n + 1][k][3];
-
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < k; j++)
+    int arr[52] = {0};
+    for (auto i : s)
+        if ('A' <= i && i <= 'Z')
+            arr[i - 'A']++;
+        else
         {
-            for (int l = 0; l < 3; l++)
-            {
-                dp[i][j][l] = -1e18;
-            }
+            arr[i - 'a' + 26]++;
         }
-    }
 
-    dp[0][0][0] = 0;
-
-    for (int i = 0; i < n; i++)
+    int ans = 0;
+    int err = 0;
+    for (int i = 0; i < 26; i++)
     {
-        for (int j = 0; j < k; j++)
-        {
-            for (int l = 0; l < 3; l++)
-            {
-            }
-        }
+        ans += min(arr[i], arr[i + 26]);
+        err += abs(arr[i] - arr[i + 26]) / 2;
     }
+    cout << ans + min(err, k) << endl;
 }
 
 int32_t main()

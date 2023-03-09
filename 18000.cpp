@@ -62,39 +62,105 @@ vector<bool> sieve(int n)
 
 void solve()
 {
-    int n, k, x;
-    cin >> n >> k >> x;
+    int n;
+    cin >> n;
 
-    vi a(n);
-    rep(i, 0, n)
+    string s;
+    cin >> s;
+    int i = 0;
+
+    int flag = 0;
+
+    for (i = 0; i < n; i++)
     {
-        cin >> a[i];
-    }
-
-    int dp[n + 1][k][3];
-
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < k; j++)
+        if (s[i] == 'm' || s[i] == 'M')
         {
-            for (int l = 0; l < 3; l++)
-            {
-                dp[i][j][l] = -1e18;
-            }
+            flag = 1;
+            continue;
+        }
+        else if (s[i] == 'e' || s[i] == 'E')
+            break;
+        else
+        {
+            cout << "NO" << endl;
+            return;
         }
     }
 
-    dp[0][0][0] = 0;
-
-    for (int i = 0; i < n; i++)
+    if (flag == 0)
     {
-        for (int j = 0; j < k; j++)
+        cout << "NO" << endl;
+        return;
+    }
+
+    flag = 0;
+    for (i; i < n; i++)
+    {
+        if (s[i] == 'e' || s[i] == 'E')
         {
-            for (int l = 0; l < 3; l++)
-            {
-            }
+            flag++;
+            continue;
+        }
+        else if (s[i] == 'o' || s[i] == 'O')
+            break;
+        else
+        {
+            cout << "NO" << endl;
+            return;
         }
     }
+    if (flag == 0)
+    {
+        cout << "NO" << endl;
+        return;
+    }
+    flag = 0;
+    for (; i < n; i++)
+    {
+        if (s[i] == 'o' || s[i] == 'O')
+        {
+            flag++;
+            continue;
+        }
+        else if (s[i] == 'w' || s[i] == 'W')
+            break;
+        else
+        {
+            cout << "NO" << endl;
+            return;
+        }
+    }
+    if (flag == 0)
+    {
+        cout << "NO" << endl;
+        return;
+    }
+    flag = 0;
+
+    for (i; i < n; i++)
+    {
+        if (s[i] == 'W' || s[i] == 'w')
+        {
+            flag++;
+            continue;
+        }
+        else
+        {
+            cout << "NO" << endl;
+            return;
+        }
+    }
+
+    if (i != n)
+    {
+        flag = 0;
+    }
+    if (flag == 0)
+    {
+        cout << "NO" << endl;
+        return;
+    }
+    cout << "YES" << endl;
 }
 
 int32_t main()

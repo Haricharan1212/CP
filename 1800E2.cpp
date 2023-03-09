@@ -62,39 +62,57 @@ vector<bool> sieve(int n)
 
 void solve()
 {
-    int n, k, x;
-    cin >> n >> k >> x;
+    int n, k;
+    cin >> n >> k;
 
-    vi a(n);
-    rep(i, 0, n)
-    {
-        cin >> a[i];
-    }
+    string s, t;
+    cin >> s >> t;
 
-    int dp[n + 1][k][3];
+    vector<vector<int>> v(26);
+    vector<vector<int>> vv(26);
 
     for (int i = 0; i < n; i++)
     {
-        for (int j = 0; j < k; j++)
-        {
-            for (int l = 0; l < 3; l++)
-            {
-                dp[i][j][l] = -1e18;
-            }
-        }
+        v[s[i] - 'a'].push_back(i);
+        vv[t[i] - 'a'].push_back(i);
     }
 
-    dp[0][0][0] = 0;
-
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < 26; i++)
     {
-        for (int j = 0; j < k; j++)
+        if (v[i].size() != vv[i].size())
         {
-            for (int l = 0; l < 3; l++)
+            cout << "NO" << endl;
+            return;
+        }
+    }
+    if (n >= 2 * k)
+    {
+        cout << "YES" << endl;
+        return;
+    }
+    else if (n <= k - 1)
+    {
+        if (s != t)
+        {
+            cout << "NO" << endl;
+            return;
+        }
+    }
+    else if (k <= n <= 2 * k - 1)
+    {
+        for (int i = 0; i < n; i++)
+        {
+            if ((i - k) < 0 && i + k >= n)
             {
+                if (s[i] != t[i])
+                {
+                    cout << "NO" << endl;
+                    return;
+                }
             }
         }
     }
+    cout << "YES" << endl;
 }
 
 int32_t main()
