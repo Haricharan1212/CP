@@ -1,0 +1,87 @@
+// Haricharan
+
+#pragma GCC optimize("Ofast")
+#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,avx2,fma")
+#pragma GCC optimize("unroll-loops")
+
+#include <bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+
+using namespace std;
+using namespace __gnu_pbds;
+
+typedef long long ll;
+
+#define int long long int
+#define ordered_set tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update>
+
+#define vi vector<int>
+#define vii vector<vector<int>>
+#define pi pair<int, int>
+#define mi map<int, int>
+#define si set<int>
+#define rep(var, l, r) for (int var = l; var < r; var++)
+#define repr(var, r, l) for (int var = r; var > l; var--)
+int mod1 = 1000000007;
+int mod2 = 998244353;
+
+int modexp(int x, int y, int mod)
+{
+    int res = 1;
+    x = x % mod;
+    while (y > 0)
+    {
+        if (y & 1)
+            res = (res * x) % mod;
+        y = y >> 1;
+        x = (x * x) % mod;
+    }
+    return res;
+}
+
+void solve()
+{
+    int n, mm;
+    cin >> n >> mm;
+
+    int sum = 0;
+
+    vi a(n);
+    map<int, int> m;
+    rep(i, 0, n)
+    {
+        m[sum]++;
+        cin >> a[i];
+        sum += a[i];
+    }
+
+    int opp = 0;
+
+    if (sum % 2 == 0)
+    {
+        rep(i, 0, n) if (m.find(a[i] + sum / 2) != m.end()) opp++;
+    }
+
+    int ans = pow(n, m, mod2);
+
+    rep(i, 1, opp + 1)
+    {
+    }
+
+    cout << ans << endl;
+}
+
+int32_t main()
+{
+    ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
+    srand(chrono::high_resolution_clock::now().time_since_epoch().count());
+    int tc = 1;
+    // cin >> tc;
+    while (tc--)
+    {
+        solve();
+    }
+
+    return 0;
+}

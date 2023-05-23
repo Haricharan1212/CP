@@ -5,74 +5,76 @@
 #pragma GCC optimize("unroll-loops")
 
 #include <bits/stdc++.h>
-using namespace std;
-
-#define fio ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
-typedef long long ll;
-
-// For ordered Tree
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
+
+using namespace std;
 using namespace __gnu_pbds;
+
+typedef long long ll;
+
+#define int long long int
 #define ordered_set tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update>
 
 #define vi vector<int>
 #define vii vector<vector<int>>
+#define pi pair<int, int>
+#define mi map<int, int>
+#define si set<int>
+#define rep(var, l, r) for (int var = l; var < r; var++)
+#define repr(var, r, l) for (int var = r; var > l; var--)
+int mod1 = 1000000007;
+int mod2 = 998244353;
 
-const int N = 1e5 + 5;
-bool prime[N + 1];
-
-void sieve()
+vector<bool> sieve(int n)
 {
-    memset(prime, true, sizeof(prime));
+    // Time Complexity:- O(log(log(n)))
 
-    for (int p = 2; p * p <= N; p++)
+    vector<bool> is_prime(n + 1, 1);
+    is_prime[0] = is_prime[1] = 0;
+    for (int i = 2; i <= n; i++)
     {
-        if (prime[p] == true)
+        if (is_prime[i] && 1LL * i * i <= n)
         {
-            for (int i = p * p; i <= N; i += p)
-                prime[i] = false;
+            for (int j = i * i; j <= n; j += i)
+                is_prime[j] = 0;
         }
     }
+    return is_prime;
 }
 
 void solve()
 {
-
-    ll n, m;
+    int n, m;
     cin >> n >> m;
 
-    vector<ll> a(n);
-    for (int i = 0; i < n; i++)
+    vi a(n);
+    rep(i, 0, n)
+    {
         cin >> a[i];
+    }
 
-    ll g = a[0];
-    vector<ll> dp(n, 0);
-
-    dp[0] = 1;
-
-    int mod = 998244353;
-
-    for (int i = 1; i < n; i++)
+    int ans = 1;
+    rep(i, 1, n)
     {
         if (a[i - 1] % a[i] != 0)
         {
             cout << 0 << endl;
             return;
         }
+        if (a[i] != a[i - 1])
+            ans *= m / a[i] - m / a[i - 1];
+        else
+            ans *= m / a[i];
 
-        dp[i] = dp[i - 1] * (a[i] == a[i - 1] ? m / a[i] : (m / a[i] - (m * a[i - 1]) / (a[i])));
-        dp[i] %= mod;
+        ans %= mod2;
     }
-
-    for (auto i : dp)
-        cout << i << ' ';
-    cout << dp[n - 1] << endl;
+    cout << ans << endl;
 }
 
-int main()
+int32_t main()
 {
-    fio;
+    ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
     cin >> tc;

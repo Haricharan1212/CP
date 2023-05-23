@@ -65,81 +65,49 @@ void solve()
     int n;
     cin >> n;
 
-    set<int> s;
+    vector<pi> a(n), ans;
 
-    vi a(n);
+    set<pi> pq;
+
+    int ones = 0;
+    int flag = 0;
+
     rep(i, 0, n)
     {
-        cin >> a[i];
-        s.insert(a[i]);
+        cin >> a[i].first;
+        a[i].second = i;
+        if (a[i].first == 1)
+            ones++;
+        pq.insert(a[i]);
+
+        if (a[i].first != a[0].first)
+        {
+            flag = 1;
+        }
     }
-
-    vi b = a;
-    sort(b.begin(), b.end());
-
-    if (b[0] == 1 && b[n - 1] == 1)
+    if (ones == n || pq.size() == 1 || !flag)
     {
         cout << 0 << endl;
         return;
     }
-    if (b[0] == 1 && s.size() >= 2)
+    else if (ones)
     {
         cout << -1 << endl;
         return;
     }
-
-    if (b[0] == b[n - 1])
+    else
     {
-        cout << 0 << endl;
-        return;
-    }
-
-    map<int, vi> m;
-    for (int i = 0; i < n; i++)
-    {
-        m[a[i]].push_back(i);
-    }
-
-    vector<pair<int, int>> ans;
-
-    int num = 0;
-    int numm = 0;
-    for (auto it = m.begin(); it != m.end(); it++)
-    {
-        if (it == m.begin())
+        while ((*--pq.end()).first != (*pq.begin()).first)
         {
-            num = (*it).first;
-            numm = ((*it).second)[0];
-        }
-        else
-        {
-            int count = 0;
-            int f = (*it).first;
-            while (f > num)
-            {
-                f = (f + num - 1) / num;
-                count++;
-            }
-            for (auto jj : (*it).second)
-                for (int j = 0; j < count; j++)
-                    ans.push_back({jj, numm});
+            // for (auto i : pq)
+            //     cout << i.first << ' ' << i.second << "     ";
+            // cout << endl;
 
-            m[f] = (*it).second;
-            m[(*it).first] = {};
-
-            if (f < num)
-            {
-                num = f;
-                it = m.begin();
-                num = (*it).first;
-                numm = ((*it).second)[0];
-            }
+            pi x = *--pq.end();
+            pq.erase(--pq.end());
+            ans.push_back({x.second, (*pq.begin()).second});
+            pq.insert({(x.first + (*pq.begin()).first - 1) / (*pq.begin()).first, x.second});
         }
-        // if (ans.size() > 30 * n)
-        // {
-        //     cout << 0 << endl;
-        //     return;
-        // };
     }
     cout << ans.size() << endl;
     for (auto i : ans)

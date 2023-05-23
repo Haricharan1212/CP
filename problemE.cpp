@@ -5,57 +5,53 @@
 #pragma GCC optimize("unroll-loops")
 
 #include <bits/stdc++.h>
-using namespace std;
-
-#define fio ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
-typedef long long ll;
-
-// For ordered Tree
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
+
+using namespace std;
 using namespace __gnu_pbds;
+
+typedef long long ll;
+
+#define int long long int
 #define ordered_set tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update>
 
 #define vi vector<int>
 #define vii vector<vector<int>>
-
-const int N = 1e5 + 5;
-bool prime[N + 1];
-
-void sieve()
-{
-    memset(prime, true, sizeof(prime));
-
-    for (int p = 2; p * p <= N; p++)
-    {
-        if (prime[p] == true)
-        {
-            for (int i = p * p; i <= N; i += p)
-                prime[i] = false;
-        }
-    }
-}
+#define pi pair<int, int>
+#define mi map<int, int>
+#define si set<int>
+#define rep(var, l, r) for (int var = l; var < r; var++)
+#define repr(var, r, l) for (int var = r; var > l; var--)
+int mod1 = 1000000007;
+int mod2 = 998244353;
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
+    int n;
+    cin >> n;
 
-    vi a(n);
-    for (int i = 0; i < n; i++)
-        cin >> a[i];
+    vector<double> a(n), b(n);
+    rep(i, 0, n) cin >> a[i];
 
-    sort(a.begin(), a.end());
+    rep(i, 0, n)
+    {
+        rep(j, max(i - 64, 0LL), min(n, i + 64))
+        {
+            double num = pow(2, abs(i - j));
+            b[i] += a[j] / num;
+        }
+    }
 
-    cout << (a[0] > m ? "NO" : "YES") << endl;
+    rep(i, 0, n) cout << fixed << setprecision(7) << b[i] << ' ';
 }
 
-int main()
+int32_t main()
 {
-    fio;
+    ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    cin >> tc;
+    //    cin >> tc;
     while (tc--)
     {
         solve();

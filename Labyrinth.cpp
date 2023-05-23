@@ -26,49 +26,73 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
-int modexp(long long x, unsigned int y, int p)
+vector<pi> return_adj(vector<vector<pi>> &adj, int i, int j, int n, int m)
 {
-    int res = 1;
-
-    x = x % p;
-    if (x == 0)
-        return 0;
-    while (y > 0)
+    vector<pi> ans;
+    if (i > 0 && a[i - 1][j] == '.')
     {
-        if (y & 1)
-            res = (res * x) % p;
-        y = y >> 1;
-        x = (x * x) % p;
+        ans.push_back({i - 1, j});
     }
-    return res;
-}
-
-vector<bool> sieve(int n)
-{
-    // Time Complexity:- O(log(log(n)))
-
-    vector<bool> is_prime(n + 1, 1);
-    is_prime[0] = is_prime[1] = 0;
-    for (int i = 2; i <= n; i++)
+    if (i < n - 1 && a[i + 1][j] == '.')
     {
-        if (is_prime[i] && 1LL * i * i <= n)
-        {
-            for (int j = i * i; j <= n; j += i)
-                is_prime[j] = 0;
-        }
+        ans.push_back({i + 1, j});
     }
-    return is_prime;
+    if (j > 0 && a[i][j - 1] == '.')
+    {
+        ans.push_back({i, j - 1});
+    }
+    if (j < m - 1 && a[i][j + 1] == '.')
+    {
+        ans.push_back({i, j + 1});
+    }
+    return ans;
 }
 
 void solve()
 {
-    int n;
-    cin >> n;
+    set<pi> visited;
+    vector<vector<pi>> adj;
+    set<pi> level_set;
 
-    vi a(n);
+    int n, m;
+    cin >> n >> m;
+
+    vector<string> a(n);
+    pi start, end;
     rep(i, 0, n)
     {
         cin >> a[i];
+
+        for (auto j : a[i])
+            if (j == 'A')
+                start = {i, j};
+            else if (j == 'B')
+                end = {i, j};
+    }
+
+    level_set = {start};
+    visited.insert(start);
+
+    while (level_set.size())
+    {
+        set<pi> next_level_set;
+        for (auto i : level_set)
+        {
+            if (i == end)
+            {
+            }
+
+            vector<pi> adj = return_adj(adj, i.first, i.second, n, m);
+            for (auto j : adj)
+            {
+                if (visited.find(j) == visited.end())
+                {
+                    visited.insert(j);
+                    next_level_set.insert(j);
+                }
+            }
+        }
+        level_set = next_level_set;
     }
 }
 
@@ -77,7 +101,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    cin >> tc;
+    //    cin >> tc;
     while (tc--)
     {
         solve();

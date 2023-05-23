@@ -65,11 +65,30 @@ void solve()
     int n;
     cin >> n;
 
-    vi a(n);
-    rep(i, 0, n)
+    string s;
+    cin >> s;
+
+    vi pref(n), suff(n);
+
+    set<int> ss;
+
+    for (int i = 0; i < n; i++)
     {
-        cin >> a[i];
+        ss.insert(s[i]);
+        pref[i] = ss.size();
     }
+    ss = {};
+
+    for (int i = n - 1; i >= 0; i--)
+    {
+        ss.insert(s[i]);
+        suff[i] = ss.size();
+    }
+
+    int ans = 0;
+    rep(i, 0, n - 1) ans = max(ans, pref[i] + suff[i + 1]);
+
+    cout << ans << "\n";
 }
 
 int32_t main()

@@ -26,106 +26,33 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
-int modexp(long long x, unsigned int y, int p)
-{
-    int res = 1;
-
-    x = x % p;
-    if (x == 0)
-        return 0;
-    while (y > 0)
-    {
-        if (y & 1)
-            res = (res * x) % p;
-        y = y >> 1;
-        x = (x * x) % p;
-    }
-    return res;
-}
-
-vector<bool> sieve(int n)
-{
-    // Time Complexity:- O(log(log(n)))
-
-    vector<bool> is_prime(n + 1, 1);
-    is_prime[0] = is_prime[1] = 0;
-    for (int i = 2; i <= n; i++)
-    {
-        if (is_prime[i] && 1LL * i * i <= n)
-        {
-            for (int j = i * i; j <= n; j += i)
-                is_prime[j] = 0;
-        }
-    }
-    return is_prime;
-}
-
 void solve()
 {
     int n, k;
     cin >> n >> k;
 
-    vi arr(n);
+    vi hot(k), cold(k), a(n);
 
-    rep(i, 0, n)
-    {
-        cin >> arr[i];
-        arr[i]--;
-    }
-
-    vi a(k), b(k);
+    rep(i, 0, n) cin >> a[i];
     rep(i, 0, k)
     {
-        cin >> a[i];
+        cin >> hot[i];
     }
+
     rep(i, 0, k)
     {
-        cin >> b[i];
+        cin >> cold[i];
     }
 
-    vi pref(n);
-    pref[0] = a[arr[0]];
+    vector<int> dp(n);
 
-    rep(i, 1, n)
-    {
-
-        // for (auto i : pref)
-        //     cout << i << ' ';
-
-        if (arr[i] == arr[i - 1])
-            pref[i] = pref[i - 1] + b[arr[i]];
-        else
-            pref[i] = pref[i - 1] + a[arr[i]];
-    }
-
-    int dp[n][1] = {0};
-
-    vi last_time(k + 1, -1);
+    vi last(k, -1);
 
     rep(i, 0, n)
     {
 
-        if (i == 0)
-        {
-            dp[0][0] = a[arr[i]];
-            last_time[arr[i]] = i;
-        }
-        else
-        {
-            if (last_time[arr[i]] != -1)
-            {
-                // cout << pref[i - 1];
-                dp[i][0] = dp[last_time[arr[i]]][0] + pref[i - 1] - pref[last_time[arr[i]]] + b[arr[i]];
-                last_time[arr[i]] = i;
-            }
-            else
-            {
-                dp[i][0] = dp[i - 1][0] + a[arr[i]];
-                last_time[arr[i]] = i;
-            }
-        }
+        last[]
     }
-    cout << dp[n - 1][0] << endl;
 }
 
 int32_t main()

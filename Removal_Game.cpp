@@ -64,60 +64,51 @@ void solve()
 {
     int n;
     cin >> n;
-
-    vi arr(n, 0);
     int sum = 0;
+
+    vi a(n);
     rep(i, 0, n)
     {
-        cin >> arr[i];
-        sum += arr[i];
+        cin >> a[i];
+        sum += a[i];
     }
 
-    vector<vector<int>> a(n, vector<int>(n, -1e18));
-    a[0][n - 1] = 0;
+    int dp[n][n];
 
-    for (int i = 0; i < n; i++)
+    rep(i, 0, n) rep(j, 0, n) dp[i][j] = 0;
+
+    rep(i, 0, n)
     {
-        for (int j = n - 1; j >= i; j--)
-        {
-            if ((i + (n - j)) % 2 == 1)
-            {
+        if (n % 2 == 1)
+            dp[i][i] = a[i];
+        else
+            dp[i][i] = 0;
+    }
 
-                if (i != n - 1)
-                {
-                    a[i + 1][j] = max(a[i + 1][j], a[i][j] + arr[i]);
-                }
-                if (j != 0)
-                    a[i][j - 1] = max(a[i][j - 1], a[i][j] + arr[j]);
-            }
-            else
+    rep(i, 1, n)
+    {
+        rep(j, 0, n)
+        {
+            if (i + j < n)
             {
-                if (i != n - 1)
-                {
-                    if (a[i + 1][j] == -1e18)
-                        a[i + 1][j] = a[i][j];
-                    else
-                        a[i + 1][j] = min(a[i + 1][j], a[i][j]);
-                }
-                if (j != 0)
-                    if (a[i][j - 1] == -1e18)
-                        a[i][j - 1] = a[i][j];
-                    else
-                        a[i][j - 1] = min(a[i][j - 1], a[i][j]);
+                if ((i + n) % 2 == 1)
+                    dp[j][i + j] = max(a[j] + dp[j + 1][i + j], a[i + j] + dp[j][i + j - 1]);
+                else
+                    dp[j][i + j] = min(dp[j + 1][i + j], dp[j][i + j - 1]);
             }
         }
     }
 
-    for (int i = 0; i < n; i++)
-    {
-        for (int j = 0; j < n; j++)
-            cout << (a[i][j] == -1e18 ? 0 : a[i][j]) << ' ';
-        cout << endl;
-    }
+    // for (int i = 0; i < n; i++)
+    // {
+    //     for (int j = 0; j < n; j++)
+    //     {
+    //         cout << dp[i][j] << " ";
+    //     }
+    //     cout << endl;
+    // }
 
-    int ans = -1e18;
-    rep(i, 0, n) ans = max(ans, a[i][i]);
-    cout << ans << endl;
+    cout << dp[0][n - 1] << endl;
 }
 
 int32_t main()
