@@ -26,23 +26,20 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
-pi check_ans(int node, vii &adj, vector<bool> &visited)
+void check(vii &adj, int n, vi &dist, vector<bool> &vis)
 {
-    visited[node] = true;
-    pi ans = {node, 0};
-    for (auto child : adj[node])
+    vis[n] = true;
+
+    for (auto i : adj[n])
     {
-        if (!visited[child])
+        if (!vis[i])
         {
-            pi temp = check_ans(child, adj, visited);
-            if (temp.second + 1 > ans.second)
-            {
-                ans.first = temp.first;
-                ans.second = temp.second + 1;
-            }
+            dist[i] = dist[n] + 1;
+            check(adj, i, dist, vis);
         }
     }
-    return ans;
+
+    return;
 }
 
 void solve()
@@ -50,18 +47,53 @@ void solve()
     int n;
     cin >> n;
 
-    vector<pi> a;
-    vector<bool> visited(n, false);
-    vii adj(n);
+    vector<vector<int>> adj(n);
+
+    rep(i, 0, n - 1)
+    {
+        int a, b;
+        cin >> a >> b;
+        a--, b--;
+        adj[a].push_back(b);
+        adj[b].push_back(a);
+    }
+
+    vi dist(n);
+    vector<bool> vis(n, false);
+
+    dist[0] = 0;
+    check(adj, 0, dist, vis);
+
+    int max = 0, max_index = 0;
 
     rep(i, 0, n)
     {
-        cin >> a[i].first >> a[i].second;
-        adj[a[i].first].push_back(a[i].second);
-        adj[a[i].second].push_back(a[i].first);
+        if (dist[i] > max)
+        {
+            max = dist[i];
+            max_index = i;
+        }
     }
 
-    pi f = check_ans(0, adj, visited);
+    vis = vector<bool>(n, false);
+    dist = vi(n);
+
+    dist[max_index] = 0;
+    check(adj, max_index, dist, vis);
+
+    // for (auto i : dist)
+    //     cout << i << ' ';
+
+    max = 0;
+
+    rep(i, 0, n)
+    {
+        if (dist[i] > max)
+        {
+            max = dist[i];
+        }
+    }
+    cout << max << endl;
 }
 
 int32_t main()

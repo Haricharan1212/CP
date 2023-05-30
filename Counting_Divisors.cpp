@@ -26,55 +26,50 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
-vi primes;
-
 vector<int> sieve(int n)
 {
     // Time Complexity:- O(log(log(n)))
-
     vector<int> is_prime(n + 1, -1);
-    is_prime[0] = is_prime[1] = -1;
+
     for (int i = 2; i <= n; i++)
     {
         if (is_prime[i] == -1 && 1LL * i * i <= n)
         {
             for (int j = i * i; j <= n; j += i)
-                is_prime[j] = i;
+                if (is_prime[j] == -1)
+                    is_prime[j] = i;
         }
     }
     return is_prime;
 }
 
+vi primes;
+
 void solve()
 {
+    int n;
+    cin >> n;
 
-    int x;
-    cin >> x;
-    int xx = x;
+    int ans = 1;
 
-    if (primes[x] == -1)
+    int x = n;
+    while (x != 1)
     {
-        cout << 1 << endl;
-        return;
-    }
+        int num = primes[x];
+        if (num == -1)
+            num = x;
+        int cnt = 0;
 
-    set<int> prims;
-    while (primes[x] != -1)
-    {
-        // cout << x << ' ';
-        prims.insert(primes[x]);
-        x = x / primes[x];
-    }
-    int count = xx;
-
-    for (auto i : prims)
-        if (i > 1)
+        while (x % num == 0)
         {
-            count *= (i - 1);
-            count /= i;
+            cnt++;
+            x /= num;
         }
 
-    cout << count << endl;
+        ans *= (cnt + 1);
+    }
+
+    cout << ans << endl;
 }
 
 int32_t main()
@@ -84,9 +79,6 @@ int32_t main()
     int tc = 1;
     cin >> tc;
     primes = sieve(1e6 + 5);
-
-    rep(i, 0, 20) cout << primes[i] << ' ';
-
     while (tc--)
     {
         solve();

@@ -26,126 +26,120 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
-class Graph
-{
-    // No. of vertices
-    int V;
+const int N = 100000;
 
-    // Pointer to an array
-    // containing adjacency lists
-    list<int> *adj;
-    bool isCyclicUtil(int v, bool visited[], int parent);
+// variables to be used
+// in both functions
+vector<int> graph[N];
+vector<vector<int>> cycles;
 
-public:
-    // Constructor
-    Graph(int V);
-
-    // To add an edge to graph
-    void addEdge(int v, int w);
-
-    // Returns true if there is a cycle
-    bool isCyclic();
-};
-
-Graph::Graph(int V)
-{
-    this->V = V;
-    adj = new list<int>[V];
-}
-
-void Graph::addEdge(int v, int w)
+// Function to mark the vertex with
+// different colors for different cycles
+void dfs_cycle(int u, int p, int color[], int par[], int &cyclenumber)
 {
 
-    // Add w to v’s list.
-    adj[v].push_back(w);
-
-    // Add v to w’s list.
-    adj[w].push_back(v);
-}
-
-bool Graph::isCyclicUtil(int v, bool visited[], int parent)
-{
-
-    // Mark the current node as visited
-    visited[v] = true;
-
-    // Recur for all the vertices
-    // adjacent to this vertex
-    list<int>::iterator i;
-    for (i = adj[v].begin(); i != adj[v].end(); ++i)
+    // already (completely) visited vertex.
+    if (color[u] == 2)
     {
+        return;
+    }
 
-        // If an adjacent vertex is not visited,
-        // then recur for that adjacent
-        if (!visited[*i])
+    // seen vertex, but was not completely visited -> cycle detected.
+    // backtrack based on parents to find the complete cycle.
+    if (color[u] == 1)
+    {
+        vector<int> v;
+        cyclenumber++;
+
+        int cur = p;
+        v.push_back(cur);
+
+        // backtrack the vertex which are
+        // in the current cycle thats found
+        while (cur != u)
         {
-            if (isCyclicUtil(*i, visited, v))
-                return true;
+            cur = par[cur];
+            v.push_back(cur);
         }
-
-        // If an adjacent vertex is visited and
-        // is not parent of current vertex,
-        // then there exists a cycle in the graph.
-        else if (*i != parent)
-            return true;
+        cycles.push_back(v);
+        return;
     }
-    return false;
-}
+    par[u] = p;
 
-// Returns true if the graph contains
-// a cycle, else false.
-bool Graph::isCyclic()
-{
+    // partially visited.
+    color[u] = 1;
 
-    // Mark all the vertices as not
-    // visited and not part of recursion
-    // stack
-    bool *visited = new bool[V];
-    for (int i = 0; i < V; i++)
-        visited[i] = false;
-
-    // Call the recursive helper
-    // function to detect cycle in different
-    // DFS trees
-    for (int u = 0; u < V; u++)
+    // simple dfs on graph
+    for (int v : graph[u])
     {
 
-        // Don't recur for u if
-        // it is already visited
-        if (!visited[u])
-            if (isCyclicUtil(u, visited, -1))
-                return true;
+        // if it has not been visited previously
+        if (v == par[u])
+        {
+            continue;
+        }
+        dfs_cycle(v, u, color, par, cyclenumber);
     }
-    return false;
+
+    // completely visited.
+    color[u] = 2;
+}
+
+// add the edges to the graph
+void addEdge(int u, int v)
+{
+    graph[u].push_back(v);
+    graph[v].push_back(u);
+}
+
+// Function to print the cycles
+void printCycles(int &cyclenumber)
+{
+
+    // print all the vertex with same cycle
+    for (int i = 0; i < cyclenumber; i++)
+    {
+        // Print the i-th cycle
+        cout << "Cycle Number " << i + 1 << ": ";
+        for (int x : cycles[i])
+            cout << x << " ";
+        cout << endl;
+    }
+}
+
+void dfs(int node, vii &adj, vi &visited)
+{
+    visited[node] = true;
+    for (int child : adj[node])
+    {
+        if (visited[child] == false)
+            dfs(child, adj, visited);
+    }
 }
 
 void solve()
 {
-    int n;
-    cin >> n;
+    int n, m;
+    cin >> n >> m;
 
-    vi a(n);
-    rep(i, 0, n)
+    vii adj(n);
+    rep(i, 0, m)
     {
-        cin >> a[i];
+        int a, b;
+        cin >> a >> b;
+        a--, b--;
+        adj[a].push_back(b);
+        adj[b].push_back(a);
     }
 
-    Graph g1(5);
-    g1.addEdge(1, 0);
-    g1.addEdge(0, 2);
-    g1.addEdge(2, 1);
-    g1.addEdge(0, 3);
-    g1.addEdge(3, 4);
-    g1.isCyclic() ? cout << "Graph contains cycle\n"
-                  : cout << "Graph doesn't contain cycle\n";
+    bool<visited>(n, false);
 
-    Graph g2(3);
-    g2.addEdge(0, 1);
-    g2.addEdge(1, 2);
-    g2.isCyclic() ? cout << "Graph contains cycle\n"
-                  : cout << "Graph doesn't contain cycle\n";
+    rep(i, 0, n)
+    {
 
-    return 0;
+        if (visited[i] == false)
+            dfs(i, adj, visited);
+    }
 }
 
 int32_t main()

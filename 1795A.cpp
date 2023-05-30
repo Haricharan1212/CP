@@ -65,8 +65,27 @@ void solve()
     int n, m;
     cin >> n >> m;
 
-    string a, b;
-    cin >> a >> b;
+    string s, t;
+    cin >> s >> t;
+
+    while (s.size() >= 2 && s[s.size() - 1] == s[s.size() - 2])
+    {
+        char c = s.back();
+        s.pop_back();
+        t.push_back(c);
+    }
+
+    rep(i, 0, s.size() - 1) if (s[i] == s[i + 1])
+    {
+        cout << "NO\n";
+        return;
+    }
+    rep(i, 0, t.size() - 1) if (t[i] == t[i + 1])
+    {
+        cout << "NO\n";
+        return;
+    }
+    cout << "YES\n";
 }
 
 int32_t main()

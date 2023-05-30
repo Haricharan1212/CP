@@ -13,7 +13,7 @@ using namespace __gnu_pbds;
 
 typedef long long ll;
 
-#define int unsigned long long int
+#define int long long int
 #define ordered_set tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update>
 
 #define vi vector<int>
@@ -26,104 +26,53 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
-vector<bool> sieve(int n)
-{
-    // Time Complexity:- O(log(log(n)))
-
-    vector<bool> is_prime(n + 1, 1);
-    is_prime[0] = is_prime[1] = 0;
-    for (int i = 2; i <= n; i++)
-    {
-        if (is_prime[i] && 1LL * i * i <= n)
-        {
-            for (int j = i * i; j <= n; j += i)
-                is_prime[j] = 0;
-        }
-    }
-    return is_prime;
-}
-
-// 1010
-// 1100
-
-//  10100
-//  11000
-
-//  10000
+// 1010, 1011, 1100, 1101, 1110, 1111
+// 1000
 
 void solve()
 {
     int n, x;
     cin >> n >> x;
 
-    if (n == x)
-    {
-        cout << n << endl;
-        return;
-    }
+    bitset<64> a(n), b(x), c(0);
 
-    int a[65] = {0}, b[65] = {0};
-    for (int i = 0; i < 64; i++)
-    {
-        a[i] = n % 2;
-        b[i] = x % 2;
-        n /= 2;
-        x /= 2;
-    }
+    int ans = 0;
+    int flag = 0;
 
-    int ind = -1;
-
-    rep(i, 0, 64)
+    for (int i = 61; i >= 0; i--)
     {
         if (a[i] == 0 && b[i] == 1)
         {
-            cout << -1 << '\n';
+            cout << -1 << endl;
             return;
         }
         else if (a[i] == 1 && b[i] == 0)
         {
-            ind = i;
-            break;
+            if (flag == 0 && c[i + 1] == 0)
+                c[i + 1] = 1, c[i] = 0, flag = 1;
+            else if (flag == 0 && c[i + 1] == 1)
+            {
+                cout << -1 << endl;
+                return;
+            }
+            else
+                c[i] = 0;
         }
-    }
-
-    a[ind] = 0;
-
-    int indd;
-    rep(i, ind + 1, 65)
-    {
-        if (a[i] == 1)
+        else if (a[i] == 1 && b[i] == 1)
         {
-            a[i] = 0;
+            if (flag == 0)
+                c[i] = 1;
+            else
+            {
+                cout << -1 << endl;
+                return;
+            }
         }
-        else
-        {
-            a[i] = 1;
-            indd = i;
-            break;
-        }
+        // cout << a[i] << " " << b[i] << ' ' << c[i] << endl;
+        // cout << flag << endl;
     }
 
-    // for (int i = 0; i < 64; i++)
-    //     cout << a[i] << ' ';
-    // cout << endl;
-    // for (int i = 0; i < 64; i++)
-    //     cout << b[i] << ' ';
-    // cout << endl;
-
-    // cout << ind << endl;
-
-    int ans = 0;
-    for (int i = 0; i < 61; i++)
-    {
-        if (i <= indd)
-            ans += a[i] * (1LL << i);
-        else
-            ans += b[i] * (1LL << i);
-
-        // cout << ans << ' ';
-    }
-    cout << ans << endl;
+    cout << c.to_ullong() << endl;
 }
 
 int32_t main()

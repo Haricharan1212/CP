@@ -5,71 +5,103 @@
 #pragma GCC optimize("unroll-loops")
 
 #include <bits/stdc++.h>
-using namespace std;
-
-#define fio ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
-typedef long long ll;
-
-// For ordered Tree
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
+
+using namespace std;
 using namespace __gnu_pbds;
+
+typedef long long ll;
+
+#define int long long int
 #define ordered_set tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update>
 
 #define vi vector<int>
 #define vii vector<vector<int>>
+#define pi pair<int, int>
+#define mi map<int, int>
+#define si set<int>
+#define rep(var, l, r) for (int var = l; var < r; var++)
+#define repr(var, r, l) for (int var = r; var > l; var--)
+int mod2 = 998244353;
 
-const int n = 1e5 + 5;
-bool prime[n + 1];
-
-void sieve()
+vector<bool> sieve(int n)
 {
-    memset(prime, true, sizeof(prime));
-
-    for (int p = 2; p * p <= n; p++)
-    {
-        if (prime[p] == true)
-        {
-            for (int i = p * p; i <= n; i += p)
-                prime[i] = false;
-        }
-    }
-    prime[0] = false;
-    prime[1] = false;
+    vector<bool> prime(n + 1, true);
+    prime[0] = prime[1] = false;
+    for (int i = 2; i <= n; ++i)
+        if (prime[i])
+            if (i * 1ll * i <= n)
+                for (int j = i * i; j <= n; j += i)
+                    prime[j] = false;
+    return prime;
 }
-const int mod = 998244353;
+
+int modexp(int a, int b, int m)
+{
+    int res = 1;
+    while (b)
+    {
+        if (b & 1)
+        {
+            res = (res * a) % m;
+        }
+        a = (a * a) % m;
+        b >>= 1;
+    }
+    return res;
+}
 
 void solve()
 {
-    ll n, m;
+    int n, m;
     cin >> n >> m;
 
-    ll prod = 1;
-    ll pow = m;
-    ll ans = 0;
-    for (int i = 2; i <= n; i++)
+    vector<bool> prime = sieve(n + 1);
+
+    vi dp(n + 1, 0);
+    dp[0] = 1;
+    dp[1] = m;
+
+    int num = 1;
+
+    rep(i, 2, n + 1)
     {
-        pow *= m;
-        pow %= mod;
+        dp[i] = dp[i - 1];
 
         if (prime[i])
-            prod *= i;
+        {
+            num *= i;
+        }
 
-        ans += pow - (m / prod);
-        ans %= mod;
-        ans += mod;
-        ans %= mod;
+        dp[i] *= ((m / num) % mod2);
+        dp[i] %= mod2;
+
+        if (num > m)
+            break;
     }
+
+    int ans = 0;
+
+    rep(i, 1, n + 1)
+    {
+        // cout << dp[i] << endl;
+        ans += modexp(m, i, mod2) - dp[i];
+        ans %= mod2;
+        ans = (ans + mod2) % mod2;
+    }
+
+    ans = (ans + mod2) % mod2;
     cout << ans << endl;
 }
 
-int main()
+int32_t main()
 {
-    fio;
+    ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
-    sieve();
+    //    cin >> tc;
+
     while (tc--)
     {
         solve();

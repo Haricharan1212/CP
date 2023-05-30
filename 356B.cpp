@@ -33,6 +33,8 @@ void solve()
 
     string s, t;
     cin >> s >> t;
+
+    int num = s.size() * t.size() / __gcd(s.size(), t.size());
 }
 
 int32_t main()
