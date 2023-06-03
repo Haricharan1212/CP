@@ -26,85 +26,62 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
-void showq(queue<int> gq)
+void dfs(vii &adj, vi &col, int &blue, int &redc, vector<bool> &visited, int node, vi &blues, vi &reds)
 {
-    queue<int> g = gq;
-    while (!g.empty())
+    visited[node] = true;
+    if (col[node] == 1)
+        reds[node]++;
+    else if (col[node] == 2)
+        blues[node]++;
+
+    for (auto child : adj[node])
     {
-        cout << '\t' << g.front();
-        g.pop();
+        if (!visited[child])
+        {
+            dfs(adj, col, blue, redc, visited, child, blues, reds);
+            blues[node] += blues[child];
+            reds[node] += reds[child];
+        }
     }
-    cout << '\n';
 }
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
+    int n;
+    cin >> n;
+
+    int redc = 0, bluec = 0;
+
+    vi col(n);
+    rep(i, 0, n)
+    {
+        cin >> col[i];
+        if (col[i] == 1)
+            redc++;
+        else if (col[i] == 2)
+            bluec++;
+    }
 
     vii adj(n);
-    rep(i, 0, m)
+    rep(i, 0, n - 1)
     {
         int a, b;
         cin >> a >> b;
+
         a--, b--;
         adj[a].push_back(b);
         adj[b].push_back(a);
     }
+
     vector<bool> visited(n, false);
-    vi parent(n, -1);
+    vi blues(n, 0);
+    vi reds(n, 0);
+    dfs(adj, col, bluec, redc, visited, 0, blues, reds);
 
-    queue<int> q;
-    q.push(0);
-    visited[0] = true;
-    rep(i, 0, n)
-    {
-        if (q.size() == 0)
-        {
-            cout << "IMPOSSIBLE\n";
-            return;
-        }
-        int num = q.front();
-        q.pop();
+    int ans = 0;
 
-        for (auto i : adj[num])
-        {
-            if (!visited[i])
-            {
-                visited[i] = true;
-
-                q.push(i);
-                parent[i] = num;
-            }
-        }
-        // cout << num << 'x';
-
-        // showq(q);
-    }
-
-    vi ff;
-
-    int curr = n - 1;
-
-    while (curr != 0)
-    {
-        ff.push_back(curr);
-        curr = parent[curr];
-
-        if (curr == -1)
-        {
-            cout << "IMPOSSIBLE\n";
-            return;
-        }
-    }
-
-    ff.push_back(0);
-
-    reverse(ff.begin(), ff.end());
-
-    cout << ff.size() << endl;
-    for (auto i : ff)
-        cout << i + 1 << ' ';
+    rep(i, 1, n) if ((blues[i] == bluec && reds[i] == 0) || (reds[i] == redc && blues[i] == 0)) ans++;
+    cout << ans;
 }
 
 int32_t main()
@@ -112,7 +89,6 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    //    cin >> tc;
     while (tc--)
     {
         solve();

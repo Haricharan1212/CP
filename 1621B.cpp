@@ -31,10 +31,28 @@ void solve()
     int n;
     cin >> n;
 
-    vi a(n);
+    map<int, int> start, end;
+    map<pi, int> m;
     rep(i, 0, n)
     {
-        cin >> a[i];
+        int a, b, c;
+        cin >> a >> b >> c;
+        s.insert({a, b});
+
+        if (!start[a])
+            start[a] = c;
+        else
+            start[a] = min(start[a], c);
+
+        if (!end[b])
+            end[b] = c;
+        else
+            end[b] = min(end[b], c);
+
+        if (s.count({start.begin()->first, end.rbegin()->first}))
+            cout << start.begin()->second << endl;
+        else
+            cout << start.begin()->second + end.rbegin()->second << endl;
     }
 }
 

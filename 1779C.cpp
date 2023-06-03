@@ -64,7 +64,6 @@ void solve()
 {
     int n, m;
     cin >> n >> m;
-
     m--;
 
     vi a(n);
@@ -72,29 +71,37 @@ void solve()
     {
         cin >> a[i];
     }
-
-    int summ = 0;
-    rep(i, 1, m + 1) summ += a[i];
-
-    vi pref = a;
-    rep(i, 1, n) pref[i] += pref[i - 1];
-
-    priority_queue<int> pq;
-
-    pq.push(a[m]);
-
-    int op = 0;
-    for (int i = m - 1; i >= 0; i--)
+    int ans = 0;
+    if (a[m] > 0)
     {
-        while (pref[i] < summ)
+        a[m] *= -1;
+        ans++;
+    }
+
+    int dsum = 0;
+    multiset<int> s;
+    rep(i, 0, m)
+    {
+        dsum += a[i];
+        s.insert(a[i]);
+    }
+
+    int csum = 0;
+    rep(i, 0, m)
+    {
+        csum += a[i];
+        s.insert(a[i]);
+
+        if (csum < dsum)
         {
-            op++;
-            int num = pq.top();
-            pq.pop();
-            pq.push(-num);
-            summ -= 2 * num;
+            int num = *s.rbegin();
+            s.erase(s.rebegin());
+            csum -= num;
+            num *= -1;
+            s.insert(num);
+            csum += num;
+            ans++;
         }
-        pq.push(a[i]);
     }
 }
 

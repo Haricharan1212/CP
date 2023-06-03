@@ -26,69 +26,67 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
-void search(int node, vector<vector<int>> &adj, vector<int> &color, vector<bool> &visited)
-{
-    visited[node] = true;
-    for (auto child : adj[node])
-    {
-        if (!visited[child])
-        {
-            color[child] = color[node];
-            search(child, adj, color, visited);
-        }
-    }
-    return;
-}
-
 void solve()
 {
     int n, m;
     cin >> n >> m;
 
-    vector<pi> a(m);
-    vector<vector<int>> adj(n);
+    vii adj(n);
     rep(i, 0, m)
     {
-        cin >> a[i].first >> a[i].second;
-        a[i].first--;
-        a[i].second--;
-        adj[a[i].first].push_back(a[i].second);
-        adj[a[i].second].push_back(a[i].first);
+        int a, b;
+        cin >> a >> b;
+        a--, b--;
+        adj[a].push_back(b);
+        adj[b].push_back(a);
     }
 
-    vector<int> color(n, -1);
+    vi cols(n, -1);
+
     vector<bool> visited(n, false);
 
-    int col = 1;
-
-    rep(i, 0, n)
+    rep(j, 0, n)
     {
-        if (visited[i] == false)
+        if (visited[j])
+            continue;
+
+        cols[j] = 1;
+        deque<int> dq = {j};
+
+        rep(i, 0, n)
         {
-            color[i] = col;
-            search(i, adj, color, visited);
-            col++;
+            if (dq.size() == 0)
+            {
+                break;
+            }
+            int num = dq[0];
+            dq.pop_front();
+
+            // cout << num << endl;
+            // for (auto i : cols)
+            //     cout << i << ' ';
+            // cout << endl;
+
+            visited[num] = true;
+
+            for (auto i : adj[num])
+            {
+                if (cols[i] == cols[num])
+                {
+                    cout << "IMPOSSIBLE" << endl;
+                    return;
+                }
+                else if (cols[i] == -1)
+                {
+                    cols[i] = 3 - cols[num];
+                    dq.push_back(i);
+                }
+            }
         }
     }
 
-    if (col ==)
-    {
-        cout << "IMPOSSIBLE";
-        return;
-    }
-
-    rep(i, 0, n)
-    {
-        if (color[i] == 1)
-        {
-            cout << 1 << ' ';
-        }
-        else
-        {
-            cout << 2 << ' ';
-        }
-    }
-    cout << endl;
+    for (auto i : cols)
+        cout << i << ' ';
 }
 
 int32_t main()
@@ -96,7 +94,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    //    cin >> tc;
     while (tc--)
     {
         solve();

@@ -26,20 +26,38 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
-int maxSubArraySum(int a[], int size)
+int modexp(long long x, unsigned int y, int p)
 {
-    int max_so_far = INT_MIN, max_ending_here = 0;
+    int res = 1;
 
-    for (int i = 0; i < size; i++)
+    x = x % p;
+    if (x == 0)
+        return 0;
+    while (y > 0)
     {
-        max_ending_here = max_ending_here + a[i];
-        if (max_so_far < max_ending_here)
-            max_so_far = max_ending_here;
-
-        if (max_ending_here < 0)
-            max_ending_here = 0;
+        if (y & 1)
+            res = (res * x) % p;
+        y = y >> 1;
+        x = (x * x) % p;
     }
-    return max_so_far;
+    return res;
+}
+
+vector<bool> sieve(int n)
+{
+    // Time Complexity:- O(log(log(n)))
+
+    vector<bool> is_prime(n + 1, 1);
+    is_prime[0] = is_prime[1] = 0;
+    for (int i = 2; i <= n; i++)
+    {
+        if (is_prime[i] && 1LL * i * i <= n)
+        {
+            for (int j = i * i; j <= n; j += i)
+                is_prime[j] = 0;
+        }
+    }
+    return is_prime;
 }
 
 void solve()
@@ -59,7 +77,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

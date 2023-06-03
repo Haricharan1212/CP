@@ -26,16 +26,45 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
+void dfs(vii &adj, vi &dp, int node, vector<bool> &visited)
+{
+    visited[node] = true;
+    cout << node << endl;
+    for (auto i : dp)
+        cout << i << ' ';
+    cout << endl;
+    for (auto child : adj[node])
+    {
+        {
+            dp[child] += dp[node];
+            dfs(adj, dp, child, visited);
+        }
+    }
+}
+
 void solve()
 {
-    int n;
-    cin >> n;
+    int n, m;
+    cin >> n >> m;
 
-    vi a(n);
-    rep(i, 0, n)
+    vii adj(n);
+    rep(i, 0, m)
     {
-        cin >> a[i];
+        int a, b;
+        cin >> a >> b;
+        a--, b--;
+        adj[a].push_back(b);
     }
+
+    vi dp(n, 0);
+    dp[0] = 1;
+    vector<bool> visited(n, false);
+    dfs(adj, dp, 0, visited);
+
+    for (auto i : dp)
+        cout << i << ' ';
+
+    cout << dp[n - 1] << endl;
 }
 
 int32_t main()
@@ -43,7 +72,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    cin >> tc;
+    // cin >> tc;
     while (tc--)
     {
         solve();

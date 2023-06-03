@@ -26,20 +26,38 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
-template <typename T>
-vector<T> slicing(vector<T> const &v,
-                  int X, int Y)
+int modexp(long long x, unsigned int y, int p)
 {
+    int res = 1;
 
-    // Begin and End iterator
-    auto first = v.begin() + X;
-    auto last = v.begin() + Y + 1;
+    x = x % p;
+    if (x == 0)
+        return 0;
+    while (y > 0)
+    {
+        if (y & 1)
+            res = (res * x) % p;
+        y = y >> 1;
+        x = (x * x) % p;
+    }
+    return res;
+}
 
-    // Copy the element
-    vector<T> vector(first, last);
+vector<bool> sieve(int n)
+{
+    // Time Complexity:- O(log(log(n)))
 
-    // Return the results
-    return vector;
+    vector<bool> is_prime(n + 1, 1);
+    is_prime[0] = is_prime[1] = 0;
+    for (int i = 2; i <= n; i++)
+    {
+        if (is_prime[i] && 1LL * i * i <= n)
+        {
+            for (int j = i * i; j <= n; j += i)
+                is_prime[j] = 0;
+        }
+    }
+    return is_prime;
 }
 
 void solve()
@@ -48,43 +66,9 @@ void solve()
     cin >> n;
 
     vi a(n);
-    int maxind;
     rep(i, 0, n)
     {
         cin >> a[i];
-        if (a[i] == n)
-            maxind = i;
-    }
-
-    if (n == 1)
-    {
-        cout << 1 << endl;
-        return;
-    }
-
-    if (maxind == 0)
-    {
-        rep(i, 0, n) if (a[i] == n - 1) maxind = i;
-
-        pi f = {-1, 1e9};
-
-        rep(i, 0, maxind) f = max(f, {a[i], i});
-
-        cout << f.second;
-
-        for (auto i : slicing(a, maxind, n - 1))
-            cout << i << ' ';
-        for (auto i : slicing(a, f.second, maxind - 1))
-            cout << i << ' ';
-        for (auto i : slicing(a, 0, f.second - 1))
-            cout << i << ' ';
-
-        cout << endl;
-    }
-
-    else
-    {
-        cout << "F" << endl;
     }
 }
 

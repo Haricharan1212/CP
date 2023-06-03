@@ -65,50 +65,11 @@ void solve()
     int n;
     cin >> n;
 
-    vi a(n), b(n);
+    vii adj(n);
     rep(i, 0, n)
     {
-        int x;
-        cin >> x;
-        x--;
-        a[x] = i;
+        cin >> a[i];
     }
-    rep(i, 0, n)
-    {
-        int x;
-        cin >> x;
-        x--;
-        b[x] = i;
-    }
-
-    a.push_back(-1);
-    b.push_back(-1);
-
-    int ans = 0;
-
-    int l1 = 1e9;
-    int r1 = -1;
-
-    int l2 = 1e9;
-    int r2 = -1;
-
-    rep(curr, 0, n)
-    {
-        l1 = min(l1, a[curr]);
-        r1 = max(r1, a[curr]);
-
-        l2 = min(l2, b[curr]);
-        r2 = max(r2, b[curr]);
-
-        if (a[curr + 1] > l1 && a[curr + 1] < r1)
-            continue;
-
-        if (b[curr + 1] > l2 && b[curr + 1] < r2)
-            continue;
-
-        ans += min(l1, l2) + (n - 1 - max(r1, r2));
-    }
-    cout << ans << endl;
 }
 
 int32_t main()
@@ -116,7 +77,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

@@ -28,13 +28,17 @@ int mod2 = 998244353;
 
 void solve()
 {
-    int n;
-    cin >> n;
+    int n, m;
+    cin >> n >> m;
 
-    vi a(n);
-    rep(i, 0, n)
+    vi adj(n);
+
+    rep(i, 0, m)
     {
-        cin >> a[i];
+        int a, b;
+        cin >> a >> b;
+        a--, b--;
+        adj[b].push_back(a);
     }
 }
 

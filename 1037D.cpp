@@ -26,85 +26,84 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
-void showq(queue<int> gq)
+void dfs(vii &adj, int node, vector<bool> &visited, vi &depths, vi &parent)
 {
-    queue<int> g = gq;
-    while (!g.empty())
+    visited[node] = true;
+    for (int child : adj[node])
     {
-        cout << '\t' << g.front();
-        g.pop();
+        if (!visited[child])
+        {
+            depths[child] = depths[node] + 1;
+            parent[child] = node;
+            dfs(adj, child, visited, depths, parent);
+        }
     }
-    cout << '\n';
 }
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
+    int n;
+    cin >> n;
 
     vii adj(n);
-    rep(i, 0, m)
+    rep(i, 0, n - 1)
     {
         int a, b;
         cin >> a >> b;
         a--, b--;
+
         adj[a].push_back(b);
         adj[b].push_back(a);
     }
-    vector<bool> visited(n, false);
-    vi parent(n, -1);
 
-    queue<int> q;
-    q.push(0);
-    visited[0] = true;
+    vi depth(n, 0);
+    vi parent(n, -1);
+    vector<bool> visited(n, false);
+    dfs(adj, 0, visited, depth, parent);
+
+    vi order(n);
     rep(i, 0, n)
     {
-        if (q.size() == 0)
-        {
-            cout << "IMPOSSIBLE\n";
-            return;
-        }
-        int num = q.front();
-        q.pop();
-
-        for (auto i : adj[num])
-        {
-            if (!visited[i])
-            {
-                visited[i] = true;
-
-                q.push(i);
-                parent[i] = num;
-            }
-        }
-        // cout << num << 'x';
-
-        // showq(q);
+        cin >> order[i];
+        order[i]--;
     }
 
-    vi ff;
-
-    int curr = n - 1;
-
-    while (curr != 0)
+    if (order[0] != 0)
     {
-        ff.push_back(curr);
-        curr = parent[curr];
+        cout << "No\n";
+        return;
+    }
 
-        if (curr == -1)
+    reverse(order.begin(), order.end());
+
+    int cdepth = depth[order[0]];
+    visited = vector<bool>(n, false);
+
+    rep(i, 0, n)
+    {
+        // cout << order[i] << " ";
+        if (visited[order[i]])
         {
-            cout << "IMPOSSIBLE\n";
+            cout << "No\n";
+            return;
+        }
+        if (depth[order[i]] == cdepth)
+        {
+            visited[order[i]] = true;
+            continue;
+        }
+        else if (depth[order[i]] == cdepth - 1)
+        {
+            cdepth--;
+            visited[order[i]] = true;
+        }
+        else
+        {
+            cout << "No\n";
             return;
         }
     }
-
-    ff.push_back(0);
-
-    reverse(ff.begin(), ff.end());
-
-    cout << ff.size() << endl;
-    for (auto i : ff)
-        cout << i + 1 << ' ';
+    cout << "Yes" << endl;
 }
 
 int32_t main()
@@ -112,7 +111,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    //    cin >> tc;
+    // cin >> tc;
     while (tc--)
     {
         solve();

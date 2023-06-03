@@ -65,49 +65,45 @@ void solve()
     int n;
     cin >> n;
 
-    vi a(n), b(n);
+    vector<pi> a(n);
+
+    rep(i, 0, n) cin >> a[i].first >> a[i].second;
+    sort(a.begin(), a.end());
+
+    int ans = 1e18;
+
+    multiset<int> s;
+    multiset<int, greater<int>> s1;
+
     rep(i, 0, n)
     {
-        int x;
-        cin >> x;
-        x--;
-        a[x] = i;
+        s.insert(a[i].second);
+        s1.insert(a[i].second);
     }
+
     rep(i, 0, n)
     {
-        int x;
-        cin >> x;
-        x--;
-        b[x] = i;
+        int num = a[i].first;
+
+        s1.erase(s1.find(a[i].second));
+        s.erase(s.find(a[i].second));
+
+        if (s.lower_bound(num) == s.end())
+        {
+        }
+        else
+            ans = min(ans, *s.lower_bound(num) - num);
+
+        if (s1.lower_bound(num) == s1.end())
+        {
+        }
+        else
+            ans = min(ans, num - *s1.lower_bound(num));
+
+        s.insert(a[i].second);
+        s1.insert(a[i].second);
     }
 
-    a.push_back(-1);
-    b.push_back(-1);
-
-    int ans = 0;
-
-    int l1 = 1e9;
-    int r1 = -1;
-
-    int l2 = 1e9;
-    int r2 = -1;
-
-    rep(curr, 0, n)
-    {
-        l1 = min(l1, a[curr]);
-        r1 = max(r1, a[curr]);
-
-        l2 = min(l2, b[curr]);
-        r2 = max(r2, b[curr]);
-
-        if (a[curr + 1] > l1 && a[curr + 1] < r1)
-            continue;
-
-        if (b[curr + 1] > l2 && b[curr + 1] < r2)
-            continue;
-
-        ans += min(l1, l2) + (n - 1 - max(r1, r2));
-    }
     cout << ans << endl;
 }
 
@@ -116,7 +112,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

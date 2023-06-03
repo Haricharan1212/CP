@@ -28,13 +28,28 @@ int mod2 = 998244353;
 
 void solve()
 {
-    int n;
-    cin >> n;
+    int n, k;
+    cin >> n >> k;
 
     vi a(n);
     rep(i, 0, n)
     {
         cin >> a[i];
+    }
+
+    sort(a.begin(), a.end());
+
+    vi pref = a(n);
+    rep(i, 1, n)
+    {
+        pref[i] = pref[i - 1] + a[i];
+    }
+
+    int ans = 1e9;
+
+    rep(i, 0, n)
+    {
+        int csum = a[0] * i;
     }
 }
 

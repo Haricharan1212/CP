@@ -86,6 +86,20 @@ int get_lca(vii &arr, vi &depths, int a, int b)
     return arr[a][0];
 }
 
+void check(vii &adj, vector<bool> &visited, vi &dp, int node)
+{
+    visited[node] = true;
+
+    for (auto child : adj[node])
+    {
+        if (!visited[child])
+        {
+            check(adj, visited, dp, child);
+            dp[node] += dp[child];
+        }
+    }
+}
+
 void solve()
 {
     int n, q;
@@ -122,8 +136,7 @@ void solve()
         }
     }
 
-    vi dp(n, 0), ddp(n, 0);
-    map<int, int> m;
+    vi dp(n, 0);
 
     while (q--)
     {
@@ -133,28 +146,21 @@ void solve()
         a--, b--;
 
         int anc = get_lca(arr, depths, a, b);
-        dp[anc]--;
-        if (anc == 0)
-        {
-        }
-        else
-            ddp[parent[anc]]--;
 
-        m[a]++;
-        m[b]++;
+        dp[a]++;
+        dp[b]++;
+        dp[anc]--;
+        if (anc)
+            dp[parent[anc]]--;
     }
 
     visited = vector<bool>(n, false);
 
-    checkk(adj, visited, ddp, 0);
-
-    visited = vector<bool>(n, false);
-
-    check(adj, visited, dp, m, 0);
+    check(adj, visited, dp, 0);
 
     rep(i, 0, n)
     {
-        cout << dp[i] + ddp[i] << ' ';
+        cout << dp[i] << ' ';
     }
 }
 

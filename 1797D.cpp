@@ -26,97 +26,74 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
-set<int> done;
-
-struct node
+void dfs(int node, vector<bool> &vis, vii &adj, vi &subtree_size, vi &father, vi &imp, vector<set<pi>> &sons)
 {
-    vi adj;
-    set<int> children;
-    int imp = 0;
-    int heavyson;
-    int sonsize = 0;
-    int a;
-};
 
-void build_subtree_sum(int u, vector<node> &nodes)
-{
-    if (done.count(u))
-        return;
+    visited[node] = true;
 
-    done.insert(u);
-
-    for (auto v : nodes[u].adj)
+    for (auto child : adj[node])
     {
-        if (done.count(v))
-            continue;
-
-        nodes[u].children.insert(v);
-        build_subtree_sum(v, nodes);
+        if (!visited[child])
+        {
+            father[child] = node;
+            dfs(child, visited, adj, subtree_size, father, imp, sons);
+            subtree_size[node] += subtree_size[child];
+            sons[node].insert({-subtree_size[child], child});
+        }
     }
-
-    sort(nodes[u].children.begin(), nodes[u].children.end(), [&](int a, int b)
-         { return (nodes[a].sonsize > nodes[b].sonsize) || (a < b); });
-
-    int maxsize = 0;
-    nodes[u].imp = nodes[u].a;
-    for (auto v : nodes[u].children)
-    {
-        nodes[u].imp += nodes[v].imp;
-        nodes[u].sonsize += nodes[v].sonsize;
-    }
-    nodes[u].sonsize += 1;
 }
 
 void solve()
 {
-    done.clear();
-
     int n, m;
     cin >> n >> m;
 
-    vector<node> nodes(n);
-
-    rep(i, 0, n) cin >> nodes[i].a;
+    vii adj(n);
+    vi imp(n);
+    rep(i, 0, n) cin >> imp[i];
 
     rep(i, 0, n - 1)
     {
         int a, b;
         cin >> a >> b;
-
         a--, b--;
-
-        nodes[a].adj.push_back(b);
-        nodes[b].adj.push_back(a);
+        adj[a].push_back(b);
+        adj[b].push_back(a);
     }
 
-    build_subtree_sum(0, nodes);
+    vi subtree_size(n, 0);
+    vi father(n, -1);
 
-    rep(i, 0, n)
-    {
-        // cout << nodes[i].imp << " " << nodes[i].heavyson << " " << nodes[i].sonsize << endl;
-        // for (auto j : nodes[i].children)
-        //     cout << j << " ";
-        // cout << endl;
-    }
+    vector<set<pi>> sons(n);
+
+    vector<bool> vis(n, 0);
+
+    dfs(0, vis, adj, subtree_size, father, imp, sons);
 
     rep(i, 0, m)
     {
-        int x;
-        cin >> x;
 
-        if (x == 1)
+        int a, b;
+        cin >> a >> b;
+
+        if (a == 1)
         {
-            int f;
-            cin >> f;
-            f--;
-            cout << nodes[f].imp << endl;
+            cout << imp[b - 1] << "\n";
         }
         else
         {
-            int f;
-            cin >> f;
+            b--;
 
-            f--;
+            if (sons[b].size() == 0)
+                continue;
+
+            int heavyson = sons[b].begin()->second;
+            sons[b].erase(sons[b].begin());
+
+            int fat = father[b];
+
+            sons[fat].erase({-subtree_size[b], b});
+            sons[fat].insert({})
         }
     }
 }

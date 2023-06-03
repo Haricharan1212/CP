@@ -62,53 +62,26 @@ vector<bool> sieve(int n)
 
 void solve()
 {
-    int n;
-    cin >> n;
+    int n, s;
+    cin >> n >> s;
 
-    vi a(n), b(n);
-    rep(i, 0, n)
+    vii adj(n);
+    rep(i, 0, n - 1)
     {
-        int x;
-        cin >> x;
-        x--;
-        a[x] = i;
-    }
-    rep(i, 0, n)
-    {
-        int x;
-        cin >> x;
-        x--;
-        b[x] = i;
+        int a, b;
+        cin >> a >> b;
+        a--, b--;
+
+        adj[a].push_back(b);
+        adj[b].push_back(a);
     }
 
-    a.push_back(-1);
-    b.push_back(-1);
+    int cnt = 0;
+    rep(i, 0, n) if (adj[i].size() == 1) cnt++;
 
-    int ans = 0;
+    long double ans = (long double)s * 2.0 / ((long double)cnt);
 
-    int l1 = 1e9;
-    int r1 = -1;
-
-    int l2 = 1e9;
-    int r2 = -1;
-
-    rep(curr, 0, n)
-    {
-        l1 = min(l1, a[curr]);
-        r1 = max(r1, a[curr]);
-
-        l2 = min(l2, b[curr]);
-        r2 = max(r2, b[curr]);
-
-        if (a[curr + 1] > l1 && a[curr + 1] < r1)
-            continue;
-
-        if (b[curr + 1] > l2 && b[curr + 1] < r2)
-            continue;
-
-        ans += min(l1, l2) + (n - 1 - max(r1, r2));
-    }
-    cout << ans << endl;
+    cout << fixed << setprecision(20) << ans << "\n";
 }
 
 int32_t main()
@@ -116,7 +89,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    //    cin >> tc;
     while (tc--)
     {
         solve();

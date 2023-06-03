@@ -26,16 +26,69 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
+vi factorial;
+
+int mx = 2e5 + 5;
+
+// int l[mx][105] = {0};
+
+vector<vector<int>> l(mx, vector<int>(105, 0));
+
+void initialize()
+{
+    l[0][0] = 1;
+
+    for (int i = 1; i < mx; i++)
+    {
+        l[i][0] = 1;
+        for (int j = 1; j < min(100LL, i + 1); j++)
+        {
+            l[i][j] = (l[i - 1][j - 1] + l[i - 1][j]) % mod1;
+        }
+    }
+}
+
+// Function to return the value of nCr
+int nCr(int n, int r)
+{
+
+    if (r > n)
+        return 0;
+    // Return nCr
+    return l[n][r];
+}
+
 void solve()
 {
-    int n;
-    cin >> n;
+    int n, m, k;
+    cin >> n >> m >> k;
 
     vi a(n);
     rep(i, 0, n)
     {
         cin >> a[i];
     }
+    sort(a.begin(), a.end());
+    vector<int> s;
+
+    // 1 2 3
+    int ans = 0;
+
+    rep(i, 0, n)
+    {
+        s.push_back(a[i]);
+        int posses = s.size() - (upper_bound(s.begin(), s.end(), a[i] - (k + 1)) - s.begin()) - 1;
+
+        if (posses < m - 1)
+            continue;
+
+        int tt = nCr(posses, m - 1);
+
+        ans += tt;
+        ans %= mod1;
+    }
+
+    cout << ans << endl;
 }
 
 int32_t main()
@@ -44,6 +97,9 @@ int32_t main()
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
     cin >> tc;
+
+    initialize();
+
     while (tc--)
     {
         solve();

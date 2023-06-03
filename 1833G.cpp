@@ -26,38 +26,36 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
-int modexp(long long x, unsigned int y, int p)
+void dfs(vii &adj, int node, vector<bool> &visited, vector<pi> &ans)
 {
-    int res = 1;
-
-    x = x % p;
-    if (x == 0)
-        return 0;
-    while (y > 0)
+    visited[node] = true;
+    bool flag = true;
+    for (auto child : adj[node])
     {
-        if (y & 1)
-            res = (res * x) % p;
-        y = y >> 1;
-        x = (x * x) % p;
-    }
-    return res;
-}
-
-vector<bool> sieve(int n)
-{
-    // Time Complexity:- O(log(log(n)))
-
-    vector<bool> is_prime(n + 1, 1);
-    is_prime[0] = is_prime[1] = 0;
-    for (int i = 2; i <= n; i++)
-    {
-        if (is_prime[i] && 1LL * i * i <= n)
+        if (!visited[child])
         {
-            for (int j = i * i; j <= n; j += i)
-                is_prime[j] = 0;
+            if (adj[child] == 1)
+            {
+            }
+            else
+            {
+                flag = false;
+            }
+
+            dfs(adj, child, visited, ans);
+            ans.push_back({node, child});
         }
     }
-    return is_prime;
+
+    if (flag)
+    {
+        if (adj[node].size() == 1)
+        {
+        }
+        else if (adj[node] size() == 2)
+        {
+        }
+    }
 }
 
 void solve()
@@ -65,11 +63,20 @@ void solve()
     int n;
     cin >> n;
 
-    vi a(n);
-    rep(i, 0, n)
+    vii adj(n);
+    rep(i, 0, n - 1)
     {
-        cin >> a[i];
+        int a, b;
+        cin >> a >> b;
+        a--, b--;
+        adj[a].push_back(b);
+        adj[b].push_back(a);
     }
+
+    vector<pi> ans;
+    vector<bool> visited(n, false);
+
+    dfs(adj, 0, visited, ans);
 }
 
 int32_t main()

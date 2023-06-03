@@ -20,40 +20,57 @@ typedef long long ll;
 #define vii vector<vector<int>>
 #define pi pair<int, int>
 #define mi map<int, int>
-#define si multiset<int>
+#define si set<int>
 #define rep(var, l, r) for (int var = l; var < r; var++)
 #define repr(var, r, l) for (int var = r; var > l; var--)
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
-void check(vii &adj, int node, vi &current, vector<bool> &visited, si &c)
+bool flag = false;
+
+void dfs(vii &adj, int node, vi &parent, vector<bool> &visited)
 {
+    // cout << node << 'n' << endl;
+    // for (auto i : parent)
+    //     cout << i << ' ';
+    // cout << 'x' << endl;
+    if (flag)
+        return;
+
     visited[node] = true;
 
-    cout << endl;
-    cout << node << ' ';
-
-    for (auto i : adj[node])
+    for (auto child : adj[node])
     {
-        cout << i << ' ';
-        if (c.count(i) && current.size() > 2)
+        if (child == parent[node])
+            continue;
+        if (visited[child])
         {
-            current.push_back(i);
+            int curr = node;
 
-            cout << current.size() << endl;
+            vi ans;
+            si done;
 
-            for (auto i : current)
-                cout << i << ' ';
+            while (curr != child)
+            {
+                ans.push_back(curr);
+                done.insert(curr);
+                curr = parent[curr];
+
+                if (done.count(curr))
+                    break;
+            }
+
+            ans.push_back(child);
+            ans.push_back(node);
+
+            cout << ans.size() << endl;
+            for (auto i : ans)
+                cout << i + 1 << ' ';
+            flag = true;
             exit(0);
         }
-        if (visited[i] == false)
-        {
-            current.push_back(i);
-            c.insert(i);
-            check(adj, i, current, visited, c);
-            current.pop_back();
-            c.erase(c.find(i));
-        }
+        parent[child] = node;
+        dfs(adj, child, parent, visited);
     }
 }
 
@@ -63,27 +80,29 @@ void solve()
     cin >> n >> m;
 
     vii adj(n);
-    rep(i, 0, n)
+    rep(i, 0, m)
     {
         int a, b;
         cin >> a >> b;
         a--, b--;
-
         adj[a].push_back(b);
         adj[b].push_back(a);
     }
 
+    vi parent(n, -1);
     vector<bool> visited(n, false);
 
-    rep(i, 0, n)
+    rep(j, 0, n)
     {
-        if (visited[i] == false)
-        {
-            vi current;
-            si c;
-            check(adj, i, current, visited, c);
-        }
+        if (visited[j])
+            continue;
+        parent[j] = -1;
+        dfs(adj, j, parent, visited);
+
+        if (flag)
+            return;
     }
+    cout << "IMPOSSIBLE";
 }
 
 int32_t main()

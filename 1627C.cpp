@@ -65,50 +65,62 @@ void solve()
     int n;
     cin >> n;
 
-    vi a(n), b(n);
+    vii adj(n);
+    vector<pi> edges;
+    rep(i, 0, n - 1)
+    {
+        int a, b;
+        cin >> a >> b;
+        a--, b--;
+        edges.push_back({a, b});
+        adj[a].push_back(b);
+        adj[b].push_back(a);
+    }
+
+    int cnt = -1;
+
     rep(i, 0, n)
     {
-        int x;
-        cin >> x;
-        x--;
-        a[x] = i;
+        if (adj[i].size() > 2)
+        {
+            cout << -1 << endl;
+            return;
+        }
+        else if (adj[i].size() == 1)
+            cnt = i;
     }
+
+    vector<bool> visited(n, false);
+
+    map<pi, int> m;
+
+    int f = 0;
+    visited[cnt] = true;
     rep(i, 0, n)
     {
-        int x;
-        cin >> x;
-        x--;
-        b[x] = i;
+        for (auto i : adj[cnt])
+        {
+            if (!visited[i])
+            {
+                visited[i] = true;
+                m[{cnt, i}] = f;
+                m[{i, cnt}] = f;
+                f++;
+                cnt = i;
+            }
+        }
     }
 
-    a.push_back(-1);
-    b.push_back(-1);
-
-    int ans = 0;
-
-    int l1 = 1e9;
-    int r1 = -1;
-
-    int l2 = 1e9;
-    int r2 = -1;
-
-    rep(curr, 0, n)
+    for (auto i : edges)
     {
-        l1 = min(l1, a[curr]);
-        r1 = max(r1, a[curr]);
-
-        l2 = min(l2, b[curr]);
-        r2 = max(r2, b[curr]);
-
-        if (a[curr + 1] > l1 && a[curr + 1] < r1)
-            continue;
-
-        if (b[curr + 1] > l2 && b[curr + 1] < r2)
-            continue;
-
-        ans += min(l1, l2) + (n - 1 - max(r1, r2));
+        if (m[{i.first, i.second}] % 2 == 1)
+        {
+            cout << 2 << ' ';
+        }
+        else
+            cout << 3 << ' ';
     }
-    cout << ans << endl;
+    cout << endl;
 }
 
 int32_t main()
@@ -116,7 +128,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

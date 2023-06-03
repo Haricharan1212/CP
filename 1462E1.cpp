@@ -36,6 +36,20 @@ void solve()
     {
         cin >> a[i];
     }
+    sort(a.begin(), a.end());
+    vector<int> s;
+
+    // 1 2 3
+    int ans = 0;
+
+    rep(i, 0, n)
+    {
+        s.push_back(a[i]);
+        int posses = s.size() - (upper_bound(s.begin(), s.end(), a[i] - 3) - s.begin()) - 1;
+        ans += (posses * (posses - 1)) / 2;
+    }
+
+    cout << ans << endl;
 }
 
 int32_t main()

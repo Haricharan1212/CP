@@ -26,78 +26,44 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
-int modexp(long long x, unsigned int y, int p)
-{
-    int res = 1;
-
-    x = x % p;
-    if (x == 0)
-        return 0;
-    while (y > 0)
-    {
-        if (y & 1)
-            res = (res * x) % p;
-        y = y >> 1;
-        x = (x * x) % p;
-    }
-    return res;
-}
-
-vector<bool> sieve(int n)
-{
-    // Time Complexity:- O(log(log(n)))
-
-    vector<bool> is_prime(n + 1, 1);
-    is_prime[0] = is_prime[1] = 0;
-    for (int i = 2; i <= n; i++)
-    {
-        if (is_prime[i] && 1LL * i * i <= n)
-        {
-            for (int j = i * i; j <= n; j += i)
-                is_prime[j] = 0;
-        }
-    }
-    return is_prime;
-}
-
 void solve()
 {
 
     int l, r;
     cin >> l >> r;
 
-    int f = floor(log2(r / l));
-    cout << f + 1 << ' ';
+    int num = 0;
+    int ll = l;
 
-    int num = powl(2, f);
-    int numm = num / 2 * 3;
-    int count = 0;
-
-    int p = r / num;
-    count += p - l + 1;
-
-    if (numm != 0)
+    while (ll <= r)
     {
-        int q = r / numm;
-        count += max(0ll, f * (q - l + 1));
+        num++;
+        ll = ll << 1;
     }
 
-    count %= mod2;
+    int ans = 0;
 
-    // for (int i = l; i <= r; i++)
-    // {
-    //     if (i * num <= r)
-    //     {
-    //         count++;
-    //     }
-    //     else
-    //         break;
-    //     if (i * numm <= r)
-    //     {
-    //         count += f;
-    //     }
-    // }
-    cout << count << endl;
+    cout << num << ' ';
+    num--;
+
+    int lmin = l;
+    int lmax = r / (1 << num);
+
+    ans += lmax - lmin + 1;
+    // cout << ans << endl;
+    int pow3 = (1 << (num - 1)) * 3;
+
+    // cout << pow3 << 'x' << endl;
+
+    if (l * pow3 <= r)
+    {
+        int lmmin = l;
+        int lmmax = r / (pow3);
+
+        ans += (lmmax - lmmin + 1) * (num);
+    }
+
+    cout << ans << endl;
 }
 
 int32_t main()

@@ -26,38 +26,28 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
-int modexp(long long x, unsigned int y, int p)
+void dfs(vii &adj, int node, vi &a, vi &b, int &sum, vi &bs, vi &ans, vector<bool> &visited, int bsum)
 {
-    int res = 1;
+    // cout << node << ' ' << sum << endl;
+    // for (auto i : bs)
+    //     cout << i << ' ';
+    // cout << 'h' << endl;
+    visited[node] = true;
+    ans[node] = (upper_bound(bs.begin(), bs.end(), sum) - bs.begin()) - 1;
 
-    x = x % p;
-    if (x == 0)
-        return 0;
-    while (y > 0)
+    for (auto child : adj[node])
     {
-        if (y & 1)
-            res = (res * x) % p;
-        y = y >> 1;
-        x = (x * x) % p;
-    }
-    return res;
-}
-
-vector<bool> sieve(int n)
-{
-    // Time Complexity:- O(log(log(n)))
-
-    vector<bool> is_prime(n + 1, 1);
-    is_prime[0] = is_prime[1] = 0;
-    for (int i = 2; i <= n; i++)
-    {
-        if (is_prime[i] && 1LL * i * i <= n)
+        if (!visited[child])
         {
-            for (int j = i * i; j <= n; j += i)
-                is_prime[j] = 0;
+            sum += a[child];
+            bsum += b[child];
+            bs.push_back(bsum);
+            dfs(adj, child, a, b, sum, bs, ans, visited, bsum);
+            bs.pop_back();
+            bsum -= b[child];
+            sum -= a[child];
         }
     }
-    return is_prime;
 }
 
 void solve()
@@ -65,11 +55,31 @@ void solve()
     int n;
     cin >> n;
 
-    vi a(n);
-    rep(i, 0, n)
+    vii adj(n);
+    vi a(n, 0), b(n, 0);
+    rep(i, 1, n)
     {
-        cin >> a[i];
+        int x;
+        cin >> x >> a[i] >> b[i];
+        x--;
+
+        adj[x].push_back(i);
+        adj[i].push_back(x);
     }
+
+    int sum = 0, bsum = 0;
+    vi bs = {0};
+
+    vector<bool> visited(n, false);
+    vi ans(n, 0);
+
+    dfs(adj, 0, a, b, sum, bs, ans, visited, bsum);
+
+    rep(i, 1, n)
+    {
+        cout << ans[i] << ' ';
+    }
+    cout << endl;
 }
 
 int32_t main()

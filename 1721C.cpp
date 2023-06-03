@@ -5,60 +5,50 @@
 #pragma GCC optimize("unroll-loops")
 
 #include <bits/stdc++.h>
-using namespace std;
-
-#define fio ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
-typedef long long ll;
-
-// For ordered Tree
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
+
+using namespace std;
 using namespace __gnu_pbds;
+
+typedef long long ll;
+
+#define int long long int
 #define ordered_set tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update>
 
 #define vi vector<int>
 #define vii vector<vector<int>>
+#define pi pair<int, int>
+#define mi map<int, int>
+#define si set<int>
+#define rep(var, l, r) for (int var = l; var < r; var++)
+#define repr(var, r, l) for (int var = r; var > l; var--)
+int mod1 = 1000000007;
+int mod2 = 998244353;
 
 void solve()
 {
     int n;
     cin >> n;
+
     vi a(n), b(n);
-    for (int i = 0; i < n; i++)
-        cin >> a[i];
-    for (int i = 0; i < n; i++)
-        cin >> b[i];
-
-    vi mn(n, 0), mx(n, 0);
-
-    for (int i = 0; i < n; i++)
-        mn[i] = *lower_bound(b.begin(), b.end(), a[i]) - a[i];
-
-    int prev = n - 1;
-    for (int i = n - 1; i >= 0; i--)
+    rep(i, 0, n)
     {
-        int x = upper_bound(b.begin(), b.end(), a[i]) - b.begin();
-
-        if (b[x - 1] == a[i])
-            prev = x;
-        else if (x == i && i != 0)
-        {
-            prev = x - 1;
-        }
-
-        mx[i] = b[prev] - a[i];
+        cin >> a[i];
+    }
+    rep(i, 0, n)
+    {
+        cin >> b[i];
     }
 
-    for (auto i : mn)
-        cout << i << ' ';
-    cout << endl;
-    for (auto i : mx)
-        cout << i << ' ';
-    cout << endl;
+    rep(i, 0, n)
+    {
+    }
 }
-int main()
+
+int32_t main()
 {
-    fio;
+    ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
     cin >> tc;
