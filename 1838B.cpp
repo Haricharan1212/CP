@@ -26,44 +26,56 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
+void print(int a, int b)
+{
+    cout << a + 1 << " " << b + 1 << endl;
+}
+
 void solve()
 {
     int n;
     cin >> n;
 
     vi a(n);
-    map<int, vi> m;
-    map<int, int, greater<int>> dp;
-
+    int ind;
+    int maxind;
+    int ind2;
     rep(i, 0, n)
     {
-        int l, r;
-        cin >> l >> r;
-        l++;
-        m[r].push_back(l);
+        cin >> a[i];
+
+        if (a[i] == n)
+            maxind = i;
+
+        if (a[i] == 2)
+            ind2 = i;
+
+        if (a[i] == 1)
+            ind = i;
     }
 
-    dp[0] = 0;
-
-    int currentmx = 0;
-
-    for (auto i : m)
+    if (ind < maxind && maxind < ind2)
     {
-        dp[i.first] = currentmx;
-        for (auto j : i.second)
-        {
-            dp[i.first] = max(dp[i.first], dp.lower_bound(j - 1)->second + 1);
-        }
-
-        currentmx = max(currentmx, dp[i.first]);
+        print(0, 0);
     }
-
-    // // for (auto i : dp)
-    // // {
-    // //     cout << i.first << " " << i.second << endl;
-    // }
-
-    cout << dp.begin()->second << endl;
+    else if (ind < ind2 && ind2 < maxind)
+    {
+        print(ind2, maxind);
+    }
+    else if (maxind < ind && ind < ind2)
+    {
+        print(maxind, ind);
+    }
+    else if (ind > maxind && maxind > ind2)
+    {
+        print(0, 0);
+    }
+    else if (ind > ind2 && ind2 > maxind)
+    {
+        print(ind2, maxind);
+    }
+    else
+        print(maxind, ind);
 }
 
 int32_t main()
@@ -71,7 +83,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    //    cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

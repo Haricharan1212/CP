@@ -28,42 +28,25 @@ int mod2 = 998244353;
 
 void solve()
 {
-    int n;
-    cin >> n;
+    int n, k;
+    cin >> n >> k;
 
     vi a(n);
-    map<int, vi> m;
-    map<int, int, greater<int>> dp;
-
     rep(i, 0, n)
     {
-        int l, r;
-        cin >> l >> r;
-        l++;
-        m[r].push_back(l);
+        cin >> a[i];
     }
 
-    dp[0] = 0;
+    reverse(a.begin(), a.end());
 
-    int currentmx = 0;
-
-    for (auto i : m)
+    int ans = 0;
+    rep(i, 0, n - 1)
     {
-        dp[i.first] = currentmx;
-        for (auto j : i.second)
-        {
-            dp[i.first] = max(dp[i.first], dp.lower_bound(j - 1)->second + 1);
-        }
-
-        currentmx = max(currentmx, dp[i.first]);
+        if (2 * a[i] > a[i - 1])
+            ans++;
     }
 
-    // // for (auto i : dp)
-    // // {
-    // //     cout << i.first << " " << i.second << endl;
-    // }
-
-    cout << dp.begin()->second << endl;
+    cout << ans << endl;
 }
 
 int32_t main()
@@ -71,7 +54,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    //    cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

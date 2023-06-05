@@ -26,50 +26,68 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
-int modexp(long long x, unsigned int y, int p)
-{
-    int res = 1;
-
-    x = x % p;
-    if (x == 0)
-        return 0;
-    while (y > 0)
-    {
-        if (y & 1)
-            res = (res * x) % p;
-        y = y >> 1;
-        x = (x * x) % p;
-    }
-    return res;
-}
-
-vector<bool> sieve(int n)
-{
-    // Time Complexity:- O(log(log(n)))
-
-    vector<bool> is_prime(n + 1, 1);
-    is_prime[0] = is_prime[1] = 0;
-    for (int i = 2; i <= n; i++)
-    {
-        if (is_prime[i] && 1LL * i * i <= n)
-        {
-            for (int j = i * i; j <= n; j += i)
-                is_prime[j] = 0;
-        }
-    }
-    return is_prime;
-}
-
 void solve()
 {
-    int n;
-    cin >> n;
+    int n, m;
+    cin >> n >> m;
 
-    vi a(n);
-    rep(i, 0, n)
+    vii adj(n);
+
+    vector<pi> edges(m);
+    rep(i, 0, m)
     {
-        cin >> a[i];
+        cin >> edges[i].first >> edges[i].second;
+        edges[i].first--;
+        edges[i].second--;
+
+        adj[edges[i].first].push_back(edges[i].second);
+        adj[edges[i].second].push_back(edges[i].first);
     }
+
+    if (m == (n * (n - 1)) / 2)
+    {
+        int ind = 1;
+
+        vi ans(m, -1);
+        int cnt = 2;
+        rep(i, 0, m)
+        {
+            if (edges[i].first == ind || edges[i].second == ind)
+                ans[i] = min(3LL, cnt++);
+            else
+                ans[i] = 1;
+        }
+
+        cout << 3 << endl;
+
+        for (auto i : ans)
+            cout << i << ' ';
+        cout << endl;
+
+        return;
+    }
+
+    int ind = 0;
+
+    while (adj[ind].size() == n - 1)
+        ind++;
+
+    vi ans(m, -1);
+
+    rep(i, 0, m)
+    {
+        if (edges[i].first == ind || edges[i].second == ind)
+            ans[i] = 2;
+        else
+            ans[i] = 1;
+    }
+
+    cout << 2 << endl;
+
+    for (auto i : ans)
+        cout << i << ' ';
+
+    cout << endl;
 }
 
 int32_t main()

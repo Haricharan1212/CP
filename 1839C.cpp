@@ -32,38 +32,54 @@ void solve()
     cin >> n;
 
     vi a(n);
-    map<int, vi> m;
-    map<int, int, greater<int>> dp;
-
     rep(i, 0, n)
     {
-        int l, r;
-        cin >> l >> r;
-        l++;
-        m[r].push_back(l);
+        cin >> a[i];
     }
 
-    dp[0] = 0;
-
-    int currentmx = 0;
-
-    for (auto i : m)
+    if (a[n - 1] == 1)
     {
-        dp[i.first] = currentmx;
-        for (auto j : i.second)
-        {
-            dp[i.first] = max(dp[i.first], dp.lower_bound(j - 1)->second + 1);
-        }
-
-        currentmx = max(currentmx, dp[i.first]);
+        cout << "NO" << endl;
+        return;
     }
 
-    // // for (auto i : dp)
-    // // {
-    // //     cout << i.first << " " << i.second << endl;
-    // }
+    reverse(a.begin(), a.end());
+    int ones = 0;
 
-    cout << dp.begin()->second << endl;
+    a.push_back(0);
+
+    vi ans;
+    rep(i, 0, n)
+    {
+        if (a[i] == 0)
+        {
+            ans.push_back(0);
+        }
+        else
+        {
+            ones++;
+
+            if (a[i + 1] == 0)
+            {
+                ans.push_back(ones);
+                ones = 0;
+            }
+            else
+                ans.push_back(0);
+        }
+    }
+
+    rep(i, 0, n) if (ans[i] > i)
+    {
+        cout << "NO" << endl;
+        return;
+    }
+
+    cout << "YES" << endl;
+
+    for (auto i : ans)
+        cout << i << ' ';
+    cout << endl;
 }
 
 int32_t main()
@@ -71,7 +87,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    //    cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

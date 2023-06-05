@@ -26,44 +26,52 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
+bool check(pair<int, pi> a, pair<int, pi> b)
+{
+    if (b.first - a.first >= abs(b.second.first - a.second.first) + abs(b.second.second - a.second.second))
+    {
+        return true;
+    }
+    return false;
+}
+
 void solve()
 {
-    int n;
-    cin >> n;
+    int r, n;
+    cin >> r >> n;
 
-    vi a(n);
-    map<int, vi> m;
-    map<int, int, greater<int>> dp;
+    vi dp(n + 1, -1e18);
+    vector<pair<int, pi>> v(n + 1);
+    v[0] = {0, {1, 1}};
 
-    rep(i, 0, n)
+    rep(i, 1, n + 1)
     {
-        int l, r;
-        cin >> l >> r;
-        l++;
-        m[r].push_back(l);
+        int t, x, y;
+        cin >> t >> x >> y;
+        v[i] = {t, {x, y}};
     }
 
     dp[0] = 0;
 
-    int currentmx = 0;
-
-    for (auto i : m)
+    rep(i, 1, n + 1)
     {
-        dp[i.first] = currentmx;
-        for (auto j : i.second)
+        dp[i] = dp[i - 1];
+        for (int j = i - 1; j >= 0; j--)
         {
-            dp[i.first] = max(dp[i.first], dp.lower_bound(j - 1)->second + 1);
-        }
+            if (check(v[j], v[i]) && check(v[0], v[j]))
+            {
+                dp[i] = max(dp[i], dp[j] + 1);
+            }
 
-        currentmx = max(currentmx, dp[i.first]);
+            if (v[i].first - v[j].first > 1005)
+                break;
+        }
     }
 
-    // // for (auto i : dp)
-    // // {
-    // //     cout << i.first << " " << i.second << endl;
-    // }
+    int mx = 0;
+    rep(i, 0, n + 1) mx = max(mx, dp[i]);
 
-    cout << dp.begin()->second << endl;
+    cout << mx << endl;
 }
 
 int32_t main()

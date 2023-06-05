@@ -28,42 +28,49 @@ int mod2 = 998244353;
 
 void solve()
 {
-    int n;
-    cin >> n;
+    int n, m;
+    cin >> n >> m;
 
-    vi a(n);
-    map<int, vi> m;
-    map<int, int, greater<int>> dp;
+    vii perms(n);
+    map<vi, int> mp;
 
     rep(i, 0, n)
     {
-        int l, r;
-        cin >> l >> r;
-        l++;
-        m[r].push_back(l);
+        rep(j, 0, m)
+        {
+            int x;
+            cin >> x;
+            perms[i].push_back(--x);
+            mp[perms[i]]++;
+        }
     }
 
-    dp[0] = 0;
-
-    int currentmx = 0;
-
-    for (auto i : m)
+    rep(i, 0, n)
     {
-        dp[i.first] = currentmx;
-        for (auto j : i.second)
+        vi inverse_perm(m);
+        rep(j, 0, m)
         {
-            dp[i.first] = max(dp[i.first], dp.lower_bound(j - 1)->second + 1);
+            inverse_perm[perms[i][j]] = j;
         }
 
-        currentmx = max(currentmx, dp[i.first]);
+        for (int i = m - 1; i >= 0; i--)
+        {
+            if (mp[inverse_perm] > 0)
+            {
+                cout << i + 1 << ' ';
+                break;
+            }
+            else
+                inverse_perm.pop_back();
+
+            if (inverse_perm.size() == 0)
+            {
+                cout << 0 << ' ';
+            }
+        }
     }
 
-    // // for (auto i : dp)
-    // // {
-    // //     cout << i.first << " " << i.second << endl;
-    // }
-
-    cout << dp.begin()->second << endl;
+    cout << endl;
 }
 
 int32_t main()
@@ -71,7 +78,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    //    cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

@@ -26,43 +26,50 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
+int modexp(long long x, unsigned int y, int p)
+{
+    int res = 1;
+
+    x = x % p;
+    if (x == 0)
+        return 0;
+    while (y > 0)
+    {
+        if (y & 1)
+            res = (res * x) % p;
+        y = y >> 1;
+        x = (x * x) % p;
+    }
+    return res;
+}
+
+vector<bool> sieve(int n)
+{
+    // Time Complexity:- O(log(log(n)))
+
+    vector<bool> is_prime(n + 1, 1);
+    is_prime[0] = is_prime[1] = 0;
+    for (int i = 2; i <= n; i++)
+    {
+        if (is_prime[i] && 1LL * i * i <= n)
+        {
+            for (int j = i * i; j <= n; j += i)
+                is_prime[j] = 0;
+        }
+    }
+    return is_prime;
+}
+
 void solve()
 {
-    int n, k;
-    cin >> n >> k;
+    int n;
+    cin >> n;
 
     vi a(n);
-    vector<vi> bits(n, vi(6, 0));
     rep(i, 0, n)
     {
         cin >> a[i];
-
-        int temp = a[i];
-        for (int j = 0; j < 6; j++)
-        {
-            bits[i][j] = temp % 2;
-            temp /= 2;
-        }
     }
-
-    vector<bool> ff;
-    rep(i, 0, 6 - k) ff.push_back(0);
-    rep(i, 0, k) ff.push_back(1);
-
-    do
-    {
-
-        for (int i = 0; i < 6; i++)
-        {
-            set<int> ss;
-            if (ff[i] == 1)
-            {
-                rep(i, 0, n)
-            }
-        }
-
-        ff = next_permutation(ff.begin(), ff.end());
-    } while (next_permutation(ff.begin(), ff.end()));
 }
 
 int32_t main()

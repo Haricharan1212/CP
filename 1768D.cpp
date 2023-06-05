@@ -69,63 +69,7 @@ void solve()
     rep(i, 0, n)
     {
         cin >> a[i];
-        a[i]--;
     }
-
-    int ans = n - 1;
-
-    int count = 0;
-
-    rep(i, 0, n)
-    {
-        if (a[i] == i)
-            count++;
-    }
-    if (count == n)
-    {
-        cout << 1 << endl;
-        return;
-    }
-    bool countt = false;
-    rep(i, 0, n - 1)
-    {
-        if (a[i] == i + 1 && a[i + 1] == i)
-        {
-            countt = true;
-            break;
-        }
-    }
-
-    if (countt)
-        ans = min(ans, n - count - 2);
-
-    countt = false;
-    rep(i, 0, n - 1)
-    {
-        if (a[i] == i + 1)
-        {
-            countt = true;
-            break;
-        }
-    }
-
-    if (countt)
-        ans = min(ans, n - count - 2);
-
-    countt = false;
-    rep(i, 0, n - 1)
-    {
-        if (a[i + 1] == i)
-        {
-            countt = true;
-            break;
-        }
-    }
-
-    if (countt)
-        ans = min(ans, n - count - 2);
-
-    cout << ans << endl;
 }
 
 int32_t main()

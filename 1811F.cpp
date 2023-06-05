@@ -26,199 +26,120 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
-int merge(int *parent, int x)
+void dfs(vector<si> &adj, int node, vector<bool> &visited, int &count)
 {
-    if (parent[x] == x)
-        return x;
-    return merge(parent, parent[x]);
-}
+    visited[node] = true;
+    count++;
 
-int connectedcomponentss(int n, vector<vector<int>> &edges, int k, int flag)
-{
-    int parent[n];
-    for (int i = 0; i < n; i++)
-    {
-        parent[i] = i;
-    }
-    for (auto x : edges)
-    {
-        parent[merge(parent, x[0])] = merge(parent, x[1]);
-    }
-    int ans = 0;
-    for (int i = 0; i < n; i++)
-    {
-        ans += (parent[i] == i);
-    }
-    for (int i = 0; i < n; i++)
-    {
-        parent[i] = merge(parent, parent[i]);
-    }
-    map<int, list<int>> m;
-    for (int i = 0; i < n; i++)
-    {
-        m[parent[i]].push_back(i);
-    }
+    // cout << node << ' ';
 
-    int count = 0;
-
-    for (auto it = m.begin(); it != m.end(); it++)
+    for (auto it : adj[node])
     {
-        list<int> l = it->second;
-        // for (auto x : l)
-        // {
-        //     cout << x << " ";
-        // }
-        // cout << endl;
-
-        if (l.size() != k && l.size() != 1)
+        if (!visited[it])
         {
-            cout << "NO" << endl;
-            return -1;
+            dfs(adj, it, visited, count);
         }
-        if (l.size() == k)
-            count++;
     }
-
-    if ((count != 1))
-    {
-        cout << "NO" << endl;
-        return -1;
-    }
-    return ans;
-}
-
-int connectedcomponents(int n, vector<vector<int>> &edges, int k, int flag)
-{
-    int parent[n];
-    for (int i = 0; i < n; i++)
-    {
-        parent[i] = i;
-    }
-    for (auto x : edges)
-    {
-        parent[merge(parent, x[0])] = merge(parent, x[1]);
-    }
-    int ans = 0;
-    for (int i = 0; i < n; i++)
-    {
-        ans += (parent[i] == i);
-    }
-    for (int i = 0; i < n; i++)
-    {
-        parent[i] = merge(parent, parent[i]);
-    }
-    map<int, list<int>> m;
-    for (int i = 0; i < n; i++)
-    {
-        m[parent[i]].push_back(i);
-    }
-
-    int count = 0;
-
-    for (auto it = m.begin(); it != m.end(); it++)
-    {
-        list<int> l = it->second;
-        // for (auto x : l)
-        // {
-        //     cout << x << " ";
-        // }
-        // cout << endl;
-
-        if (l.size() != k && l.size() != 1)
-        {
-            cout << "NO" << endl;
-            return -1;
-        }
-        if (l.size() == k)
-            count++;
-    }
-
-    if ((count != k + 1))
-    {
-        cout << "NO" << endl;
-        return -1;
-    }
-    return ans;
 }
 
 void solve()
 {
-    // string t;
-    // cin >> t;
-
     int n, m;
     cin >> n >> m;
 
-    vi adj[n];
-    vector<vi> v, edges, vv;
-
+    vector<si> adj(n);
+    vector<pi> edges(m);
     rep(i, 0, m)
     {
         int a, b;
         cin >> a >> b;
-        a--;
-        b--;
-
-        if (a > b)
-            swap(a, b);
-
-        adj[a].push_back(b);
-        adj[b].push_back(a);
-        edges.push_back({a, b});
+        a--, b--;
+        edges[i] = {a, b};
+        adj[a].insert(b);
+        adj[b].insert(a);
     }
 
-    int k = sqrtl(n);
-
-    if (n != k * k || (m != (k * k + k)))
+    int k = sqrt(n);
+    if (k * k != n || k * k + k != m)
     {
         cout << "NO" << endl;
-
         return;
     }
 
     rep(i, 0, n)
     {
-        if (adj[i].size() != 4 && adj[i].size() != 2)
+        if (adj[i].size() != 2 && adj[i].size() != 4)
         {
             cout << "NO" << endl;
             return;
         }
     }
 
+    vector<si> adjj = adj;
+
     rep(i, 0, m)
     {
-        // cout << adj[edges[i][0]].size() << " " << adj[edges[i][1]].size() << endl;
-        if (adj[edges[i][0]].size() == 2 && adj[edges[i][1]].size() == 2)
+        int a = edges[i].first, b = edges[i].second;
+
+        if (adj[a].size() == 4 && adj[b].size() == 4)
         {
-            v.push_back(edges[i]);
-            // s.insert(edges[i][0]);
-            // s.insert(edges[i][1]);
-        }
-        else if (adj[edges[i][0]].size() == 4 && adj[edges[i][1]].size() == 4)
-        {
-            vv.push_back(edges[i]);
+            adjj[a].erase(b);
+            adjj[b].erase(a);
         }
     }
 
-    rep(i, 0, v.size())
+    // for (auto i : adj)
+    // {
+    //     for (auto j : i)
+    //     {
+    //         cout << j + 1 << ' ';
+    //     }
+    //     cout << endl;
+    // }
+
+    vector<bool> visited(n, false);
+
+    int cnt = 0;
+    rep(i, 0, n)
     {
-        cout << v[i][0] << " " << v[i][1] << endl;
+        if (!visited[i])
+        {
+            int count = 0;
+            dfs(adj, i, visited, count);
+            cnt++;
+        }
     }
 
-    if (connectedcomponents(n, v, k - 1, 0) == -1)
+    if (cnt != 1)
     {
+        cout << "NO" << endl;
         return;
     }
 
-    rep(i, 0, vv.size())
+    visited = vector<bool>(n, false);
+
+    int ccnt = 0;
+    rep(i, 0, n)
     {
-        cout << vv[i][0] << " " << vv[i][1] << endl;
+        if (!visited[i])
+        {
+            ccnt++;
+            int count = 0;
+            dfs(adjj, i, visited, count);
+            if (count != k)
+            {
+                cout << "NO" << endl;
+                return;
+            }
+        }
     }
 
-    if (connectedcomponentss(n, vv, k, 1) == -1)
+    if (ccnt != k)
     {
+        cout << "NO" << endl;
         return;
     }
+
     cout << "YES" << endl;
 }
 

@@ -62,44 +62,44 @@ vector<bool> sieve(int n)
 
 void solve()
 {
-    int n, x;
-    cin >> n >> x;
+    int n;
+    cin >> n;
 
-    vi a(n);
-    map<int, vi> m;
+    vector<pi> a(n);
+
     rep(i, 0, n)
     {
-        cin >> a[i];
-        m[a[i]].push_back(i + 1);
+        int x, y;
+        cin >> x >> y;
+
+        a[i] = {x, -y};
     }
 
     sort(a.begin(), a.end());
 
+    map<int, int> m;
+    int ans = 0;
+
+    int on = 0;
+
+    int x = 0;
+    int xmax = 0;
     rep(i, 0, n)
     {
-        rep(j, i + 1, n)
+        if (a[i].first > xmax)
         {
-            int i1 = m[a[i]][m[a[i]].size() - 1];
-            m[a[i]].pop_back();
-
-            int i2 = m[a[j]][m[a[j]].size() - 1];
-            m[a[j]].pop_back();
-
-            if (m.find(x - a[i] - a[j]) == m.end())
-            {
-            }
-            else if (m[x - a[i] - a[j]].size() > 0)
-            {
-                cout << i1 << " " << i2 << " " << m[x - a[i] - a[j]][0] << "\n";
-                return;
-            }
-
-            m[a[i]].push_back(i1);
-            m[a[j]].push_back(i2);
+            // cout << x << 'x' << ans << endl;
+            x++;
+            xmax = max(x, xmax);
+            ans += a[i].second;
+            m[a[i].first]++;
+            int num = x;
+            x -= m[num];
+            m[num] = 0;
         }
     }
 
-    cout << "IMPOSSIBLE\n";
+    cout << -ans << endl;
 }
 
 int32_t main()
@@ -107,7 +107,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

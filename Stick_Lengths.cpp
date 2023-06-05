@@ -62,6 +62,26 @@ vector<bool> sieve(int n)
 
 void solve()
 {
+    int n;
+    cin >> n;
+
+    vi a(n);
+    rep(i, 0, n) cin >> a[i];
+
+    sort(a.begin(), a.end());
+
+    int m1 = a[n / 2];
+    int m2 = a[n / 2 - 1];
+
+    int ans = 0;
+
+    rep(i, 0, n) ans += abs(a[i] - m1);
+
+    int ans2 = 0;
+
+    rep(i, 0, n) ans2 += abs(a[i] - m2);
+
+    cout << min(ans, ans2);
 }
 
 int32_t main()
@@ -69,7 +89,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    //    cin >> tc;
     while (tc--)
     {
         solve();

@@ -64,6 +64,18 @@ void solve()
 {
     int n;
     cin >> n;
+
+    vi a(n);
+
+    if (n == 1)
+        cout << 1 << endl;
+    else if (n % 2 == 1)
+        cout << -1 << endl;
+    else
+    {
+        rep(i, 0, n / 2) cout << 2 * i + 2 << ' ' << 2 * i + 1 << ' ';
+        cout << endl;
+    }
 }
 
 int32_t main()

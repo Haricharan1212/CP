@@ -26,44 +26,47 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
+int check(int ht, vi &a)
+{
+
+    map<int, int> m;
+
+    for (auto i : a)
+    {
+        int num = (ht - i) / 2;
+        m[2] += num;
+        m[(ht - i) % 2]++;
+    }
+
+    int x = m[2] - m[1];
+    x *= 2;
+
+    if (m[1] > m[2])
+        return (m[1] - 1) * 2 + 1;
+    else
+        return 2 * m[1] + x / 3 * 2 + x % 3;
+}
+
 void solve()
 {
     int n;
     cin >> n;
 
     vi a(n);
-    map<int, vi> m;
-    map<int, int, greater<int>> dp;
-
+    int mx = 0;
     rep(i, 0, n)
     {
-        int l, r;
-        cin >> l >> r;
-        l++;
-        m[r].push_back(l);
+        cin >> a[i];
+        mx = max(mx, a[i]);
     }
 
-    dp[0] = 0;
+    int ans = 1e18;
 
-    int currentmx = 0;
+    ans = min(ans, check(mx, a));
+    ans = min(ans, check(mx + 1, a));
+    ans = min(ans, check(mx + 2, a));
 
-    for (auto i : m)
-    {
-        dp[i.first] = currentmx;
-        for (auto j : i.second)
-        {
-            dp[i.first] = max(dp[i.first], dp.lower_bound(j - 1)->second + 1);
-        }
-
-        currentmx = max(currentmx, dp[i.first]);
-    }
-
-    // // for (auto i : dp)
-    // // {
-    // //     cout << i.first << " " << i.second << endl;
-    // }
-
-    cout << dp.begin()->second << endl;
+    cout << ans << endl;
 }
 
 int32_t main()
@@ -71,7 +74,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    //    cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

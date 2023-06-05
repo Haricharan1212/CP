@@ -26,44 +26,74 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
+void dfs(int node, vii &adj, vi &cols, vector<bool> &visited)
+{
+    visited[node] = true;
+    for (auto child : adj[node])
+    {
+        if (!visited[child])
+        {
+            cols[child] = 1 - cols[node];
+            dfs(child, adj, cols, visited);
+        }
+    }
+}
+
 void solve()
 {
     int n;
     cin >> n;
 
-    vi a(n);
-    map<int, vi> m;
-    map<int, int, greater<int>> dp;
+    vii adj(n);
+    rep(i, 0, n - 1)
+    {
+        int a, b;
+        cin >> a >> b;
+        a--, b--;
+        adj[a].push_back(b);
+        adj[b].push_back(a);
+    }
+
+    if (n == 2)
+    {
+        cout << "2 2\n1 1\n";
+        return;
+    }
+
+    vi cols(n, -1);
+    cols[0] = 0;
+    vector<bool> vis(n, false);
+
+    dfs(0, adj, cols, vis);
+
+    int num = count(cols.begin(), cols.end(), 0);
+
+    int des;
+    if (num > n - num)
+        des = 0;
+    else
+        des = 1;
+
+    vi ans(n);
 
     rep(i, 0, n)
     {
-        int l, r;
-        cin >> l >> r;
-        l++;
-        m[r].push_back(l);
+        if (cols[i] == des)
+            ans[i] = adj[i].size();
+        else
+            ans[i] = 1;
     }
 
-    dp[0] = 0;
+    int sm = 0;
 
-    int currentmx = 0;
+    for (auto i : ans)
+        sm += i;
 
-    for (auto i : m)
-    {
-        dp[i.first] = currentmx;
-        for (auto j : i.second)
-        {
-            dp[i.first] = max(dp[i.first], dp.lower_bound(j - 1)->second + 1);
-        }
+    cout << max(num, n - num) << ' ' << sm << endl;
 
-        currentmx = max(currentmx, dp[i.first]);
-    }
-
-    // // for (auto i : dp)
-    // // {
-    // //     cout << i.first << " " << i.second << endl;
-    // }
-
-    cout << dp.begin()->second << endl;
+    for (auto i : ans)
+        cout << i << ' ';
+    cout << endl;
 }
 
 int32_t main()

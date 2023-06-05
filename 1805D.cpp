@@ -26,38 +26,18 @@ typedef long long ll;
 int mod1 = 1000000007;
 int mod2 = 998244353;
 
-int modexp(long long x, unsigned int y, int p)
+void dfs(int node, vii &adj, vi &dists, vector<bool> &visited)
 {
-    int res = 1;
+    visited[node] = true;
 
-    x = x % p;
-    if (x == 0)
-        return 0;
-    while (y > 0)
+    for (auto child : adj[node])
     {
-        if (y & 1)
-            res = (res * x) % p;
-        y = y >> 1;
-        x = (x * x) % p;
-    }
-    return res;
-}
-
-vector<bool> sieve(int n)
-{
-    // Time Complexity:- O(log(log(n)))
-
-    vector<bool> is_prime(n + 1, 1);
-    is_prime[0] = is_prime[1] = 0;
-    for (int i = 2; i <= n; i++)
-    {
-        if (is_prime[i] && 1LL * i * i <= n)
+        if (!visited[child])
         {
-            for (int j = i * i; j <= n; j += i)
-                is_prime[j] = 0;
+            dists[child] = dists[node] + 1;
+            dfs(child, adj, dists, visited);
         }
     }
-    return is_prime;
 }
 
 void solve()
@@ -65,19 +45,84 @@ void solve()
     int n;
     cin >> n;
 
-    vi a(n);
+    vii adj(n);
+    rep(i, 0, n - 1)
+    {
+        int u, v;
+        cin >> u >> v;
+        u--, v--;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+
+    vi dists(n, 0);
+    vector<bool> visited(n, false);
+
+    dfs(0, adj, dists, visited);
+    int iindex = -1;
+    int mx = -1;
     rep(i, 0, n)
     {
-        cin >> a[i];
+        if (dists[i] > mx)
+        {
+            mx = dists[i];
+            iindex = i;
+        }
+    }
+
+    vi dists1(n, 0);
+    visited.assign(n, false);
+    dfs(iindex, adj, dists1, visited);
+
+    mx = -1;
+    int iiindex = -1;
+
+    rep(i, 0, n)
+    {
+        if (dists1[i] > mx)
+        {
+            mx = dists1[i];
+            iiindex = i;
+        }
+    }
+
+    vi dists2(n, 0);
+    visited.assign(n, false);
+    dfs(iiindex, adj, dists2, visited);
+
+    vi f;
+
+    rep(i, 0, n)
+    {
+        f.push_back(max(dists1[i], dists2[i]));
+    }
+
+    // for (auto i : f)
+    //     cout << i << ' ';
+
+    map<int, int> m;
+
+    rep(i, 0, n)
+    {
+        m[f[i]]++;
+    }
+
+    // for (auto i : m)
+    //     cout << i.first << ' ' << i.second << '\n';
+
+    int current = 0;
+    rep(i, 1, n + 1)
+    {
+        cout << min(n, current + 1) << " ";
+        current += m[i];
     }
 }
-
 int32_t main()
 {
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    cin >> tc;
+    //    cin >> tc;
     while (tc--)
     {
         solve();

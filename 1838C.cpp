@@ -62,44 +62,60 @@ vector<bool> sieve(int n)
 
 void solve()
 {
-    int n, x;
-    cin >> n >> x;
+    int n, m;
+    cin >> n >> m;
 
-    vi a(n);
-    map<int, vi> m;
-    rep(i, 0, n)
+    set<int> s;
+
+    int start = 1;
+    vi ss;
+
+    if (n == 4)
     {
-        cin >> a[i];
-        m[a[i]].push_back(i + 1);
+        ss = {1, 3, 0, 2};
     }
-
-    sort(a.begin(), a.end());
-
-    rep(i, 0, n)
+    else if (n % 2 == 0)
     {
-        rep(j, i + 1, n)
+        rep(i, 0, n / 2)
         {
-            int i1 = m[a[i]][m[a[i]].size() - 1];
-            m[a[i]].pop_back();
-
-            int i2 = m[a[j]][m[a[j]].size() - 1];
-            m[a[j]].pop_back();
-
-            if (m.find(x - a[i] - a[j]) == m.end())
-            {
-            }
-            else if (m[x - a[i] - a[j]].size() > 0)
-            {
-                cout << i1 << " " << i2 << " " << m[x - a[i] - a[j]][0] << "\n";
-                return;
-            }
-
-            m[a[i]].push_back(i1);
-            m[a[j]].push_back(i2);
+            ss.push_back(i);
+            ss.push_back(i + n / 2);
+        }
+    }
+    else if (n % 2 == 1)
+    {
+        ss.push_back(0);
+        ss.push_back(n / 2);
+        ss.push_back(n - 1);
+        rep(i, 1, n / 2)
+        {
+            ss.push_back(i);
+            ss.push_back(n - 1 - i);
         }
     }
 
-    cout << "IMPOSSIBLE\n";
+    // for (auto i : ss)
+    //     cout << i << ' ';
+    // cout << endl;
+
+    int arr[n][m];
+
+    rep(i, 0, n)
+    {
+        rep(j, 0, m)
+        {
+            arr[i][j] = ss[i] * m + j + 1;
+        }
+    }
+
+    rep(i, 0, n)
+    {
+        rep(j, 0, m)
+        {
+            cout << arr[i][j] << " ";
+        }
+        cout << "\n";
+    }
 }
 
 int32_t main()
@@ -107,7 +123,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

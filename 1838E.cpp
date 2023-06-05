@@ -43,63 +43,37 @@ int modexp(long long x, unsigned int y, int p)
     return res;
 }
 
-vector<bool> sieve(int n)
-{
-    // Time Complexity:- O(log(log(n)))
-
-    vector<bool> is_prime(n + 1, 1);
-    is_prime[0] = is_prime[1] = 0;
-    for (int i = 2; i <= n; i++)
-    {
-        if (is_prime[i] && 1LL * i * i <= n)
-        {
-            for (int j = i * i; j <= n; j += i)
-                is_prime[j] = 0;
-        }
-    }
-    return is_prime;
-}
-
 void solve()
 {
-    int n, x;
-    cin >> n >> x;
+    int n, m, k;
+    cin >> n >> m >> k;
 
     vi a(n);
-    map<int, vi> m;
     rep(i, 0, n)
     {
         cin >> a[i];
-        m[a[i]].push_back(i + 1);
     }
 
-    sort(a.begin(), a.end());
+    int mci = 1;
+    int ans = modexp(k - 1, m, mod1);
+    // cout << ans << ' ';
 
-    rep(i, 0, n)
+    rep(i, 1, n)
     {
-        rep(j, i + 1, n)
-        {
-            int i1 = m[a[i]][m[a[i]].size() - 1];
-            m[a[i]].pop_back();
+        mci *= ((m - i + 1) * modexp(i, mod1 - 2, mod1)) % mod1;
+        mci %= mod1;
+        ans += (mci * modexp(k - 1, m - i, mod1)) % mod1;
+        ans %= mod1;
 
-            int i2 = m[a[j]][m[a[j]].size() - 1];
-            m[a[j]].pop_back();
-
-            if (m.find(x - a[i] - a[j]) == m.end())
-            {
-            }
-            else if (m[x - a[i] - a[j]].size() > 0)
-            {
-                cout << i1 << " " << i2 << " " << m[x - a[i] - a[j]][0] << "\n";
-                return;
-            }
-
-            m[a[i]].push_back(i1);
-            m[a[j]].push_back(i2);
-        }
+        // cout << ans << ' ';
     }
 
-    cout << "IMPOSSIBLE\n";
+    ans = modexp(k, m, mod1) % mod1 - ans;
+    ans %= mod1;
+    ans += mod1;
+    ans %= mod1;
+
+    cout << ans << "\n";
 }
 
 int32_t main()
@@ -107,7 +81,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();

@@ -62,44 +62,18 @@ vector<bool> sieve(int n)
 
 void solve()
 {
-    int n, x;
-    cin >> n >> x;
+    int n;
+    cin >> n;
 
-    vi a(n);
-    map<int, vi> m;
-    rep(i, 0, n)
+    string s;
+    cin >> s;
+
+    if (count(s.begin(), s.end(), '1') % 2 || s.count(s.begin(), s.end(), '1') < 2)
     {
-        cin >> a[i];
-        m[a[i]].push_back(i + 1);
+        cout << "NO\n";
+        return;
     }
-
-    sort(a.begin(), a.end());
-
-    rep(i, 0, n)
-    {
-        rep(j, i + 1, n)
-        {
-            int i1 = m[a[i]][m[a[i]].size() - 1];
-            m[a[i]].pop_back();
-
-            int i2 = m[a[j]][m[a[j]].size() - 1];
-            m[a[j]].pop_back();
-
-            if (m.find(x - a[i] - a[j]) == m.end())
-            {
-            }
-            else if (m[x - a[i] - a[j]].size() > 0)
-            {
-                cout << i1 << " " << i2 << " " << m[x - a[i] - a[j]][0] << "\n";
-                return;
-            }
-
-            m[a[i]].push_back(i1);
-            m[a[j]].push_back(i2);
-        }
-    }
-
-    cout << "IMPOSSIBLE\n";
+    cout << "YES\n";
 }
 
 int32_t main()
@@ -107,7 +81,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    cin >> tc;
     while (tc--)
     {
         solve();
