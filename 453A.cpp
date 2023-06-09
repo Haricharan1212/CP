@@ -10,35 +10,24 @@ using namespace std;
 #define si set<int>
 #define rep(var, l, r) for (int var = l; var < r; var++)
 
-int mod2 = 998244353;
+// To find max, f(X < x) = f(X1 < x) * f(X2 < x) * f(X3 < x) * ... * f(Xn < x)
+// = (x / a1) * (x / a2) * (x / a3) * ... * (x / an) = x^n / m^n
+
+// P(x) = n x^(n - 1)/m^n
+//  E(x) = n sum(x^n / m^n)
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
+    int m, n;
+    cin >> m >> n;
 
-    int ans = 1;
-
-    vi a(n);
-    rep(i, 0, n) cin >> a[i];
-
-    rep(i, 1, n)
+    long double ans = 0;
+    rep(i, 1, m + 1)
     {
-        if (a[i - 1] % a[i] != 0)
-        {
-            ans *= 0;
-            break;
-        }
-        if (a[i] == a[i - 1])
-            ans *= m / a[i];
-        else
-            ans *= m / a[i] - m / (a[i - 1] / a[i]);
-        ans %= mod2;
-        ans += mod2;
-        ans %= mod2;
+        ans += i * (powl((long double)i / (long double)m, n) - pow(((long double)i - 1) / (long double)m, n));
     }
 
-    cout << ans << endl;
+    cout << fixed << setprecision(30) << ans << endl;
 }
 
 int32_t main()
@@ -46,7 +35,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    cin >> tc;
+    //    cin >> tc;
     while (tc--)
         solve();
 

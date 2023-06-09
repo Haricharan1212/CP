@@ -10,35 +10,32 @@ using namespace std;
 #define si set<int>
 #define rep(var, l, r) for (int var = l; var < r; var++)
 
-int mod2 = 998244353;
-
 void solve()
 {
+
     int n, m;
     cin >> n >> m;
 
-    int ans = 1;
-
-    vi a(n);
-    rep(i, 0, n) cin >> a[i];
-
-    rep(i, 1, n)
+    vii adj(n);
+    map<pi, int> mm;
+    rep(i, 0, m)
     {
-        if (a[i - 1] % a[i] != 0)
-        {
-            ans *= 0;
-            break;
-        }
-        if (a[i] == a[i - 1])
-            ans *= m / a[i];
-        else
-            ans *= m / a[i] - m / (a[i - 1] / a[i]);
-        ans %= mod2;
-        ans += mod2;
-        ans %= mod2;
+        int a, b;
+        cin >> a >> b;
+        a--, b--;
+
+        adj[a].push_back(b);
+        adj[b].push_back(a);
+
+        int c;
+        cin >> c;
+
+        mm[{a, b}] = c;
+        mm[{b, a}] = c;
     }
 
-    cout << ans << endl;
+    vi dist(n, INT_MAX);
+    priority_queue<pi, vector<pi>, greater<pi>> pq;
 }
 
 int32_t main()
@@ -46,7 +43,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    cin >> tc;
+    //    cin >> tc;
     while (tc--)
         solve();
 

@@ -10,35 +10,32 @@ using namespace std;
 #define si set<int>
 #define rep(var, l, r) for (int var = l; var < r; var++)
 
-int mod2 = 998244353;
-
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
+    int n;
+    cin >> n;
 
-    int ans = 1;
+    string s;
+    cin >> s;
 
-    vi a(n);
-    rep(i, 0, n) cin >> a[i];
-
-    rep(i, 1, n)
+    char current = -1;
+    string ans;
+    rep(i, 0, n)
     {
-        if (a[i - 1] % a[i] != 0)
+        if (current == -1)
         {
-            ans *= 0;
-            break;
+            ans.push_back(s[i]);
+            current = s[i];
         }
-        if (a[i] == a[i - 1])
-            ans *= m / a[i];
-        else
-            ans *= m / a[i] - m / (a[i - 1] / a[i]);
-        ans %= mod2;
-        ans += mod2;
-        ans %= mod2;
+        else if (s[i] == current)
+        {
+            current = -1;
+        }
     }
 
-    cout << ans << endl;
+    for (auto i : ans)
+        cout << i;
+    cout << endl;
 }
 
 int32_t main()
