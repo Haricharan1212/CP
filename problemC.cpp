@@ -1,82 +1,109 @@
 // Haricharan
-
-#pragma GCC optimize("Ofast")
-#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,avx2,fma")
-#pragma GCC optimize("unroll-loops")
-
 #include <bits/stdc++.h>
 using namespace std;
 
-#define fio ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
-typedef long long ll;
-
-// For ordered Tree
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-using namespace __gnu_pbds;
-#define ordered_set tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update>
-
+#define int long long int
 #define vi vector<int>
 #define vii vector<vector<int>>
-
-const int N = 1e5 + 5;
-bool prime[N + 1];
-
-void sieve()
-{
-    memset(prime, true, sizeof(prime));
-
-    for (int p = 2; p * p <= N; p++)
-    {
-        if (prime[p] == true)
-        {
-            for (int i = p * p; i <= N; i += p)
-                prime[i] = false;
-        }
-    }
-}
+#define vb vector<bool>
+#define pi pair<int, int>
+#define si set<int>
+#define rep(var, l, r) for (int var = l; var < r; var++)
 
 void solve()
 {
+    int n, q;
+    cin >> n >> q;
 
-    int n;
-    cin >> n;
-
-    map<int, int> m;
-
-    for (int i = 0; i < n; i++)
+    vi a(n + 1);
+    map<int, vi> m, mm;
+    vi pref(n + 1, 0);
+    mm[0] = {0};
+    vi ss(n + 1, 0);
+    rep(i, 1, n + 1)
     {
-        int a;
-        cin >> a;
-        m[a]++;
+        cin >> a[i];
+        pref[i] = pref[i - 1] ^ a[i];
+        ss[i] = ss[i - 1] + a[i];
+
+        if (i % 2)
+            m[pref[i]].push_back(i);
+        else
+            mm[pref[i]].push_back(i);
     }
 
-    int op = 0, opp = 0;
-    for (auto i : m)
+    // for (auto i : m)
+    // {
+    //     cout << i.first << ": ";
+    //     for (auto j : i.second)
+    //     {
+    //         cout << j << ' ';
+    //     }
+    //     cout << endl;
+    // }
+
+    // for (auto i : mm)
+    // {
+    //     cout << i.first << ": ";
+    //     for (auto j : i.second)
+    //     {
+    //         cout << j << ' ';
+    //     }
+    //     cout << endl;
+    // }
+
+    while (q--)
     {
-        if (i.first < i.second)
+        int l, r;
+        cin >> l >> r;
+
+        int op = 0;
+
+        if ((r - l + 1) % 2 == 1)
         {
-            op += i.second - i.first;
+            if (pref[r] == pref[l - 1])
+                op = 1;
+            else
+                op = -1;
         }
         else
         {
-            opp += i.first - i.second;
+            if (pref[r] == pref[l - 1])
+            {
+                if (r % 2)
+                    if (lower_bound(mm[pref[r]].begin(), mm[pref[r]].end(), l - 1) != mm[pref[r]].end() && *lower_bound(mm[pref[r]].begin(), mm[pref[r]].end(), l - 1) < r)
+                        op = 2;
+                    else
+                        op = -1;
+                else
+                {
+                    if (lower_bound(m[pref[r]].begin(), m[pref[r]].end(), l - 1) != m[pref[r]].end() && *lower_bound(m[pref[r]].begin(), m[pref[r]].end(), l - 1) < r)
+                        op = 2;
+                    else
+                        op = -1;
+                }
+                        }
+            else
+            {
+                op = -1;
+            }
         }
-    }
 
-    cout << op << endl;
+        if (ss[r] == ss[l - 1])
+            op = 0;
+
+        cout << op << endl;
+    }
 }
 
-int main()
+int32_t main()
 {
-    fio;
+    ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    cin >> tc;
+    //    cin >> tc;
     while (tc--)
-    {
         solve();
-    }
 
     return 0;
 }

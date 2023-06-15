@@ -1,79 +1,91 @@
 // Haricharan
-
-#pragma GCC optimize("Ofast")
-#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,avx2,fma")
-#pragma GCC optimize("unroll-loops")
-
 #include <bits/stdc++.h>
 using namespace std;
 
-#define fio ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
-typedef long long ll;
-
-// For ordered Tree
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-using namespace __gnu_pbds;
-#define ordered_set tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update>
-
+#define int long long int
 #define vi vector<int>
 #define vii vector<vector<int>>
+#define vb vector<bool>
+#define pi pair<int, int>
+#define si set<int>
+#define rep(var, l, r) for (int var = l; var < r; var++)
 
-const int N = 1e5 + 5;
-bool prime[N + 1];
+int mod2 = 998244353;
 
-void sieve()
+int modexp(int a, int b)
 {
-    memset(prime, true, sizeof(prime));
-
-    for (int p = 2; p * p <= N; p++)
+    int res = 1;
+    while (b)
     {
-        if (prime[p] == true)
-        {
-            for (int i = p * p; i <= N; i += p)
-                prime[i] = false;
-        }
+        if (b & 1)
+            res = (res * a) % mod2;
+        a = (a * a) % mod2;
+        b >>= 1;
     }
+    return res;
 }
 
 void solve()
 {
+    int n, a1, x, y, m, k;
+    cin >> n >> a1 >> x >> y >> m >> k;
 
-    int n;
-    cin >> n;
+    int nck = 1;
+    vi b(n + 1, 0);
 
-    vector<ll> c(n);
+    int ai = a1;
+    int prefy = 0;
 
-    for (int i = 0; i < n; i++)
-        cin >> c[i];
+    int bi = 0;
+    int ans = 0;
 
-    vector<ll> a = c, b = c;
+    rep(i, 1, n + 1)
+    {
+        if (i < k)
+            continue;
 
-    for (int i = 1; i < n; i++)
-        a[i] ^= a[i - 1];
+        if (i == k)
+        {
+            bi = ai;
+        }
+        else
+        {
+            bi = (bi * x + prefy * (y)) + nck * a1;
+        }
+        bi %= mod2;
 
-    for (int i = n - 2; i >= 0; i--)
-        b[i] ^= b[i + 1];
+        prefy += nck;
+        prefy %= mod2;
 
-    ll ans = 0;
-    for (int i = 0; i < n - 1; i++)
-        ans = max(ans, a[i] + b[n - 1 - i]);
+        nck = nck * (i + 1) * modexp(i + 1 - k, mod2 - 2);
+        nck %= mod2;
 
-    ans = max(ans, a[n - 1]);
+        cout << bi << ' ';
+
+        ans ^= bi * i;
+    }
+
+    // for (auto i : b)
+    // {
+    //     cout << i << " ";
+    // }
+
+    // rep(i, 1, n + 1)
+    // {
+    //     ans ^= (b[i] * (i));
+    // }
 
     cout << ans << endl;
 }
 
-int main()
+int32_t main()
 {
-    fio;
+    ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
     //    cin >> tc;
     while (tc--)
-    {
         solve();
-    }
 
     return 0;
 }

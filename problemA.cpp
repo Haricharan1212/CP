@@ -1,114 +1,90 @@
 // Haricharan
-
-#pragma GCC optimize("Ofast")
-#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,avx2,fma")
-#pragma GCC optimize("unroll-loops")
-
 #include <bits/stdc++.h>
 using namespace std;
 
-#define fio ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
-typedef long long ll;
-
-// For ordered Tree
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-using namespace __gnu_pbds;
-#define ordered_set tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update>
-
+#define int long long int
 #define vi vector<int>
 #define vii vector<vector<int>>
-
-const int N = 1e5 + 5;
-bool prime[N + 1];
-
-void sieve()
-{
-    memset(prime, true, sizeof(prime));
-
-    for (int p = 2; p * p <= N; p++)
-    {
-        if (prime[p] == true)
-        {
-            for (int i = p * p; i <= N; i += p)
-                prime[i] = false;
-        }
-    }
-}
+#define vb vector<bool>
+#define pi pair<int, int>
+#define si set<int>
+#define rep(var, l, r) for (int var = l; var < r; var++)
 
 void solve()
 {
 
-    int n, p;
-    cin >> n >> p;
+    int k;
+    cin >> k;
+    int n = 1 << k;
 
-    vi a(n);
-    for (int i = 0; i < n; i++)
+    vi factorial(n + 2);
+
+    factorial[0] = 1;
+    rep(i, 1, n + 2)
+    {
+        factorial[i] = (factorial[i - 1] * i);
+    }
+
+    vi a(n + 1);
+    rep(i, 1, n + 1)
+    {
         cin >> a[i];
-
-    if (p == 0 || n == 1)
-    {
-        cout << 0 << endl;
-        return;
+        a[i]--;
     }
 
-    int ans = 0;
-    int i;
-    for (i = 0; i < n; i++)
+    int ans = 1;
+
+    int curr = 3;
+
+    for (int i = 1; i < k; i++)
     {
-        if (a[i] != 0)
+        vi curs;
+        int pow = 1 << i;
+
+        for (int i = 0; i < pow; i++)
         {
-            break;
+            curs.push_back(curr++);
         }
+
+        map<int, int> m;
+
+        for (auto i : curs)
+            if (a[i] != -1)
+                m[a[i] / (n / pow)]++;
+            else
+                m[a[i]]++;
+
+        for (auto i : curs)
+            cout << i << ' ';
+
+        int posses = m[-1];
+        for (auto i : m)
+        {
+            if (i.first == -1)
+                continue;
+            if (i.second >= 2)
+            {
+                cout << 0 << endl;
+                return;
+            }
+        }
+
+        cout << endl;
+
+        ans *= factorial[posses];
     }
-    for (int k = 1; k <= min(i, p); k++)
-        ans += 2 * k;
 
-    ans += (i)*2 * max(0, p - i);
-
-    reverse(a.begin(), a.end());
-    int j;
-
-    for (j = 0; j < n; j++)
-    {
-        if (a[j] != 0)
-        {
-            break;
-        }
-    }
-
-    for (int k = 1; k <= min(j, p); k++)
-        ans += 2 * k;
-
-    ans += (j)*2 * max(0, p - j);
-
-    vector<int> v;
-
-    int count = 0;
-    for (int k = j; k < j; k++)
-    {
-        if (a[j] == 0)
-        {
-            count++;
-        }
-        else
-        {
-            v.push_back(count);
-            count = 0;
-        }
-    }
+    cout << ans << endl;
 }
 
-int main()
+int32_t main()
 {
-    fio;
+    ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    cin >> tc;
+    //    cin >> tc;
     while (tc--)
-    {
         solve();
-    }
 
     return 0;
 }

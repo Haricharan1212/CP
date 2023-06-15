@@ -12,6 +12,43 @@ using namespace std;
 
 void solve()
 {
+    int n;
+    cin >> n;
+
+    vi a(n);
+    si s;
+    rep(i, 0, n) cin >> a[i], s.insert(a[i]);
+
+    if (s.size() == 1)
+    {
+        cout << 1 << endl;
+        return;
+    }
+
+    vi b = {a[0]};
+    rep(i, 1, n)
+    {
+        if (a[i] == a[i - 1])
+            continue;
+        b.push_back(a[i]);
+    }
+
+    a = b;
+    n = a.size();
+
+    vi ans;
+    ans.push_back(a[0]);
+
+    rep(i, 1, n - 1)
+    {
+        if (a[i] < a[i - 1] && a[i] < a[i + 1])
+            ans.push_back(a[i]);
+        else if (a[i] > a[i - 1] && a[i] > a[i + 1])
+            ans.push_back(a[i]);
+    }
+    ans.push_back(a[n - 1]);
+
+    cout << ans.size() << endl;
 }
 
 int32_t main()

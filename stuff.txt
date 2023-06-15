@@ -1,0 +1,18 @@
+// 4 matrices
+// ABCD
+// {1, 2, 3, 4, 3}
+
+// ABC = A * BC or AB * C
+
+// ABCD = AB * CD or A * BCD or ABC * D
+
+dp array
+  A B C    D 
+A * 6 18   51 or () or () 
+B * * 24   48
+C * * *    36 
+D * * *    * 
+
+n matrices
+
+ABCD ... Nth matix = 
