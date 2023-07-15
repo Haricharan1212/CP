@@ -1,41 +1,39 @@
 // Haricharan
-
-#pragma GCC optimize("Ofast")
-#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,avx2,fma")
-#pragma GCC optimize("unroll-loops")
-
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-
 using namespace std;
-using namespace __gnu_pbds;
-
-typedef long long ll;
 
 #define int long long int
-#define ordered_set tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update>
-
 #define vi vector<int>
 #define vii vector<vector<int>>
+#define vb vector<bool>
 #define pi pair<int, int>
-#define mi map<int, int>
 #define si set<int>
 #define rep(var, l, r) for (int var = l; var < r; var++)
-#define repr(var, r, l) for (int var = r; var > l; var--)
-int mod1 = 1000000007;
-int mod2 = 998244353;
 
 void solve()
 {
-    int n;
-    cin >> n;
+    int n, d12, d23, d31;
+    cin >> n >> d12 >> d23 >> d31;
 
-    int d12, d23, d31;
-    cin >> d12 >> d23 >> d31;
+    if (2 * max(max(d12, d31), d23) > d12 + d23 + d31 || (d12 + d23 + d31) % 2)
+    {
+        cout << "NO" << endl;
+        return;
+    }
+    cout << "YES" << endl;
 
-    vi a(n);
-    int cnt = 4;
+    si left;
+    rep(i, 4, n + 1) left.insert(i);
+
+    vector<pi> edges;
+
+    if (d23 >= d31 && d23 >= d12)
+    {
+        int comlength = (d12 + d31 - d23) / 2;
+        rep(i, 0, comlength)
+        {
+        }
+    }
 }
 
 int32_t main()
@@ -45,9 +43,7 @@ int32_t main()
     int tc = 1;
     cin >> tc;
     while (tc--)
-    {
         solve();
-    }
 
     return 0;
 }

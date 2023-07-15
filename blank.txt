@@ -1,0 +1,154 @@
+Problem A
+
+Brute force over number of -1's
+
+- Number of ones -1 < n
+
+Initial array: m: minus ones
+i: 0, 2, 4, 6, ... n
+
+m - i
+
+i                     <=                    n - i
+Number of minus ones <= Numbers of plus ones
+
+Problem B
+
+999 1000
+
+0999
+1000
+
+difference: 28
+
+Both l and r have same size (no zero padding needed)
+571 and 579 -> Prefix "57" equal
+
+Prefix, First non-equal number, Everything else
+571557 and 573543
+
+571999 and 573000
+
+ans = Diff. in first non-equal digit + 9 * Number of digits after that
+
+
+l and r have different size
+
+
+0000912
+X234567
+
+0999999
+X000000
+
+X + how many ever 9's you can fit
+
+ans = r[0] + (r.size() - 1)*9
+
+Problem C
+
+S, T
+- Reverse T always
+- How many digits differ between S and T -> cnt
+- How many digits differ between S and rev(T) -> cntt
+
+Try to make S equal to T
+
+cnt was odd
+2 * cnt - 1 operations
+cnt was even
+2 * cnt operations
+
+cnt odd
+Swap
+Rev
+Swap 
+Rev
+Swap
+...
+Swap
+
+cnt even
+Swap
+Rev
+Swap
+Rev
+...
+Rev
+
+cntt
+
+cntt -> 0
+
+Swap nothing
+Reverse
+
+cntt -> even
+2 * cntt - 1
+
+Swap
+Reverse
+Swap
+
+cntt -> odd
+2 * cntt operations
+
+Swap
+Reverse
+Swap
+Reverse
+Swap
+Reverse
+
+Problem D
+
+- Given m: Not very useful
+
+4 8
+2 6
+4 8
+2 7
+1 5
+
+Have Vector of (pairs {l, r})
+
+What we really want is maximize difference between 1's and 0's
+
+m values
+   1 2 3 4 5 6 7 8
+2: 0 0 0 1 1 1 1 1
+3: 0 1 1 1 1 1 1 0
+1: 0 1 1 1 1 1 0 0
+4: 1 1 1 1 1 0 0 0 
+
+maxl -> maximum value of l: 4
+
+first possibility
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 
+0 0 0 1 1 1 1 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+ans 5
+
+second possibility
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 
+0 0 0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0 0
+ans 15
+
+Symmetric case
+
+4: 1 1 1 1 1 0 0 0 
+1: 0 1 1 1 1 1 0 0
+3: 0 1 1 1 1 1 1 0
+2: 0 0 0 1 1 1 1 1
+
+minr = 5
+
+1 1 1 1 1 1 
+0 0 1 0 0 0
+
+6 - 1 = 5
+
+Correct ans: 5
+
+
+
+

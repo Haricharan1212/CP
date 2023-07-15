@@ -12,88 +12,47 @@ using namespace std;
 
 void solve()
 {
-    int n, q;
-    cin >> n >> q;
-
-    vi a(n + 1);
-    map<int, vi> m, mm;
-    vi pref(n + 1, 0);
-    mm[0] = {0};
-    vi ss(n + 1, 0);
-    rep(i, 1, n + 1)
+    int n;
+    cin >> n;
+    vi a(n);
+    rep(i, 0, n)
     {
         cin >> a[i];
-        pref[i] = pref[i - 1] ^ a[i];
-        ss[i] = ss[i - 1] + a[i];
-
-        if (i % 2)
-            m[pref[i]].push_back(i);
-        else
-            mm[pref[i]].push_back(i);
     }
 
-    // for (auto i : m)
-    // {
-    //     cout << i.first << ": ";
-    //     for (auto j : i.second)
-    //     {
-    //         cout << j << ' ';
-    //     }
-    //     cout << endl;
-    // }
-
-    // for (auto i : mm)
-    // {
-    //     cout << i.first << ": ";
-    //     for (auto j : i.second)
-    //     {
-    //         cout << j << ' ';
-    //     }
-    //     cout << endl;
-    // }
-
-    while (q--)
+    int f = 0;
+    rep(i, 0, n)
     {
-        int l, r;
-        cin >> l >> r;
-
-        int op = 0;
-
-        if ((r - l + 1) % 2 == 1)
+        int mn = a[i];
+        int ans = 0;
+        vi b(n);
+        rep(j, 0, n)
         {
-            if (pref[r] == pref[l - 1])
-                op = 1;
-            else
-                op = -1;
-        }
-        else
-        {
-            if (pref[r] == pref[l - 1])
-            {
-                if (r % 2)
-                    if (lower_bound(mm[pref[r]].begin(), mm[pref[r]].end(), l - 1) != mm[pref[r]].end() && *lower_bound(mm[pref[r]].begin(), mm[pref[r]].end(), l - 1) < r)
-                        op = 2;
-                    else
-                        op = -1;
-                else
-                {
-                    if (lower_bound(m[pref[r]].begin(), m[pref[r]].end(), l - 1) != m[pref[r]].end() && *lower_bound(m[pref[r]].begin(), m[pref[r]].end(), l - 1) < r)
-                        op = 2;
-                    else
-                        op = -1;
-                }
-                        }
-            else
-            {
-                op = -1;
-            }
+            b[i] = mn + (j - i);
         }
 
-        if (ss[r] == ss[l - 1])
-            op = 0;
+        rep(j, 0, i)
+        {
+            if (a[j] <= b[j] && (j == 0 || a[j - 1] < a[j]))
+                continue;
+            else
+                ans += b[j] - a[j], a[j] = b[j];
+        }
 
-        cout << op << endl;
+        for (int j = n - 1; j >= 0; j--)
+        {
+            if (a[j] >= b[j] && (j == n - 1 || a[j] < a[j + 1]))
+                continue;
+            else
+                ans += abs(b[j] - a[j]), a[j] = b[j];
+        }
+
+        cout << i << ' ' << ans << endl;
+
+        f = min(ans, f);
     }
+
+    cout << f << endl;
 }
 
 int32_t main()

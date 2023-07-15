@@ -9,69 +9,75 @@ using namespace std;
 #define pi pair<int, int>
 #define si set<int>
 #define rep(var, l, r) for (int var = l; var < r; var++)
+vi primes;
+
+vi sieve(int n)
+{
+    vi isPrime(n + 1, -1);
+    for (int i = 2; i <= n; i++)
+    {
+        if (isPrime[i] == -1)
+        {
+            for (int j = i * i; j <= n; j += i)
+            {
+                if (isPrime[j] == -1)
+                    isPrime[j] = i;
+            }
+        }
+    }
+    return isPrime;
+}
+
+vi primefactors(int n)
+{
+    vi factors;
+
+    if (primes[n] == -1)
+        return {};
+
+    while (n != 1 && primes[n] != -1)
+    {
+        factors.push_back(primes[n]);
+        n /= primes[n];
+    }
+
+    if (n > 1)
+        factors.push_back(n);
+
+    sort(factors.begin(), factors.end());
+
+    return factors;
+}
 
 void solve()
 {
+    int n;
+    cin >> n;
+    primes = sieve(n + 10);
 
-    int k;
-    cin >> k;
-    int n = 1 << k;
+    vi a = primefactors(n);
+    int num = *a.rbegin();
 
-    vi factorial(n + 2);
+    int l = (n / num - 1) * num + 1;
+    int r = n;
 
-    factorial[0] = 1;
-    rep(i, 1, n + 2)
+    int ans = n - 1;
+
+    rep(i, l, r + 1)
     {
-        factorial[i] = (factorial[i - 1] * i);
-    }
+        vi b = primefactors(i);
 
-    vi a(n + 1);
-    rep(i, 1, n + 1)
-    {
-        cin >> a[i];
-        a[i]--;
-    }
+        // cout << i << ' ';
+        // for (auto x : b)
+        //     cout << x << ' ';
 
-    int ans = 1;
+        // cout << endl;
 
-    int curr = 3;
+        if (b.size() == 0)
+            continue;
 
-    for (int i = 1; i < k; i++)
-    {
-        vi curs;
-        int pow = 1 << i;
-
-        for (int i = 0; i < pow; i++)
-        {
-            curs.push_back(curr++);
-        }
-
-        map<int, int> m;
-
-        for (auto i : curs)
-            if (a[i] != -1)
-                m[a[i] / (n / pow)]++;
-            else
-                m[a[i]]++;
-
-        for (auto i : curs)
-            cout << i << ' ';
-
-        int posses = m[-1];
-        for (auto i : m)
-        {
-            if (i.first == -1)
-                continue;
-            if (i.second >= 2)
-            {
-                cout << 0 << endl;
-                return;
-            }
-        }
-
-        cout << endl;
-
-        ans *= factorial[posses];
+        int num = *b.rbegin();
+        ans = min(ans, (i / num - 1) * num + 1);
     }
 
     cout << ans << endl;
@@ -82,7 +88,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    //    cin >> tc;
+    // cin >> tc;
     while (tc--)
         solve();
 
