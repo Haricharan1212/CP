@@ -1,129 +1,54 @@
-// Haricharan
-#include <bits/stdc++.h>
+#include <iostream>
+#include <vector>
+
 using namespace std;
 
-#define int long long int
-#define vi vector<int>
-#define vii vector<vector<int>>
-#define vb vector<bool>
-#define pi pair<int, int>
-#define si set<int>
-#define rep(var, l, r) for (int var = l; var < r; var++)
-
-int mod1 = 1e9 + 7;
-
-void dfs(vii &adj, int node, vb &visited, vi &x, vb &flag)
+bool canGenerateSubsets(vector<int> &arr, int targetSum, int currentIndex, vector<int> &currentSubset, int currentSum, int numSubsets)
 {
-    visited[node] = true;
-    map<int, vi> m;
-
-    for (auto child : adj[node])
+    if (currentSum == targetSum && currentSubset.size() > 0)
     {
-        if (!visited[child])
+        if (numSubsets == 4)
         {
-            dfs(adj, child, visited, x, flag);
-            m[x[child]].push_back(child);
+            return true;
         }
+        return canGenerateSubsets(arr, targetSum, 0, currentSubset, 0, numSubsets + 1);
     }
 
-    int cnt = 0;
-    x[node] = 127;
-    int ind = 99;
-    for (auto i : m)
+    if (currentIndex == (long long)arr.size() || currentSum > targetSum)
     {
-        ind += 5;
-        ind %= mod1;
-
-        int num = i.first * i.second.size();
-        num %= mod1;
-        num *= (i.second.size() * ind) % mod1;
-
-        int numm = i.first * i.first;
-        numm %= mod1;
-        numm *= (i.second.size() * ind) % mod1;
-
-        x[node] += (numm + num) % mod1;
-        x[node] %= mod1;
-
-        // if (i.second.size() % 2)
-        // {
-        //     flag[node] = 0;
-        //     return;
-        // }
-        if (i.second.size() % 2 == 1)
-            cnt++;
+        return false;
     }
 
-    if (cnt > 1)
-    {
-        flag[node] = 0;
-        return;
-    }
+    // Include the current element in the subset
+    currentSubset.push_back(arr[currentIndex]);
+    bool withCurrent = canGenerateSubsets(arr, targetSum, currentIndex + 1, currentSubset, currentSum + arr[currentIndex], numSubsets);
+    currentSubset.pop_back();
 
-    if (cnt == 0)
-    {
-        flag[node] = 1;
-    }
+    // Exclude the current element from the subset
+    bool withoutCurrent = canGenerateSubsets(arr, targetSum, currentIndex + 1, currentSubset, currentSum, numSubsets);
 
-    if (cnt == 1)
-    {
-        for (auto i : m)
-        {
-            if (i.second.size() % 2 == 1)
-            {
-                flag[node] = flag[i.second[0]];
-                return;
-            }
-        }
-    }
+    return withCurrent || withoutCurrent;
 }
 
-void solve()
+bool hasFourDistinctSubsets(vector<int> &arr, int targetSum)
 {
-    int n;
-    cin >> n;
+    vector<int> currentSubset;
+    return canGenerateSubsets(arr, targetSum, 0, currentSubset, 0, 1);
+}
 
-    vii adj(n);
+int main()
+{
+    vector<int> arr = {1, 2, 3, 4, 5};
+    int targetSum = 10;
 
-    rep(i, 0, n - 1)
+    if (hasFourDistinctSubsets(arr, targetSum))
     {
-        int a, b;
-        cin >> a >> b;
-        a--, b--;
-        adj[a].push_back(b);
-        adj[b].push_back(a);
-    }
-
-    vb visited(n, false);
-    vi x(n, 1);
-    // bool flag = true;
-    vb check(n, false);
-    vb flag(n, true);
-    dfs(adj, 0, visited, x, flag);
-
-    // for (auto i : x)
-    // {
-    //     cout << i << ' ';
-    // }
-
-    if (flag[0])
-    {
-        cout << "YES" << endl;
+        cout << "There are four distinct non-intersecting subsets that sum to " << targetSum << "." << endl;
     }
     else
     {
-        cout << "NO" << endl;
+        cout << "There are no four distinct non-intersecting subsets that sum to " << targetSum << "." << endl;
     }
-}
-
-int32_t main()
-{
-    ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
-    srand(chrono::high_resolution_clock::now().time_since_epoch().count());
-    int tc = 1;
-    cin >> tc;
-    while (tc--)
-        solve();
 
     return 0;
 }

@@ -1,60 +1,48 @@
 // Haricharan
-
-#pragma GCC optimize("Ofast")
-#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,avx2,fma")
-#pragma GCC optimize("unroll-loops")
-
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-
 using namespace std;
-using namespace __gnu_pbds;
-
-typedef long long ll;
 
 #define int long long int
-#define ordered_set tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update>
-
 #define vi vector<int>
 #define vii vector<vector<int>>
+#define vb vector<bool>
 #define pi pair<int, int>
-#define mi map<int, int>
 #define si set<int>
 #define rep(var, l, r) for (int var = l; var < r; var++)
-#define repr(var, r, l) for (int var = r; var > l; var--)
-int mod1 = 1000000007;
-int mod2 = 998244353;
 
 void solve()
 {
+    const int mxx = 1e6;
+
     int n;
     cin >> n;
 
-    vi a(n);
-    map<int, int> m;
+    int arr[mxx + 5] = {0};
+
     rep(i, 0, n)
     {
-        cin >> a[i];
-
-        rep(j, 1, sqrt(a[i]) + 1)
-        {
-            if (a[i] % j == 0 && j * j == a[i])
-                m[j]++;
-            else if (a[i] % j == 0)
-            {
-                m[j]++;
-                m[a[i] / j]++;
-            }
-        }
+        int x;
+        cin >> x;
+        arr[x]++;
     }
 
-    int ans = 1;
-    for (auto i : m)
-        if (i.second >= 2)
-            ans = i.first;
+    int mx = 1;
 
-    cout << ans;
+    rep(i, 1, mxx + 1)
+    {
+        int cnt = 0;
+
+        rep(j, 1, mxx / i + 2)
+        {
+            if (i * j <= mxx)
+                cnt += arr[i * j];
+        }
+
+        if (cnt >= 2)
+            mx = max(i, mx);
+    }
+
+    cout << mx << endl;
 }
 
 int32_t main()
@@ -64,9 +52,7 @@ int32_t main()
     int tc = 1;
     //    cin >> tc;
     while (tc--)
-    {
         solve();
-    }
 
     return 0;
 }

@@ -39,72 +39,13 @@ void showq(queue<int> gq)
 
 void solve()
 {
-    int n, m;
-    cin >> n >> m;
+    int a[5] = {5, 1, 15, 20, 25};
+    int i, j, m;
+    i = ++a[1];
+    j = a[1]++;
+    m = a[i++];
 
-    vii adj(n);
-    rep(i, 0, m)
-    {
-        int a, b;
-        cin >> a >> b;
-        a--, b--;
-        adj[a].push_back(b);
-        adj[b].push_back(a);
-    }
-    vector<bool> visited(n, false);
-    vi parent(n, -1);
-
-    queue<int> q;
-    q.push(0);
-    visited[0] = true;
-    rep(i, 0, n)
-    {
-        if (q.size() == 0)
-        {
-            cout << "IMPOSSIBLE\n";
-            return;
-        }
-        int num = q.front();
-        q.pop();
-
-        for (auto i : adj[num])
-        {
-            if (!visited[i])
-            {
-                visited[i] = true;
-
-                q.push(i);
-                parent[i] = num;
-            }
-        }
-        // cout << num << 'x';
-
-        // showq(q);
-    }
-
-    vi ff;
-
-    int curr = n - 1;
-
-    while (curr != 0)
-    {
-        ff.push_back(curr);
-        curr = parent[curr];
-
-        if (curr == -1)
-        {
-            cout << "IMPOSSIBLE\n";
-            return;
-        }
-    }
-
-    ff.push_back(0);
-
-    reverse(ff.begin(), ff.end());
-
-    cout << ff.size() << endl;
-    for (auto i : ff)
-        cout << i + 1 << ' ';
+    cout << i << " " << j << " " << m << endl;
 }
 
 int32_t main()

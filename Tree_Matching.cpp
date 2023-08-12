@@ -1,75 +1,79 @@
 // Haricharan
-
-#pragma GCC optimize("Ofast")
-#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,avx2,fma")
-#pragma GCC optimize("unroll-loops")
-
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-
 using namespace std;
-using namespace __gnu_pbds;
-
-typedef long long ll;
 
 #define int long long int
-#define ordered_set tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update>
-
 #define vi vector<int>
 #define vii vector<vector<int>>
+#define vb vector<bool>
 #define pi pair<int, int>
-#define mi map<int, int>
 #define si set<int>
 #define rep(var, l, r) for (int var = l; var < r; var++)
-#define repr(var, r, l) for (int var = r; var > l; var--)
-int mod1 = 1000000007;
-int mod2 = 998244353;
 
-int modexp(long long x, unsigned int y, int p)
+// 0: not there
+
+void dfs(int node, vii &adj, vii &dp, vb &vis)
 {
-    int res = 1;
+    vis[node] = true;
 
-    x = x % p;
-    if (x == 0)
-        return 0;
-    while (y > 0)
+    if (adj[node].size() == 1)
     {
-        if (y & 1)
-            res = (res * x) % p;
-        y = y >> 1;
-        x = (x * x) % p;
+        dp[node][0] = 0;
+        dp[node][1] = 0;
+        return;
     }
-    return res;
-}
 
-vector<bool> sieve(int n)
-{
-    // Time Complexity:- O(log(log(n)))
+    dp[node][0] = 0;
+    int x = 1e9;
 
-    vector<bool> is_prime(n + 1, 1);
-    is_prime[0] = is_prime[1] = 0;
-    for (int i = 2; i <= n; i++)
+    // vector<pi> diffs;
+
+    for (auto child : adj[node])
     {
-        if (is_prime[i] && 1LL * i * i <= n)
+        if (!vis[child])
         {
-            for (int j = i * i; j <= n; j += i)
-                is_prime[j] = 0;
+            dfs(child, adj, dp, vis);
+            dp[node][0] += dp[child][1];
+
+            dp[node][1] += dp[child][1];
+            x = min(x, dp[node][1] - dp[node][0]);
+
+            //     diffs.push_back({dp[child][1] - dp[child][0], child});
         }
     }
-    return is_prime;
+
+    dp[node][1] = max(dp[node][0], dp[node][1] - x + 1);
+
+    // sort(diffs.begin(), diffs.end(), greater<pi>());
 }
 
 void solve()
 {
     int n;
     cin >> n;
+    vii adj(n);
 
-    vi a(n);
-    rep(i, 0, n)
+    rep(i, 0, n - 1)
     {
-        cin >> a[i];
+        int u, v;
+        cin >> u >> v;
+        u--, v--;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
     }
+    vector<bool> visited(n, false);
+    vii dp(n, vi(2));
+
+    dfs(0, adj, dp, visited);
+
+    for (auto i : dp)
+    {
+        for (auto j : i)
+            cout << j << " ";
+        cout << endl;
+    }
+
+    cout << dp[0][1] << endl;
 }
 
 int32_t main()
@@ -77,11 +81,9 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    cin >> tc;
+    //    cin >> tc;
     while (tc--)
-    {
         solve();
-    }
 
     return 0;
 }

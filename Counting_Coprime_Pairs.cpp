@@ -1,75 +1,130 @@
 // Haricharan
-
-#pragma GCC optimize("Ofast")
-#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,avx2,fma")
-#pragma GCC optimize("unroll-loops")
-
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-
 using namespace std;
-using namespace __gnu_pbds;
-
-typedef long long ll;
 
 #define int long long int
-#define ordered_set tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update>
-
 #define vi vector<int>
 #define vii vector<vector<int>>
+#define vb vector<bool>
 #define pi pair<int, int>
-#define mi map<int, int>
 #define si set<int>
 #define rep(var, l, r) for (int var = l; var < r; var++)
-#define repr(var, r, l) for (int var = r; var > l; var--)
-int mod1 = 1000000007;
-int mod2 = 998244353;
 
-int modexp(long long x, unsigned int y, int p)
+vi s;
+
+vector<int> sieve(int n)
 {
-    int res = 1;
+    vector<int> primes(n + 1, -1);
 
-    x = x % p;
-    if (x == 0)
-        return 0;
-    while (y > 0)
-    {
-        if (y & 1)
-            res = (res * x) % p;
-        y = y >> 1;
-        x = (x * x) % p;
-    }
-    return res;
-}
-
-vector<bool> sieve(int n)
-{
-    // Time Complexity:- O(log(log(n)))
-
-    vector<bool> is_prime(n + 1, 1);
-    is_prime[0] = is_prime[1] = 0;
     for (int i = 2; i <= n; i++)
     {
-        if (is_prime[i] && 1LL * i * i <= n)
+        if (primes[i] == -1)
         {
             for (int j = i * i; j <= n; j += i)
-                is_prime[j] = 0;
+            {
+                if (primes[j] == -1)
+                    primes[j] = i;
+            }
         }
     }
-    return is_prime;
+    return primes;
+}
+
+int getFactors(int n)
+{
+    set<int> ss;
+
+    if (s[n] == -1)
+    {
+        return n;
+    }
+
+    while (n != 1)
+    {
+        if (s[n] == -1)
+        {
+            ss.insert(n);
+            break;
+        }
+
+        ss.insert(s[n]);
+        n /= s[n];
+    }
+
+    int prod = 1;
+
+    for (auto i : ss)
+        prod *= i;
+
+    return prod;
+}
+
+int numfactors(int n)
+{
+    set<int> ss;
+
+    if (s[n] == -1)
+    {
+        return 1;
+    }
+
+    while (n != 1)
+    {
+        if (s[n] == -1)
+        {
+            ss.insert(n);
+            break;
+        }
+
+        ss.insert(s[n]);
+        n /= s[n];
+    }
+
+    return ss.size();
 }
 
 void solve()
 {
     int n;
     cin >> n;
+    s = sieve(1e6 + 5);
 
-    vi a(n);
+    map<int, int> m;
+
+    int nn = n;
+
     rep(i, 0, n)
     {
-        cin >> a[i];
+        int x;
+        cin >> x;
+
+        if (x == 1)
+            nn--;
+        else
+            m[getFactors(x)]++;
     }
+
+    int cnt = 0;
+
+    int ans = 0;
+
+    for (auto i : m)
+    {
+        cout << i.first << ' ' << i.second << ' ' << numfactors(i.first) << endl;
+
+        cnt += i.second;
+
+        if (numfactors(i.first) % 2 == 0)
+        {
+            ans -= ((i.second) * (i.second - 1)) / 2;
+        }
+        else
+        {
+            ans += ((i.second) * (i.second - 1)) / 2;
+        }
+    }
+
+    cout << (cnt * (cnt - 1)) / 2 - ans << endl;
 }
 
 int32_t main()
@@ -77,11 +132,9 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    cin >> tc;
+    //    cin >> tc;
     while (tc--)
-    {
         solve();
-    }
 
     return 0;
 }

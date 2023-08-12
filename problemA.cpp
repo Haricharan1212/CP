@@ -1,4 +1,3 @@
-// Haricharan
 #include <bits/stdc++.h>
 using namespace std;
 
@@ -9,88 +8,89 @@ using namespace std;
 #define pi pair<int, int>
 #define si set<int>
 #define rep(var, l, r) for (int var = l; var < r; var++)
-vi primes;
+#define ll long long
 
-vi sieve(int n)
+bool findSubsetIndices(vector<int> &arr, int targetSum, int currentIndex, int currentSum, int repetitions, vector<bool> &done)
 {
-    vi isPrime(n + 1, -1);
-    for (int i = 2; i <= n; i++)
+
+    if (currentSum == targetSum && repetitions == 3)
     {
-        if (isPrime[i] == -1)
+        return true;
+    }
+
+    if (currentIndex == (ll)arr.size() || currentSum > targetSum)
+    {
+        return false;
+    }
+
+    while (done[currentIndex])
+    {
+        currentIndex++;
+        if (currentIndex == (ll)arr.size())
         {
-            for (int j = i * i; j <= n; j += i)
-            {
-                if (isPrime[j] == -1)
-                    isPrime[j] = i;
-            }
+            return false;
         }
     }
-    return isPrime;
-}
 
-vi primefactors(int n)
-{
-    vi factors;
-
-    if (primes[n] == -1)
-        return {};
-
-    while (n != 1 && primes[n] != -1)
+    if (currentSum == targetSum)
     {
-        factors.push_back(primes[n]);
-        n /= primes[n];
+        for (auto i : done)
+            cout << i << ' ';
+        cout << endl;
+        repetitions++;
+        currentSum = 0;
+        currentIndex = 0;
     }
 
-    if (n > 1)
-        factors.push_back(n);
+    done[currentIndex] = true;
+    // bool withCurrent = findSubsetIndices(arr, targetSum, currentSubset, currentIndex + 1, currentSum + arr[currentIndex], repetitions + 1, resultIndices);
+    bool withCurrent = findSubsetIndices(arr, targetSum, currentIndex + 1, currentSum + arr[currentIndex], repetitions, done);
 
-    sort(factors.begin(), factors.end());
+    done[currentIndex] = false;
 
-    return factors;
+    bool withoutCurrent = findSubsetIndices(arr, targetSum, currentIndex + 1, currentSum, repetitions, done);
+
+    return withCurrent || withoutCurrent;
 }
 
-void solve()
+int solution(vector<int> &A)
 {
-    int n;
-    cin >> n;
-    primes = sieve(n + 10);
+    set<int, greater<int>> sums;
 
-    vi a = primefactors(n);
-    int num = *a.rbegin();
-
-    int l = (n / num - 1) * num + 1;
-    int r = n;
-
-    int ans = n - 1;
-
-    rep(i, l, r + 1)
+    for (int i = 0; i < (long long)A.size(); i++)
     {
-        vi b = primefactors(i);
-
-        // cout << i << ' ';
-        // for (auto x : b)
-        //     cout << x << ' ';
-
-        // cout << endl;
-
-        if (b.size() == 0)
-            continue;
-
-        int num = *b.rbegin();
-        ans = min(ans, (i / num - 1) * num + 1);
+        sums.insert(A[i]);
+        for (int j = i + 1; j < (long long)A.size(); j++)
+        {
+            sums.insert(A[i] + A[j]);
+        }
     }
 
-    cout << ans << endl;
+    for (auto i : sums)
+    {
+        cout << i << ' ';
+
+        vector<int> b = A;
+        vector<bool> done(b.size(), false);
+
+        findSubsetIndices(b, i, 0, 0, 0, done);
+
+        cout << endl;
+
+        // if (findSubsetIndices(b, i, 0, 0, 0, done))
+        // {
+        //     return i;
+        // }
+    }
+
+    return 0;
 }
 
 int32_t main()
 {
-    ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
-    srand(chrono::high_resolution_clock::now().time_since_epoch().count());
-    int tc = 1;
-    // cin >> tc;
-    while (tc--)
-        solve();
+
+    vector<int> A = {1, 1, 1, 1};
+    cout << solution(A) << endl;
 
     return 0;
 }

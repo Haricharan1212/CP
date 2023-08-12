@@ -1,64 +1,14 @@
 // Haricharan
-
-#pragma GCC optimize("Ofast")
-#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,avx2,fma")
-#pragma GCC optimize("unroll-loops")
-
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-
 using namespace std;
-using namespace __gnu_pbds;
-
-typedef long long ll;
 
 #define int long long int
-#define ordered_set tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update>
-
 #define vi vector<int>
 #define vii vector<vector<int>>
+#define vb vector<bool>
 #define pi pair<int, int>
-#define mi map<int, int>
 #define si set<int>
 #define rep(var, l, r) for (int var = l; var < r; var++)
-#define repr(var, r, l) for (int var = r; var > l; var--)
-int mod1 = 1000000007;
-int mod2 = 998244353;
-
-int modexp(long long x, unsigned int y, int p)
-{
-    int res = 1;
-
-    x = x % p;
-    if (x == 0)
-        return 0;
-    while (y > 0)
-    {
-        if (y & 1)
-            res = (res * x) % p;
-        y = y >> 1;
-        x = (x * x) % p;
-    }
-    return res;
-}
-
-vector<bool> sieve(int n)
-{
-    // Time Complexity:- O(log(log(n)))
-
-    vector<bool> is_prime(n + 1, 1);
-    is_prime[0] = is_prime[1] = 0;
-    for (int i = 2; i <= n; i++)
-    {
-        if (is_prime[i] && 1LL * i * i <= n)
-        {
-            for (int j = i * i; j <= n; j += i)
-                is_prime[j] = 0;
-        }
-    }
-    return is_prime;
-}
 
 void solve()
 {
@@ -66,16 +16,22 @@ void solve()
     cin >> n >> m;
 
     vi a(n);
-    vi b(m);
+
+    vi c(n);
+
     rep(i, 0, n)
     {
-        cin >> a[i];
-        a[i]--;
-        b[a[i]] = i;
+        cin >> c[i];
+        c[i]--;
+        a[c[i]] = i;
     }
 
-    int count = 0;
-    rep(i, 0, n - 1) if (b[i] > b[i + 1]) count++;
+    int cnt = 0;
+    rep(i, 0, n)
+    {
+        if (i == 0 || a[i] < a[i - 1])
+            cnt++;
+    }
 
     rep(i, 0, m)
     {
@@ -83,19 +39,40 @@ void solve()
         cin >> x >> y;
         x--, y--;
 
-        int num = a[x];
-        int numm = a[y];
+        swap(c[x], c[y]);
 
-        b[num] = y;
-        b[numm] = x;
+        x = c[x], y = c[y];
+
+        if (x && a[x] < a[x - 1])
+            cnt--;
+        if (x != n - 1 && a[x] > a[x + 1])
+            cnt--;
+
+        if (y && a[y] < a[y - 1])
+            cnt--;
+        if (y != n - 1 && a[y] > a[y + 1])
+            cnt--;
 
         swap(a[x], a[y]);
 
-        if (num > 0 && b[num] > b[num - 1])
-            count++;
-        else if (num > 0 && b[num] > b[num - 1])
-            count--;
-        cout << count << endl;
+        if (x && a[x] < a[x - 1])
+            cnt++;
+        if (x != n - 1 && a[x] > a[x + 1])
+            cnt++;
+
+        if (y && a[y] < a[y - 1])
+            cnt++;
+        if (y != n - 1 && a[y] > a[y + 1])
+            cnt++;
+
+        cout << cnt << endl;
+
+        for (auto i : a)
+            cout << i << ' ';
+        cout << endl;
+        for (auto i : c)
+            cout << i << ' ';
+        cout << endl;
     }
 }
 
@@ -104,11 +81,9 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    // cin >> tc;
+    //    cin >> tc;
     while (tc--)
-    {
         solve();
-    }
 
     return 0;
 }
