@@ -21,13 +21,7 @@ namespace internal
     }
     int countr_zero(unsigned int n)
     {
-#ifdef _MSC_VER
-        unsigned long index;
-        _BitScanForward(&index, n);
-        return index;
-#else
         return __builtin_ctz(n);
-#endif
     }
     constexpr int countr_zero_constexpr(unsigned int n)
     {
@@ -175,22 +169,3 @@ private:
 
     void update(int k) { d[k] = op(d[2 * k], d[2 * k + 1]); }
 };
-
-
-void solve()
-{
-}
-
-int32_t main()
-{
-    ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
-    srand(chrono::high_resolution_clock::now().time_since_epoch().count());
-    int tc = 1;
-    cin >> tc;
-    // precomp(10);
-
-    while (tc--)
-        solve();
-
-    return 0;
-}
