@@ -1,99 +1,66 @@
 // Haricharan
-
-#pragma GCC optimize("Ofast")
-#pragma GCC target("sse,sse2,sse3,ssse3,sse4,popcnt,abm,mmx,avx,avx2,fma")
-#pragma GCC optimize("unroll-loops")
-
 #include <bits/stdc++.h>
-#include <ext/pb_ds/assoc_container.hpp>
-#include <ext/pb_ds/tree_policy.hpp>
-
 using namespace std;
-using namespace __gnu_pbds;
-
-typedef long long ll;
 
 #define int long long int
-#define ordered_set tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update>
-
 #define vi vector<int>
 #define vii vector<vector<int>>
+#define vb vector<bool>
 #define pi pair<int, int>
-#define mi map<int, int>
 #define si set<int>
 #define rep(var, l, r) for (int var = l; var < r; var++)
-#define repr(var, r, l) for (int var = r; var > l; var--)
-int mod1 = 1000000007;
-int mod2 = 998244353;
 
-int modexp(long long x, unsigned int y, int p)
+int count(string s)
 {
-    int res = 1;
-
-    x = x % p;
-    if (x == 0)
-        return 0;
-    while (y > 0)
-    {
-        if (y & 1)
-            res = (res * x) % p;
-        y = y >> 1;
-        x = (x * x) % p;
-    }
-    return res;
-}
-
-vector<bool> sieve(int n)
-{
-    // Time Complexity:- O(log(log(n)))
-
-    vector<bool> is_prime(n + 1, 1);
-    is_prime[0] = is_prime[1] = 0;
-    for (int i = 2; i <= n; i++)
-    {
-        if (is_prime[i] && 1LL * i * i <= n)
-        {
-            for (int j = i * i; j <= n; j += i)
-                is_prime[j] = 0;
-        }
-    }
-    return is_prime;
-}
-
-int f(int a)
-{
-    int ans = 0;
-
-    string s = to_string(a);
+    reverse(s.begin(), s.end());
 
     int n = s.size();
-    int dp[n][10];
 
-    rep(i, 0, 10)
+    int dp[n][10][2][2];
+    memset(dp, 0, sizeof(dp));
+    // dp [number of digit, last digit, number of leading zeroes, tight?]
+
+    rep(i, 0, n)
     {
-        dp[0][i] = 1;
-    }
-    rep(i, 1, n)
-    {
-        rep(j, 0, s[i] - '0' + 1)
+        rep(j, 0, 10)
         {
-            dp[i][j] = 0;
-            rep(k, 0, j + 1)
+            rep(k, 0, 2)
             {
-                dp[i][j] += dp[i - 1][k];
+                rep(l, 0, 2)
+                {
+                    int tight = l;
+                    int leadingzeros = k;
+
+                    int high = tight == 1 ? s[i] - '0' : 9;
+
+                    for (int digit = 0LL; digit <= high; digit++)
+                        if (digit == i && leadingzeros == 0)
+                            continue;
+                        else
+                            dp[i][j][k][l] += (i == 0 ? 1 : dp[i - 1][digit][k && (digit == 0LL)][tight && (digit == high)]);
+
+                    // cout << dp[i][j][k][l] << ' ';
+                }
             }
         }
     }
+
+    int ans = 0;
+    rep (i, 0, 9)
+        ans += dp[n - 1][i][1][1];
 
     return ans;
 }
 
 void solve()
 {
-    int a, b;
+    string a, b;
     cin >> a >> b;
 
-    cout << f(b) - f(a) << endl;
+    cout << count(a) << ' ';
+    cout << count(b) << ' ';
+
+    cout << count(b) - count(a) << endl;
 }
 
 int32_t main()
@@ -103,9 +70,7 @@ int32_t main()
     int tc = 1;
     // cin >> tc;
     while (tc--)
-    {
         solve();
-    }
 
     return 0;
 }

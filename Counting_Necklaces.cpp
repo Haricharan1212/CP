@@ -10,39 +10,16 @@ using namespace std;
 #define si set<int>
 #define rep(var, l, r) for (int var = l; var < r; var++)
 
-int mod = 1e9 + 7;
-int mx = 1e6 + 5;
+const int mod = 1e9 + 7;
 
-vi factorials;
-void precompute()
-{
-    factorials = vi(mx, 1);
-    rep(i, 1, mx)
-    {
-        factorials[i] = factorials[i - 1] * i % mod;
-    }
-}
-
-int modexp(int a, int b, int m)
-{
+int binexp (int a, int b){
     int res = 1;
-    while (b)
-    {
-        if (b & 1)
-        {
-            res = (res * a) % m;
-        }
-        a = (a * a) % m;
+    while (b){
+        if (b & 1) res = (res * a) % mod;
+        a = (a * a) % mod;
         b >>= 1;
     }
     return res;
-}
-
-int ncr(int n, int k)
-{
-    if (k > n)
-        return 0;
-    return factorials[n] * modexp(factorials[n - k], mod - 2, mod) % mod * modexp(factorials[k], mod - 2, mod) % mod;
 }
 
 void solve()
@@ -50,17 +27,14 @@ void solve()
     int n, m;
     cin >> n >> m;
 
-    int ans = modexp(m, n, mod);
+    int ans = 0;
 
-    rep(i, 2, n + 1)
-    {
-        if (n % i)
-            continue;
-        int mci = ncr(m, i);
-
-        ans = (ans - mci * modexp(m, n / i, mod) % mod + mod) % mod;
-        cout << ans << ' ';
+    rep (i, 0, n){
+        ans += binexp (m, __gcd(i, n));
+        ans %= mod;
     }
+
+    cout << (ans * binexp (n, mod - 2)) % mod << endl;
 }
 
 int32_t main()
@@ -68,8 +42,7 @@ int32_t main()
     ios_base::sync_with_stdio(0), cin.tie(0), cout.tie(0);
     srand(chrono::high_resolution_clock::now().time_since_epoch().count());
     int tc = 1;
-    //    cin >> tc;
-    precompute();
+    // cin >> tc;
     while (tc--)
         solve();
 

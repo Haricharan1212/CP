@@ -1,18 +1,17 @@
-// 4 matrices
-// ABCD
-// {1, 2, 3, 4, 3}
+a, b, c
 
-// ABC = A * BC or AB * C
+a, b, c, c - a
+a, b, c, c - a, a
 
-// ABCD = AB * CD or A * BCD or ABC * D
+-------------
+3 4 3 2 3
+3 4 2 2 3
+Yes
 
-dp array
-  A B C    D 
-A * 6 18   51 or () or () 
-B * * 24   48
-C * * *    36 
-D * * *    * 
+3 4 3 4 4
+3 4 3 4 4
 
-n matrices
 
-ABCD ... Nth matix = 
+3 4 2 4 3
+3 4 3 4 3
+
