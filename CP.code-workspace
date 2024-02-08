@@ -1,6 +1,9 @@
 {
     "settings": {
-        "cph.general.saveLocation": ""
+        "cph.general.saveLocation": "",
+        "files.associations": {
+            "chrono": "cpp"
+        }
     },
     "folders": [
         {
